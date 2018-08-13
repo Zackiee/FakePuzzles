@@ -1,2 +1,0 @@
-# FakePuzzles
-Studio Project
