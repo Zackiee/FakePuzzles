@@ -260,29 +260,14 @@ void renderMap()
 	//Render Inventory
 	string file;
 	ifstream myFile;
-	i = 0;
+	COORD c;
+	int i = 0;
 	myFile.open("Inventory.txt");
 	if (myFile.is_open())
 	{
 		while (getline(myFile, file))
 		{
-			for (int a = 0; a < file.length(); a++)
-			{
-				if (file[a] == '#')
-				{
-					file[a] = 223;
-				}
-				else if (file[a] == '@')
-				{
-					file[a] = 219;
-				}
-				else if (file[a] == '1' || file[a] == '2' || file[a] == '3' || file[a] == '4' || file[a] == '5')
-				{
-					file[a] = 'x';
-				}
-			}
-
-			c.X = 70;
+			c.X = 0;
 			c.Y = i;
 			i++;
 			g_Console.writeToBuffer(c, file, 0x1f);
