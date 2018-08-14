@@ -255,6 +255,10 @@ void renderMap()
 				{
 					file[i] = 223;
 				}
+				if (file[i] == '@')
+				{
+					file[i] = 219;
+				}
 			}
 				c.X = 0;
 				c.Y = i;
