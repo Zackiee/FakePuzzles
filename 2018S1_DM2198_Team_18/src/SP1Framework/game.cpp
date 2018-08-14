@@ -22,6 +22,8 @@ double  g_dBounceTime; // this is to prevent key bouncing, so we won't trigger k
 
 // Console object
 Console g_Console(109, 30, "SP1 Framework");
+char** map = new char*[30];
+
 
 //--------------------------------------------------------------
 // Purpose  : Initialisation function
@@ -44,6 +46,11 @@ void init( void )
     g_sChar.m_bActive = true;
     // sets the width, height and the font name to use in the console
     g_Console.setConsoleFont(0, 16, L"Consolas");
+
+	for (int i = 0; i < g_Console.getConsoleSize().Y; i++)
+	{
+		map[i] = new char[g_Console.getConsoleSize().X];
+	}
 }
 
 //--------------------------------------------------------------
@@ -153,25 +160,25 @@ void moveCharacter()
 
     // Updating the location of the character based on the key press
     // providing a beep sound whenver we shift the character
-    if (g_abKeyPressed[K_UP] && g_sChar.m_cLocation.Y > 0)
+    if (g_abKeyPressed[K_UP] && map[g_sChar.m_cLocation.Y - 1][g_sChar.m_cLocation.X] == 46)
     {
         //Beep(1440, 30);
         g_sChar.m_cLocation.Y--;
         bSomethingHappened = true;
     }
-    if (g_abKeyPressed[K_LEFT] && g_sChar.m_cLocation.X > 0)
+    if (g_abKeyPressed[K_LEFT] && map[g_sChar.m_cLocation.Y][g_sChar.m_cLocation.X - 1] == 46)
     {
         //Beep(1440, 30);
         g_sChar.m_cLocation.X--;
         bSomethingHappened = true;
     }
-    if (g_abKeyPressed[K_DOWN] && g_sChar.m_cLocation.Y < g_Console.getConsoleSize().Y - 1)
+    if (g_abKeyPressed[K_DOWN] && map[g_sChar.m_cLocation.Y + 1][g_sChar.m_cLocation.X] == 46)
     {
         //Beep(1440, 30);
         g_sChar.m_cLocation.Y++;
         bSomethingHappened = true;
     }
-    if (g_abKeyPressed[K_RIGHT] && g_sChar.m_cLocation.X < g_Console.getConsoleSize().X - 1)
+    if (g_abKeyPressed[K_RIGHT] && map[g_sChar.m_cLocation.Y][g_sChar.m_cLocation.X + 1] == 46)
     {
         //Beep(1440, 30);
         g_sChar.m_cLocation.X++;
@@ -199,7 +206,7 @@ void processUserInput()
 void clearScreen()
 {
     // Clears the buffer with this colour attribute
-    g_Console.clearBuffer(0x1F);
+    g_Console.clearBuffer(0x0F);
 }
 
 void renderSplashScreen()  // renders the splash screen
@@ -241,7 +248,7 @@ void renderMap()
 	}
 	*/
 	//Render Map
-	string map;
+	string mapString;
 	ifstream mapFile;
 	COORD c;
 	int i = 0;
@@ -250,23 +257,24 @@ void renderMap()
 	mapFile.open("map_data_02.txt");
 	if (mapFile.is_open())
 	{
-		while (getline(mapFile, map))
+		while (getline(mapFile, mapString))
 		{
-			for (a = 0; a < map.length(); a++)
+			for (a = 0; a < mapString.length(); a++)
 			{
-				if (map[a] == '#')
+				if (mapString[a] == '#')
 				{
-					map[a] = 223;
+					mapString[a] = 223;
 				}
-				else if (map[a] == '@')
+				else if (mapString[a] == '@')
 				{
-					map[a] = 219;
+					mapString[a] = 219;
 				}
+				map[i][a] = mapString[a];
 			}
 			c.X = 0;
 			c.Y = i;
 			i++;
-			g_Console.writeToBuffer(c, map, 0x1f);
+			g_Console.writeToBuffer(c, mapString, 0x09);
 		}
 	}
 	mapFile.close();
@@ -299,7 +307,7 @@ void renderMap()
 			c.X = 94;
 			c.Y = i;
 			i++;
-			g_Console.writeToBuffer(c, inventory, 0x1f);
+			g_Console.writeToBuffer(c, inventory, 0x00 + i);
 		}
 	}
 	inventoryFile.close();
