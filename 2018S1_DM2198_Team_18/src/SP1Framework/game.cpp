@@ -262,15 +262,22 @@ void renderMap()
 	ifstream myFile;
 	COORD c;
 	int i = 0;
-	myFile.open("Inventory.txt");
+	myFile.open("map_data_01.txt");
 	if (myFile.is_open())
 	{
 		while (getline(myFile, file))
 		{
-			c.X = 0;
-			c.Y = i;
-			i++;
-			g_Console.writeToBuffer(c, file, 0x1f);
+			for (int i = 0; i < file.length(); i++)
+			{
+				if (file[i] == '#')
+				{
+					file[i] = 223;
+				}
+			}
+				c.X = 0;
+				c.Y = i;
+				i++;
+				g_Console.writeToBuffer(c, file, 0x1f);
 		}
 	}
 	myFile.close();
