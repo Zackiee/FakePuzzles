@@ -269,6 +269,10 @@ void renderMap()
 				{
 					mapString[a] = 219;
 				}
+				else if (mapString[a] == '.')
+				{
+					mapString[a] == 255;
+				}
 				map[i][a] = mapString[a];
 			}
 			c.X = 0;
