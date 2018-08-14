@@ -225,44 +225,81 @@ void renderGame()
 void renderMap()
 {
 	/*
-    // Set up sample colours, and output shadings
-    const WORD colors[] = {
-        0x1A, 0x2B, 0x3C, 0x4D, 0x5E, 0x6F,
-        0xA1, 0xB2, 0xC3, 0xD4, 0xE5, 0xF6
-    };
+	// Set up sample colours, and output shadings
+	const WORD colors[] = {
+		0x1A, 0x2B, 0x3C, 0x4D, 0x5E, 0x6F,
+		0xA1, 0xB2, 0xC3, 0xD4, 0xE5, 0xF6
+	};
 
-    COORD c;
-    for (int i = 0; i < 12; ++i)
-    {
-        c.X = 5 * i;
-        c.Y = i + 1;
-        colour(colors[i]);
-        g_Console.writeToBuffer(c, " °±²Û", colors[i]);
-    }
+	COORD c;
+	for (int i = 0; i < 12; ++i)
+	{
+		c.X = 5 * i;
+		c.Y = i + 1;
+		colour(colors[i]);
+		g_Console.writeToBuffer(c, " °±²Û", colors[i]);
+	}
 	*/
-	string file;
-	ifstream myFile;
+	//Render Map
+	string map;
+	ifstream mapFile;
 	COORD c;
 	int i = 0;
-	myFile.open("map_data_01.txt");
-	if (myFile.is_open())
+	mapFile.open("map_data_01.txt");
+	if (mapFile.is_open())
 	{
-		while (getline(myFile, file))
+		while (getline(mapFile, map))
 		{
-			for (int i = 0; i < file.length(); i++)
+			for (int a = 0; a < map.length(); a++)
 			{
-				if (file[i] == '#')
+				if (map[a] == '#')
 				{
-					file[i] = 223;
+					map[a] = 223;
+				}
+				else if (map[a] == '@')
+				{
+					map[a] = 219;
 				}
 			}
-				c.X = 0;
-				c.Y = i;
-				i++;
-				g_Console.writeToBuffer(c, file, 0x1f);
+			c.X = 0;
+			c.Y = i;
+			i++;
+			g_Console.writeToBuffer(c, map, 0x1f);
 		}
 	}
-	myFile.close();
+	mapFile.close();
+
+	//Render Inventory
+	string inventory;
+	ifstream inventoryFile;
+	i = 0;
+	inventoryFile.open("Inventory.txt");
+	if (inventoryFile.is_open())
+	{
+		while (getline(inventoryFile, inventory))
+		{
+			for (int a = 0; a < inventory.length(); a++)
+			{
+				if (inventory[a] == '#')
+				{
+					inventory[a] = 223;
+				}
+				else if (inventory[a] == '@')
+				{
+					inventory[a] = 219;
+				}
+				else if (inventory[a] == '1' || inventory[a] == '2' || inventory[a] == '3' || inventory[a] == '4' || inventory[a] == '5')
+				{
+					inventory[a] = 'x';
+				}
+			}
+			c.X = 70;
+			c.Y = i;
+			i++;
+			g_Console.writeToBuffer(c, inventory, 0x1f);
+		}
+	}
+	inventoryFile.close();
 }
 
 void renderCharacter()
