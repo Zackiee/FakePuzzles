@@ -6,6 +6,10 @@
 #include <iostream>
 #include <iomanip>
 #include <sstream>
+#include <fstream>
+#include <string>
+
+using namespace std;
 
 double  g_dElapsedTime;
 double  g_dDeltaTime;
@@ -220,6 +224,7 @@ void renderGame()
 
 void renderMap()
 {
+	/*
     // Set up sample colours, and output shadings
     const WORD colors[] = {
         0x1A, 0x2B, 0x3C, 0x4D, 0x5E, 0x6F,
@@ -234,6 +239,23 @@ void renderMap()
         colour(colors[i]);
         g_Console.writeToBuffer(c, " °±²Û", colors[i]);
     }
+	*/
+	string file;
+	ifstream myFile;
+	COORD c;
+	int i = 0;
+	myFile.open("Inventory.txt");
+	if (myFile.is_open())
+	{
+		while (getline(myFile, file))
+		{
+			c.X = 0;
+			c.Y = i;
+			i++;
+			g_Console.writeToBuffer(c, file, 0x1f);
+		}
+	}
+	myFile.close();
 }
 
 void renderCharacter()
