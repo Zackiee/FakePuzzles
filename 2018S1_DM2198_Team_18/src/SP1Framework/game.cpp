@@ -245,12 +245,14 @@ void renderMap()
 	ifstream mapFile;
 	COORD c;
 	int i = 0;
-	mapFile.open("map_data_01.txt");
+	int a = 0;
+
+	mapFile.open("map_data_02.txt");
 	if (mapFile.is_open())
 	{
 		while (getline(mapFile, map))
 		{
-			for (int a = 0; a < map.length(); a++)
+			for (a = 0; a < map.length(); a++)
 			{
 				if (map[a] == '#')
 				{
@@ -273,12 +275,13 @@ void renderMap()
 	string inventory;
 	ifstream inventoryFile;
 	i = 0;
+
 	inventoryFile.open("Inventory.txt");
 	if (inventoryFile.is_open())
 	{
 		while (getline(inventoryFile, inventory))
 		{
-			for (int a = 0; a < inventory.length(); a++)
+			for (a = 0; a < inventory.length(); a++)
 			{
 				if (inventory[a] == '#')
 				{
@@ -293,7 +296,7 @@ void renderMap()
 					inventory[a] = 'x';
 				}
 			}
-			c.X = 70;
+			c.X = 94;
 			c.Y = i;
 			i++;
 			g_Console.writeToBuffer(c, inventory, 0x1f);
