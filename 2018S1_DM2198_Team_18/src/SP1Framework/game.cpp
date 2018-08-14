@@ -11,8 +11,6 @@
 
 using namespace std;
 
-using namespace std;
-
 double  g_dElapsedTime;
 double  g_dDeltaTime;
 bool    g_abKeyPressed[K_COUNT];
@@ -23,7 +21,7 @@ EGAMESTATES g_eGameState = S_SPLASHSCREEN;
 double  g_dBounceTime; // this is to prevent key bouncing, so we won't trigger keypresses more than once
 
 // Console object
-Console g_Console(80, 25, "SP1 Framework");
+Console g_Console(109, 30, "SP1 Framework");
 
 //--------------------------------------------------------------
 // Purpose  : Initialisation function
@@ -242,16 +240,49 @@ void renderMap()
         g_Console.writeToBuffer(c, " °±²Û", colors[i]);
     }
 	*/
-	string file;
-	ifstream myFile;
+	string map;
+	ifstream mapFile;
 	COORD c;
 	int i = 0;
+	mapFile.open("map_data_01.txt");
+	if (mapFile.is_open())
+	{
+		while (getline(mapFile, map))
+		{
+			c.X = 0;
+			c.Y = i;
+			i++;
+			g_Console.writeToBuffer(c, map, 0x1f);
+		}
+	}
+	mapFile.close();
+
+	//Render Inventory
+	string file;
+	ifstream myFile;
+	i = 0;
 	myFile.open("Inventory.txt");
 	if (myFile.is_open())
 	{
 		while (getline(myFile, file))
 		{
-			c.X = 0;
+			for (int a = 0; a < file.length(); a++)
+			{
+				if (file[a] == '#')
+				{
+					file[a] = 223;
+				}
+				else if (file[a] == '@')
+				{
+					file[a] = 219;
+				}
+				else if (file[a] == '1' || file[a] == '2' || file[a] == '3' || file[a] == '4' || file[a] == '5')
+				{
+					file[a] = 'x';
+				}
+			}
+
+			c.X = 70;
 			c.Y = i;
 			i++;
 			g_Console.writeToBuffer(c, file, 0x1f);
