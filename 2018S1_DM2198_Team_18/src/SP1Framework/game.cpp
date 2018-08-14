@@ -240,6 +240,24 @@ void renderMap()
         g_Console.writeToBuffer(c, " °±²Û", colors[i]);
     }
 	*/
+	string map;
+	ifstream mapFile;
+	COORD c;
+	int i = 0;
+	mapFile.open("map_data_01.txt");
+	if (mapFile.is_open())
+	{
+		while (getline(mapFile, map))
+		{
+			c.X = 0;
+			c.Y = i;
+			i++;
+			g_Console.writeToBuffer(c, map, 0x1f);
+		}
+	}
+	mapFile.close();
+
+	//Render Inventory
 	string file;
 	ifstream myFile;
 	COORD c;
