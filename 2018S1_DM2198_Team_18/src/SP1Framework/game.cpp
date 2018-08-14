@@ -11,8 +11,6 @@
 
 using namespace std;
 
-using namespace std;
-
 double  g_dElapsedTime;
 double  g_dDeltaTime;
 bool    g_abKeyPressed[K_COUNT];
@@ -23,7 +21,7 @@ EGAMESTATES g_eGameState = S_SPLASHSCREEN;
 double  g_dBounceTime; // this is to prevent key bouncing, so we won't trigger keypresses more than once
 
 // Console object
-Console g_Console(80, 25, "SP1 Framework");
+Console g_Console(109, 30, "SP1 Framework");
 
 //--------------------------------------------------------------
 // Purpose  : Initialisation function
@@ -246,15 +244,22 @@ void renderMap()
 	ifstream myFile;
 	COORD c;
 	int i = 0;
-	myFile.open("Inventory.txt");
+	myFile.open("map_data_01.txt");
 	if (myFile.is_open())
 	{
 		while (getline(myFile, file))
 		{
-			c.X = 0;
-			c.Y = i;
-			i++;
-			g_Console.writeToBuffer(c, file, 0x1f);
+			for (int i = 0; i < file.length(); i++)
+			{
+				if (file[i] == '#')
+				{
+					file[i] = 223;
+				}
+			}
+				c.X = 0;
+				c.Y = i;
+				i++;
+				g_Console.writeToBuffer(c, file, 0x1f);
 		}
 	}
 	myFile.close();
