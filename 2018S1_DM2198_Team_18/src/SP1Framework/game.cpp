@@ -6,6 +6,11 @@
 #include <iostream>
 #include <iomanip>
 #include <sstream>
+#include <string>
+#include <iostream>
+#include <fstream>
+
+using namespace std;
 
 double  g_dElapsedTime;
 double  g_dDeltaTime;
