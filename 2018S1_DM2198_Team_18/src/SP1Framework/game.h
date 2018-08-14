@@ -2,6 +2,8 @@
 #define _GAME_H
 
 #include "Framework\timer.h"
+#include <chrono>
+#include <ctime>
 
 extern CStopWatch g_swTimer;
 extern bool g_bQuitGame;
