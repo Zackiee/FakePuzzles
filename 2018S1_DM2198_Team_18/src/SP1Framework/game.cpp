@@ -308,22 +308,6 @@ void renderGame()
 
 void renderMap()
 {
-	/*
-	// Set up sample colours, and output shadings
-	const WORD colors[] = {
-		0x1A, 0x2B, 0x3C, 0x4D, 0x5E, 0x6F,
-		0xA1, 0xB2, 0xC3, 0xD4, 0xE5, 0xF6
-	};
-
-	COORD c;
-	for (int i = 0; i < 12; ++i)
-	{
-		c.X = 5 * i;
-		c.Y = i + 1;
-		colour(colors[i]);
-		g_Console.writeToBuffer(c, " °±²Û", colors[i]);
-	}
-	*/
 	//Render Map
 	string mapString;
 	ifstream mapFile;
@@ -453,12 +437,12 @@ void renderMap()
 void renderCharacter()
 {
     // Draw the location of the character
-    WORD charColor = 0x0C;
+    WORD charColor = 0x0F;
     if (g_sChar.m_bActive)
     {
-        charColor = 0x0A;
+        charColor = 0x0E;
     }
-    g_Console.writeToBuffer(g_sChar.m_cLocation, (char)1, charColor);
+    g_Console.writeToBuffer(g_sChar.m_cLocation, (char)14, charColor);
 }
 
 void renderFramerate()
