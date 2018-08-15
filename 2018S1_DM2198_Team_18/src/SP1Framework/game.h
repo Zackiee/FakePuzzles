@@ -65,5 +65,4 @@ struct butterknife
 	int id = 2;
 };
 
-
 #endif // _GAME_H
