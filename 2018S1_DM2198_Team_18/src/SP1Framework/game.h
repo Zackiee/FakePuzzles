@@ -53,15 +53,4 @@ void renderCharacter();     // renders the character into the buffer
 void renderFramerate();     // renders debug information, frame rate, elapsed time, etc
 void renderToScreen();      // dump the contents of the buffer to the screen, one frame worth of game
 
-typedef struct boxscan boxscan;
-struct boxscan {
-	float a;
-	float b;
-	float height;
-	float width;
-	int boxitself;
-}; boxscan* collider(float a, float b, float c, float d,int boxitself);
-void collide(boxscan *surround);
-int colliding(boxscan *surround, boxscan *enos);
-
 #endif // _GAME_H
