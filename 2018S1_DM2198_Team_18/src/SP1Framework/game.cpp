@@ -428,7 +428,7 @@ void renderMap()
 		}
 		level3File.close();
 	}
-	if (levelFour = true)
+	if (levelFour == true)
 	{
 		string level4;
 		ifstream level4File;
@@ -448,10 +448,6 @@ void renderMap()
 					{
 						level4[a] = 219;
 					}
-					/*if (level4[a] == 'f')
-					{
-					level4[a] = 176;
-					}*/
 				}
 				c.X = 0;
 				c.Y = i;
