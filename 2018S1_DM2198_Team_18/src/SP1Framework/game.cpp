@@ -14,9 +14,10 @@ using namespace std;
 int money;
 
 bool shop = false;
-bool levelOne = false;
+bool levelOne = true;
 bool levelTwo = false;
 bool levelThree = false;
+bool levelFour = false;
 
 double  g_dElapsedTime;
 double  g_dDeltaTime;
@@ -268,9 +269,15 @@ void moveCharacter()
 	{
 		shop = false;
 	}
-	if (map[g_sChar.m_cLocation.Y - 1][g_sChar.m_cLocation.X] == 'f' || map[g_sChar.m_cLocation.Y][g_sChar.m_cLocation.X - 1] == 'f' || map[g_sChar.m_cLocation.Y + 1][g_sChar.m_cLocation.X] == 'f' || map[g_sChar.m_cLocation.Y][g_sChar.m_cLocation.X + 1] == 'f')
+	if (map[g_sChar.m_cLocation.Y - 1][g_sChar.m_cLocation.X] == 'A' || map[g_sChar.m_cLocation.Y][g_sChar.m_cLocation.X - 1] == 'A' || map[g_sChar.m_cLocation.Y + 1][g_sChar.m_cLocation.X] == 'A' || map[g_sChar.m_cLocation.Y][g_sChar.m_cLocation.X + 1] == 'A')
 	{
-
+		levelOne = false;
+		levelTwo = true;
+	}
+	if (map[g_sChar.m_cLocation.Y - 1][g_sChar.m_cLocation.X] == 'B' || map[g_sChar.m_cLocation.Y][g_sChar.m_cLocation.X - 1] == 'B' || map[g_sChar.m_cLocation.Y + 1][g_sChar.m_cLocation.X] == 'B' || map[g_sChar.m_cLocation.Y][g_sChar.m_cLocation.X + 1] == 'B')
+	{
+		levelTwo = false;
+		levelThree = true;
 	}
 }
 void processUserInput()
@@ -325,40 +332,111 @@ void renderMap()
 	}
 	*/
 	//Render Map
-	string mapString;
-	ifstream mapFile;
+	string level1;
+	ifstream level1File;
 	COORD c;
 	int i = 0;
 	int a = 0;
 
-	mapFile.open("Level1.txt");
-	if (mapFile.is_open())
+	if (levelOne == true)
 	{
-		while (getline(mapFile, mapString))
+		level1File.open("Level1.txt");
+		if (level1File.is_open())
 		{
-			for (a = 0; a < mapString.length(); a++)
+			while (getline(level1File, level1))
 			{
-				if (mapString[a] == '#')
+				for (a = 0; a < level1.length(); a++)
 				{
-					mapString[a] = 223;
+					if (level1[a] == '#')
+					{
+						level1[a] = 223;
+					}
+					else if (level1[a] == '@')
+					{
+						level1[a] = 219;
+					}
+					/*else if (mapString[a] == 'f')
+					{
+						mapString[a] = 176;
+					}*/
+					map[i][a] = level1[a];
 				}
-				else if (mapString[a] == '@')
-				{
-					mapString[a] = 219;
-				}
-				else if (mapString[a] == 'f')
-				{
-					mapString[a] = 176;
-				}
-				map[i][a] = mapString[a];
+				c.X = 0;
+				c.Y = i;
+				i++;
+				g_Console.writeToBuffer(c, level1, 0x09);
 			}
-			c.X = 0;
-			c.Y = i;
-			i++;
-			g_Console.writeToBuffer(c, mapString, 0x09);
 		}
+		level1File.close();
 	}
-	mapFile.close();
+	if (levelTwo == true)
+	{
+		string level2;
+		ifstream level2File;
+		i = 0;
+		level2File.open("Level2.txt");
+		if (level2File.is_open())
+		{
+			while (getline(level2File, level2))
+			{
+				for (a = 0; a < level2.length(); a++)
+				{
+					if (level2[a] == '#')
+					{
+						level2[a] = 223;
+					}
+					if (level2[a] == '@')
+					{
+						level2[a] = 219;
+					}
+					/*if (level2[a] == 'f')
+					{
+						level2[a] = 176;
+					}*/
+					map[i][a] = level2[a];
+				}
+				c.X = 0;
+				c.Y = i;
+				i++;
+				g_Console.writeToBuffer(c, level2, 0x09);
+			}
+		}
+		level2File.close();
+	}
+	if (levelThree == true)
+	{
+		string level3;
+		ifstream level3File;
+		i = 0;
+		level3File.open("Level3.txt");
+		if (level3File.is_open())
+		{
+			while (getline(level3File, level3))
+			{
+				for (a = 0; a < level3.length(); a++)
+				{
+					if (level3[a] == '#')
+					{
+						level3[a] = 223;
+					}
+					if (level3[a] == '@')
+					{
+						level3[a] = 219;
+					}
+					/*if (level3[a] == 'f')
+					{
+					  level3[a] = 176;
+					}*/
+					map[i][a] = level3[a];
+				}
+				c.X = 0;
+				c.Y = i;
+				i++;
+				g_Console.writeToBuffer(c, level3, 0x09);
+			}
+		}
+		level3File.close();
+	}
 
 	//Render Inventory
 	string inventory;
