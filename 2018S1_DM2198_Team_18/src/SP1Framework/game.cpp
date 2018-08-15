@@ -18,6 +18,7 @@ bool levelOne = true;
 bool levelTwo = false;
 bool levelThree = false;
 bool levelFour = false;
+bool playerRespawn = false;
 
 double  g_dElapsedTime;
 double  g_dDeltaTime;
@@ -53,8 +54,10 @@ void init( void )
     // sets the initial state for the game
     g_eGameState = S_SPLASHSCREEN;
 
-    g_sChar.m_cLocation.X = g_Console.getConsoleSize().X / 2;
-    g_sChar.m_cLocation.Y = g_Console.getConsoleSize().Y / 2;
+    /*g_sChar.m_cLocation.X = g_Console.getConsoleSize().X / 2;
+    g_sChar.m_cLocation.Y = g_Console.getConsoleSize().Y / 2;*/
+	g_sChar.m_cLocation.X = 5;
+	g_sChar.m_cLocation.Y = 2;
 	g_sEnemy.m_cLocation.X = 6;
 	g_sEnemy.m_cLocation.Y = 3;
     g_sChar.m_bActive = true;
@@ -275,28 +278,46 @@ void moveCharacter()
 		{
 			levelOne = false;
 			levelTwo = true;
+			playerRespawn = true;
 		}
 	}
 	else if (levelTwo == true)
 	{
+		playerRespawn = false;
+
 		if (map[g_sChar.m_cLocation.Y - 1][g_sChar.m_cLocation.X] == '%' || map[g_sChar.m_cLocation.Y][g_sChar.m_cLocation.X - 1] == '%' || map[g_sChar.m_cLocation.Y + 1][g_sChar.m_cLocation.X] == '%' || map[g_sChar.m_cLocation.Y][g_sChar.m_cLocation.X + 1] == '%')
 		{
 			levelTwo = false;
 			levelThree = true;
+			playerRespawn = true;
 		}
 	}
 	else if (levelThree == true)
 	{
+		playerRespawn = false;
+
 		if (map[g_sChar.m_cLocation.Y - 1][g_sChar.m_cLocation.X] == '%' || map[g_sChar.m_cLocation.Y][g_sChar.m_cLocation.X - 1] == '%' || map[g_sChar.m_cLocation.Y + 1][g_sChar.m_cLocation.X] == '%' || map[g_sChar.m_cLocation.Y][g_sChar.m_cLocation.X + 1] == '%')
 		{
 			levelThree = false;
 			levelFour = true;
+			playerRespawn = true;
 		}
 	}
-	/*else if (levelFour == true)
+	else if (levelFour == true)
 	{
+		playerRespawn = false;
 
-	}*/
+		if (map[g_sChar.m_cLocation.Y - 1][g_sChar.m_cLocation.X] == '%' || map[g_sChar.m_cLocation.Y][g_sChar.m_cLocation.X - 1] == '%' || map[g_sChar.m_cLocation.Y + 1][g_sChar.m_cLocation.X] == '%' || map[g_sChar.m_cLocation.Y][g_sChar.m_cLocation.X + 1] == '%')
+		{
+			g_bQuitGame = true;
+		}
+
+	}
+	if (playerRespawn == true)
+	{
+		g_sChar.m_cLocation.X = 5;
+		g_sChar.m_cLocation.Y = 2;
+	}
 }
 void processUserInput()
 {
@@ -448,6 +469,7 @@ void renderMap()
 					{
 						level4[a] = 219;
 					}
+					map[i][a] = level4[a];
 				}
 				c.X = 0;
 				c.Y = i;
