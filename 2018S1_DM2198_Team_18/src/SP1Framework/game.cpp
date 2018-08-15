@@ -171,25 +171,66 @@ void renderEnemies()
 timer cycle;
 void enemydata() {
 	bool fooeyhappened;
-	double enemybouncetime;
+	double enemybouncetime, up, left, down, right, min_double;
 	melee hugger;
 	ranged gunner;
 
-	cycle.enemytimer = g_dElapsedTime;
+		cycle.enemytimer = g_dElapsedTime;
 
-	fooeyhappened = false;
-	if (enemybouncetime > cycle.enemytimer)
-		return;
+		fooeyhappened = false;
+		if (enemybouncetime > cycle.enemytimer)
+			return;
+
+		up = 99.0; left = 99.0; down = 99.0; right = 99.0;
 
 		hugger.targetX = g_sChar.m_cLocation.X;
 		hugger.targetY = g_sChar.m_cLocation.Y;
 
+		hugger.selfX = g_sEnemy.m_cLocation.X;
+		hugger.selfY = g_sEnemy.m_cLocation.Y;
 
+		if (hugger.selfY - 1 == ' ') {
+			up = sqrt(pow(g_sChar.m_cLocation.X - (hugger.selfX), 2) + pow(g_sChar.m_cLocation.Y - (hugger.selfY - 1), 2));
+		}
+		if (hugger.selfX - 1 == ' ') {
+			left = sqrt(pow(g_sChar.m_cLocation.X - (hugger.selfX - 1), 2) + pow(g_sChar.m_cLocation.Y - (hugger.selfY), 2));
+		}
+		if (hugger.selfY + 1 == ' ') {
+			down = sqrt(pow(g_sChar.m_cLocation.X - (hugger.selfX), 2) + pow(g_sChar.m_cLocation.Y - (hugger.selfY + 1), 2));
+		}
+		if (hugger.selfX + 1 == ' ') {
+			right = sqrt(pow(g_sChar.m_cLocation.X - (hugger.selfX + 1), 2) + pow(g_sChar.m_cLocation.Y - (hugger.selfY), 2));
+		}
+		min_double = min(min(up, down), min(left, right));
+		if (min_double == up && min_double == left) {
+			if (sqrt(pow(g_sChar.m_cLocation.X - hugger.selfX, 2)) > sqrt(pow(g_sChar.m_cLocation.Y - hugger.selfY, 2))) {
+				g_sEnemy.m_cLocation.X--;
+			}
+			else g_sEnemy.m_cLocation.Y--;
+		}
+		if (min_double == up && min_double == right) {
+			if (sqrt(pow(g_sChar.m_cLocation.X - hugger.selfX, 2)) > sqrt(pow(g_sChar.m_cLocation.Y - hugger.selfY, 2))) {
+				g_sEnemy.m_cLocation.X++;
+			}
+			else g_sEnemy.m_cLocation.Y--;
+		}
+		if (min_double == down && min_double == right) {
+			if (sqrt(pow(g_sChar.m_cLocation.X - hugger.selfX, 2)) > sqrt(pow(g_sChar.m_cLocation.Y - hugger.selfY, 2))) {
+				g_sEnemy.m_cLocation.X++;
+			}
+			else g_sEnemy.m_cLocation.Y++;
+		}
+		if (min_double == down && min_double == left) {
+			if (sqrt(pow(g_sChar.m_cLocation.X - hugger.selfX, 2)) > sqrt(pow(g_sChar.m_cLocation.Y - hugger.selfY, 2))) {
+				g_sEnemy.m_cLocation.X--;
+			}
+			else g_sEnemy.m_cLocation.Y++;
+		}
 
-	fooeyhappened = true;
+		fooeyhappened = true;
 
-	if (fooeyhappened)
-	enemybouncetime = cycle.enemytimer + 0.25; // enemies act every 1/4 seconds
+		if (fooeyhappened)
+			enemybouncetime = cycle.enemytimer + 0.25; // enemies act every 1/4 seconds
 }
 
 void gameplay()            // gameplay logic
