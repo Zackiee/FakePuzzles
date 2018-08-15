@@ -60,7 +60,7 @@ struct pistol
 {
 	int id = 1;
 };
-struct butterknife
+struct smg
 {
 	int id = 2;
 };
@@ -68,6 +68,8 @@ struct melee {
 	int hp = 3;
 	char targetX;
 	char targetY;
+	char selfX;
+	char selfY;
 };
 
 struct ranged {

@@ -25,6 +25,7 @@ struct timer
 };
 // Game specific variables here
 SGameChar   g_sChar;
+SGameChar   g_sEnemy;
 EGAMESTATES g_eGameState = S_SPLASHSCREEN;
 double  g_dBounceTime; // this is to prevent key bouncing, so we won't trigger keypresses more than once
 
@@ -50,6 +51,8 @@ void init( void )
 
     g_sChar.m_cLocation.X = g_Console.getConsoleSize().X / 2;
     g_sChar.m_cLocation.Y = g_Console.getConsoleSize().Y / 2;
+	g_sEnemy.m_cLocation.X = 3;
+	g_sEnemy.m_cLocation.Y = 3;
     g_sChar.m_bActive = true;
     // sets the width, height and the font name to use in the console
     g_Console.setConsoleFont(0, 16, L"Consolas");
@@ -152,12 +155,20 @@ void splashScreenWait()    // waits for time to pass in splash screen
         g_eGameState = S_GAME;
 }
 
+melee hugger;
+ranged gunner;
+void renderEnemies()
+{
+	// Draw the location of the enemies
+	WORD charE_Color = 0x0C;
+	
+	g_Console.writeToBuffer(g_sEnemy.m_cLocation, (char)169, charE_Color);
+}
+
 timer cycle;
 void enemydata() {
 	bool fooeyhappened;
-	double enemybouncetime;
-	melee hugger;
-	ranged gunner;
+	double enemybouncetime = 0.0;
 
 	cycle.enemytimer = g_dElapsedTime;
 
@@ -168,7 +179,7 @@ void enemydata() {
 		hugger.targetX = g_sChar.m_cLocation.X;
 		hugger.targetY = g_sChar.m_cLocation.Y;
 
-
+	if (hugger.selfY - 1)
 
 	fooeyhappened = true;
 
