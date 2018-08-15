@@ -308,13 +308,42 @@ void renderMap()
 					inventory[a] = 'x';
 				}
 			}
-			c.X = 94;
-			c.Y = i;
+			c.X = 0;
+			c.Y = 17 + i;
 			i++;
 			g_Console.writeToBuffer(c, inventory, 0x00 + i);
 		}
 	}
 	inventoryFile.close();
+
+	//Render Shop
+	string shop;
+	ifstream shopFile;
+	i = 0;
+
+	shopFile.open("Shop.txt");
+	if (shopFile.is_open())
+	{
+		while (getline(shopFile, shop))
+		{
+			for (a = 0; a < shop.length(); a++)
+			{
+				if (shop[a] == '#')
+				{
+					shop[a] = 223;
+				}
+				else if (shop[a] == '@')
+				{
+					shop[a] = 219;
+				}
+			}
+			c.X = 15;
+			c.Y = 17 + i;
+			i++;
+			g_Console.writeToBuffer(c, shop, 0x00 + i);
+		}
+	}
+	shopFile.close();
 }
 
 void renderCharacter()

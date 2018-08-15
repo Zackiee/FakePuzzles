@@ -1,14 +1,11 @@
 
- @###########@
- @ Coins: $$ @
- @___________@
- @           @
- @  Weapons  @
- @           @
- @ 1 Pistol  @
- @ 2 Rifle   @
- @ 3 Sniper  @
- @ 4 Rocket  @
- @ 5 Grenade @
- @           @
- #############
+ @##########################################@ @########################@
+ @                  STORE                   @ @ PAYMENT                @
+ @__________________________________________@ @                        @
+ @       GUNS         |       BOMBS         @ @ Press 1 to buy Pistol  @
+ @ Pistol - 10 Coins  | Rocket  - 250 Coins @ @ Press 2 to buy Rifle   @
+ @ Rifle  - 20 Coins  | Grenade - 50 Coins  @ @ Press 3 to buy Sniper  @
+ @ Sniper - 100 Coins |                     @ @ Press 4 to buy Rocket  @
+ @                    |                     @ @ Press 5 to buy Grenade @
+ ############################################ @                        @
+                                              ##########################

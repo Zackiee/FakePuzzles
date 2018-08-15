@@ -1,15 +1,12 @@
 
  @###########@
- @ Inventory @
- @           @
- @ Coins: $$ @
+ @ INVENTORY @
+ @ Coins:$$$ @
  @___________@
- @  Weapons  @
- @           @
+ @  WEAPONS  @
  @ 1 Pistol  @
  @ 2 Rifle   @
  @ 3 Sniper  @
  @ 4 Rocket  @
  @ 5 Grenade @
- @           @
  #############
