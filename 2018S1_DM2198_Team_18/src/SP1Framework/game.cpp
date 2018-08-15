@@ -11,12 +11,16 @@
 
 using namespace std;
 
-int money; // define variables
+int money;
 
 double  g_dElapsedTime;
 double  g_dDeltaTime;
 bool    g_abKeyPressed[K_COUNT];
 
+struct timer
+{
+	double enemytimer;
+};
 // Game specific variables here
 SGameChar   g_sChar;
 EGAMESTATES g_eGameState = S_SPLASHSCREEN;
@@ -147,11 +151,34 @@ void splashScreenWait()    // waits for time to pass in splash screen
         g_eGameState = S_GAME;
 }
 
+timer cycle;
+void enemydata() {
+	melee hugger;
+	ranged gunner;
+
+	cycle.enemytimer = g_dElapsedTime;
+
+	fooeyhappened = false;
+	if (enemybouncetime > cycle.enemytimer)
+		return;
+
+		hugger.targetX = g_sChar.m_cLocation.X;
+		hugger.targetY = g_sChar.m_cLocation.Y;
+
+
+
+	fooeyhappened = true;
+
+	if (fooeyhappened)
+	enemybouncetime = cycle.enemytimer + 0.25; // enemies act every 1/4 seconds
+}
+
 void gameplay()            // gameplay logic
 {
     processUserInput(); // checks if you should change states or do something else with the game, e.g. pause, exit
     moveCharacter();    // moves the character, collision detection, physics, etc
                         // sound can be played here too.
+	enemydata();
 }
 
 void inventory()		// handles inventory, inventory[0] contains money, inventory[1] && inventory[2] contains the 2 weapons held

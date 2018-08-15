@@ -2,8 +2,6 @@
 #define _GAME_H
 
 #include "Framework\timer.h"
-#include <chrono>
-#include <ctime>
 #include <vector>
 using namespace std;
 
@@ -56,6 +54,8 @@ void renderFramerate();     // renders debug information, frame rate, elapsed ti
 void renderToScreen();      // dump the contents of the buffer to the screen, one frame worth of game
 void inventory();
 
+
+// define variables
 struct pistol
 {
 	int id = 1;
@@ -64,5 +64,17 @@ struct butterknife
 {
 	int id = 2;
 };
+struct melee {
+	int hp = 3;
+	char targetX;
+	char targetY;
+};
 
+struct ranged {
+	int hp = 1;
+	char targetX;
+	char targetY;
+};
+double enemybouncetime;
+bool fooeyhappened;
 #endif // _GAME_H
