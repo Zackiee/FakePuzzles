@@ -215,52 +215,52 @@ void inventory()		// handles inventory, inventory[0] contains money, inventory[1
 
 void moveCharacter()
 {
-    bool bSomethingHappened = false;
-    if (g_dBounceTime > g_dElapsedTime)
-        return;
+	bool bSomethingHappened = false;
+	if (g_dBounceTime > g_dElapsedTime)
+		return;
 
-    // Updating the location of the character based on the key press
-    // providing a beep sound whenver we shift the character
-    if (g_abKeyPressed[K_UP] && map[g_sChar.m_cLocation.Y - 1][g_sChar.m_cLocation.X] == ' ')
-    {
-        //Beep(1440, 30);
-        g_sChar.m_cLocation.Y--;
-        bSomethingHappened = true;
-		
-    }
-    if (g_abKeyPressed[K_LEFT] && map[g_sChar.m_cLocation.Y][g_sChar.m_cLocation.X - 1] == ' ')
-    {
-        //Beep(1440, 30);
-        g_sChar.m_cLocation.X--;
-        bSomethingHappened = true;
-    }
-    if (g_abKeyPressed[K_DOWN] && map[g_sChar.m_cLocation.Y + 1][g_sChar.m_cLocation.X] == ' ')
-    {
-        //Beep(1440, 30);
-        g_sChar.m_cLocation.Y++;
-        bSomethingHappened = true;
-    }
-    if (g_abKeyPressed[K_RIGHT] && map[g_sChar.m_cLocation.Y][g_sChar.m_cLocation.X + 1] == ' ')
-    {
-        //Beep(1440, 30);
-        g_sChar.m_cLocation.X++;
-        bSomethingHappened = true;
-    }
-    if (g_abKeyPressed[K_SPACE])
-    {
-        g_sChar.m_bActive = !g_sChar.m_bActive;
-        bSomethingHappened = true;
-    }
+	// Updating the location of the character based on the key press
+	// providing a beep sound whenver we shift the character
+	if (g_abKeyPressed[K_UP] && map[g_sChar.m_cLocation.Y - 1][g_sChar.m_cLocation.X] == ' ')
+	{
+		//Beep(1440, 30);
+		g_sChar.m_cLocation.Y--;
+		bSomethingHappened = true;
 
-    if (bSomethingHappened)
-    {
-        // set the bounce time to some time in the future to prevent accidental triggers
-        g_dBounceTime = g_dElapsedTime + 0.125; // 125ms should be enough
-    }
+	}
+	if (g_abKeyPressed[K_LEFT] && map[g_sChar.m_cLocation.Y][g_sChar.m_cLocation.X - 1] == ' ')
+	{
+		//Beep(1440, 30);
+		g_sChar.m_cLocation.X--;
+		bSomethingHappened = true;
+	}
+	if (g_abKeyPressed[K_DOWN] && map[g_sChar.m_cLocation.Y + 1][g_sChar.m_cLocation.X] == ' ')
+	{
+		//Beep(1440, 30);
+		g_sChar.m_cLocation.Y++;
+		bSomethingHappened = true;
+	}
+	if (g_abKeyPressed[K_RIGHT] && map[g_sChar.m_cLocation.Y][g_sChar.m_cLocation.X + 1] == ' ')
+	{
+		//Beep(1440, 30);
+		g_sChar.m_cLocation.X++;
+		bSomethingHappened = true;
+	}
+	if (g_abKeyPressed[K_SPACE])
+	{
+		g_sChar.m_bActive = !g_sChar.m_bActive;
+		bSomethingHappened = true;
+	}
+
+	if (bSomethingHappened)
+	{
+		// set the bounce time to some time in the future to prevent accidental triggers
+		g_dBounceTime = g_dElapsedTime + 0.125; // 125ms should be enough
+	}
 
 	if (map[g_sChar.m_cLocation.Y - 1][g_sChar.m_cLocation.X] == 'S' || map[g_sChar.m_cLocation.Y][g_sChar.m_cLocation.X - 1] == 'S' || map[g_sChar.m_cLocation.Y + 1][g_sChar.m_cLocation.X] == 'S' || map[g_sChar.m_cLocation.Y][g_sChar.m_cLocation.X + 1] == 'S' ||
-		map[g_sChar.m_cLocation.Y - 1][g_sChar.m_cLocation.X] == 'H' || map[g_sChar.m_cLocation.Y][g_sChar.m_cLocation.X - 1] == 'H' || map[g_sChar.m_cLocation.Y + 1][g_sChar.m_cLocation.X] == 'H' || map[g_sChar.m_cLocation.Y][g_sChar.m_cLocation.X + 1] == 'H' || 
-		map[g_sChar.m_cLocation.Y - 1][g_sChar.m_cLocation.X] == 'O' || map[g_sChar.m_cLocation.Y][g_sChar.m_cLocation.X - 1] == 'O' || map[g_sChar.m_cLocation.Y + 1][g_sChar.m_cLocation.X] == 'O' || map[g_sChar.m_cLocation.Y][g_sChar.m_cLocation.X + 1] == 'O' || 
+		map[g_sChar.m_cLocation.Y - 1][g_sChar.m_cLocation.X] == 'H' || map[g_sChar.m_cLocation.Y][g_sChar.m_cLocation.X - 1] == 'H' || map[g_sChar.m_cLocation.Y + 1][g_sChar.m_cLocation.X] == 'H' || map[g_sChar.m_cLocation.Y][g_sChar.m_cLocation.X + 1] == 'H' ||
+		map[g_sChar.m_cLocation.Y - 1][g_sChar.m_cLocation.X] == 'O' || map[g_sChar.m_cLocation.Y][g_sChar.m_cLocation.X - 1] == 'O' || map[g_sChar.m_cLocation.Y + 1][g_sChar.m_cLocation.X] == 'O' || map[g_sChar.m_cLocation.Y][g_sChar.m_cLocation.X + 1] == 'O' ||
 		map[g_sChar.m_cLocation.Y - 1][g_sChar.m_cLocation.X] == 'P' || map[g_sChar.m_cLocation.Y][g_sChar.m_cLocation.X - 1] == 'P' || map[g_sChar.m_cLocation.Y + 1][g_sChar.m_cLocation.X] == 'P' || map[g_sChar.m_cLocation.Y][g_sChar.m_cLocation.X + 1] == 'P')
 	{
 		shop = true;
@@ -269,16 +269,34 @@ void moveCharacter()
 	{
 		shop = false;
 	}
-	if (map[g_sChar.m_cLocation.Y - 1][g_sChar.m_cLocation.X] == 'A' || map[g_sChar.m_cLocation.Y][g_sChar.m_cLocation.X - 1] == 'A' || map[g_sChar.m_cLocation.Y + 1][g_sChar.m_cLocation.X] == 'A' || map[g_sChar.m_cLocation.Y][g_sChar.m_cLocation.X + 1] == 'A')
+	if (levelOne == true)
 	{
-		levelOne = false;
-		levelTwo = true;
+		if (map[g_sChar.m_cLocation.Y - 1][g_sChar.m_cLocation.X] == '%' || map[g_sChar.m_cLocation.Y][g_sChar.m_cLocation.X - 1] == '%' || map[g_sChar.m_cLocation.Y + 1][g_sChar.m_cLocation.X] == '%' || map[g_sChar.m_cLocation.Y][g_sChar.m_cLocation.X + 1] == '%')
+		{
+			levelOne = false;
+			levelTwo = true;
+		}
 	}
-	if (map[g_sChar.m_cLocation.Y - 1][g_sChar.m_cLocation.X] == 'B' || map[g_sChar.m_cLocation.Y][g_sChar.m_cLocation.X - 1] == 'B' || map[g_sChar.m_cLocation.Y + 1][g_sChar.m_cLocation.X] == 'B' || map[g_sChar.m_cLocation.Y][g_sChar.m_cLocation.X + 1] == 'B')
+	else if (levelTwo == true)
 	{
-		levelTwo = false;
-		levelThree = true;
+		if (map[g_sChar.m_cLocation.Y - 1][g_sChar.m_cLocation.X] == '%' || map[g_sChar.m_cLocation.Y][g_sChar.m_cLocation.X - 1] == '%' || map[g_sChar.m_cLocation.Y + 1][g_sChar.m_cLocation.X] == '%' || map[g_sChar.m_cLocation.Y][g_sChar.m_cLocation.X + 1] == '%')
+		{
+			levelTwo = false;
+			levelThree = true;
+		}
 	}
+	else if (levelThree == true)
+	{
+		if (map[g_sChar.m_cLocation.Y - 1][g_sChar.m_cLocation.X] == '%' || map[g_sChar.m_cLocation.Y][g_sChar.m_cLocation.X - 1] == '%' || map[g_sChar.m_cLocation.Y + 1][g_sChar.m_cLocation.X] == '%' || map[g_sChar.m_cLocation.Y][g_sChar.m_cLocation.X + 1] == '%')
+		{
+			levelThree = false;
+			levelFour = true;
+		}
+	}
+	/*else if (levelFour == true)
+	{
+
+	}*/
 }
 void processUserInput()
 {
@@ -340,10 +358,6 @@ void renderMap()
 					{
 						level1[a] = 219;
 					}
-					/*else if (mapString[a] == 'f')
-					{
-						mapString[a] = 176;
-					}*/
 					map[i][a] = level1[a];
 				}
 				c.X = 0;
@@ -374,10 +388,6 @@ void renderMap()
 					{
 						level2[a] = 219;
 					}
-					/*if (level2[a] == 'f')
-					{
-						level2[a] = 176;
-					}*/
 					map[i][a] = level2[a];
 				}
 				c.X = 0;
@@ -408,10 +418,6 @@ void renderMap()
 					{
 						level3[a] = 219;
 					}
-					/*if (level3[a] == 'f')
-					{
-					  level3[a] = 176;
-					}*/
 					map[i][a] = level3[a];
 				}
 				c.X = 0;
