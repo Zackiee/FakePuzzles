@@ -14,6 +14,9 @@ using namespace std;
 int money;
 
 bool shop = false;
+bool levelOne = false;
+bool levelTwo = false;
+bool levelThree = false;
 
 double  g_dElapsedTime;
 double  g_dDeltaTime;
@@ -25,6 +28,7 @@ struct timer
 };
 // Game specific variables here
 SGameChar   g_sChar;
+SGameChar   g_sEnemy;
 EGAMESTATES g_eGameState = S_SPLASHSCREEN;
 double  g_dBounceTime; // this is to prevent key bouncing, so we won't trigger keypresses more than once
 
@@ -50,6 +54,8 @@ void init( void )
 
     g_sChar.m_cLocation.X = g_Console.getConsoleSize().X / 2;
     g_sChar.m_cLocation.Y = g_Console.getConsoleSize().Y / 2;
+	g_sEnemy.m_cLocation.X = 3;
+	g_sEnemy.m_cLocation.Y = 3;
     g_sChar.m_bActive = true;
     // sets the width, height and the font name to use in the console
     g_Console.setConsoleFont(0, 16, L"Consolas");
@@ -152,6 +158,16 @@ void splashScreenWait()    // waits for time to pass in splash screen
         g_eGameState = S_GAME;
 }
 
+melee hugger;
+ranged gunner;
+void renderEnemies()
+{
+	// Draw the location of the enemies
+	WORD charE_Color = 0x0C;
+	
+	g_Console.writeToBuffer(g_sEnemy.m_cLocation, (char)169, charE_Color);
+}
+
 timer cycle;
 void enemydata() {
 	bool fooeyhappened;
@@ -181,7 +197,7 @@ void gameplay()            // gameplay logic
     processUserInput(); // checks if you should change states or do something else with the game, e.g. pause, exit
     moveCharacter();    // moves the character, collision detection, physics, etc
                         // sound can be played here too.
-	enemydata();
+	//enemydata();
 }
 
 void inventory()		// handles inventory, inventory[0] contains money, inventory[1] && inventory[2] contains the 2 weapons held
@@ -241,13 +257,20 @@ void moveCharacter()
         g_dBounceTime = g_dElapsedTime + 0.125; // 125ms should be enough
     }
 
-	if (map[g_sChar.m_cLocation.Y - 1][g_sChar.m_cLocation.X] == '_' || map[g_sChar.m_cLocation.Y][g_sChar.m_cLocation.X - 1] == '_' || map[g_sChar.m_cLocation.Y + 1][g_sChar.m_cLocation.X] == '_' || map[g_sChar.m_cLocation.Y][g_sChar.m_cLocation.X + 1] == '_')
+	if (map[g_sChar.m_cLocation.Y - 1][g_sChar.m_cLocation.X] == 'S' || map[g_sChar.m_cLocation.Y][g_sChar.m_cLocation.X - 1] == 'S' || map[g_sChar.m_cLocation.Y + 1][g_sChar.m_cLocation.X] == 'S' || map[g_sChar.m_cLocation.Y][g_sChar.m_cLocation.X + 1] == 'S' ||
+		map[g_sChar.m_cLocation.Y - 1][g_sChar.m_cLocation.X] == 'H' || map[g_sChar.m_cLocation.Y][g_sChar.m_cLocation.X - 1] == 'H' || map[g_sChar.m_cLocation.Y + 1][g_sChar.m_cLocation.X] == 'H' || map[g_sChar.m_cLocation.Y][g_sChar.m_cLocation.X + 1] == 'H' || 
+		map[g_sChar.m_cLocation.Y - 1][g_sChar.m_cLocation.X] == 'O' || map[g_sChar.m_cLocation.Y][g_sChar.m_cLocation.X - 1] == 'O' || map[g_sChar.m_cLocation.Y + 1][g_sChar.m_cLocation.X] == 'O' || map[g_sChar.m_cLocation.Y][g_sChar.m_cLocation.X + 1] == 'O' || 
+		map[g_sChar.m_cLocation.Y - 1][g_sChar.m_cLocation.X] == 'P' || map[g_sChar.m_cLocation.Y][g_sChar.m_cLocation.X - 1] == 'P' || map[g_sChar.m_cLocation.Y + 1][g_sChar.m_cLocation.X] == 'P' || map[g_sChar.m_cLocation.Y][g_sChar.m_cLocation.X + 1] == 'P')
 	{
 		shop = true;
 	}
 	else
 	{
 		shop = false;
+	}
+	if (map[g_sChar.m_cLocation.Y - 1][g_sChar.m_cLocation.X] == 'f' || map[g_sChar.m_cLocation.Y][g_sChar.m_cLocation.X - 1] == 'f' || map[g_sChar.m_cLocation.Y + 1][g_sChar.m_cLocation.X] == 'f' || map[g_sChar.m_cLocation.Y][g_sChar.m_cLocation.X + 1] == 'f')
+	{
+
 	}
 }
 void processUserInput()
@@ -308,7 +331,7 @@ void renderMap()
 	int i = 0;
 	int a = 0;
 
-	mapFile.open("map_data_02.txt");
+	mapFile.open("Level1.txt");
 	if (mapFile.is_open())
 	{
 		while (getline(mapFile, mapString))
@@ -323,9 +346,9 @@ void renderMap()
 				{
 					mapString[a] = 219;
 				}
-				else if (mapString[a] == '.')
+				else if (mapString[a] == 'f')
 				{
-					mapString[a] == 255;
+					mapString[a] = 176;
 				}
 				map[i][a] = mapString[a];
 			}
@@ -358,10 +381,6 @@ void renderMap()
 					inventory[a] = 219;
 				}
 				else if (inventory[a] == '$')
-				{
-					inventory[a] = ' ';
-				}
-				else if (inventory[a] == '%')
 				{
 					inventory[a] = ' ';
 				}
@@ -429,7 +448,6 @@ void renderMap()
 		}
 		shopFile.close();
 	}
-	
 }
 
 void renderCharacter()
