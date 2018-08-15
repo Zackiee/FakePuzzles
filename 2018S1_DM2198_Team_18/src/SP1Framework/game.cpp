@@ -422,7 +422,39 @@ void renderMap()
 		}
 		level3File.close();
 	}
-
+	if (levelFour = true)
+	{
+		string level4;
+		ifstream level4File;
+		i = 0;
+		level4File.open("Level4.txt");
+		if (level4File.is_open())
+		{
+			while (getline(level4File, level4))
+			{
+				for (a = 0; a < level4.length(); a++)
+				{
+					if (level4[a] == '#')
+					{
+						level4[a] = 223;
+					}
+					if (level4[a] == '@')
+					{
+						level4[a] = 219;
+					}
+					/*if (level4[a] == 'f')
+					{
+					level4[a] = 176;
+					}*/
+				}
+				c.X = 0;
+				c.Y = i;
+				i++;
+				g_Console.writeToBuffer(c, level4, 0x09);
+			}
+		}
+		level4File.close();
+	}
 	//Render Inventory
 	string inventory;
 	ifstream inventoryFile;
