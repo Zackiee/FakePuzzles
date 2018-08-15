@@ -55,7 +55,7 @@ void init( void )
 
     g_sChar.m_cLocation.X = g_Console.getConsoleSize().X / 2;
     g_sChar.m_cLocation.Y = g_Console.getConsoleSize().Y / 2;
-	g_sEnemy.m_cLocation.X = 3;
+	g_sEnemy.m_cLocation.X = 6;
 	g_sEnemy.m_cLocation.Y = 3;
     g_sChar.m_bActive = true;
     // sets the width, height and the font name to use in the console
@@ -166,7 +166,7 @@ void renderEnemies()
 	// Draw the location of the enemies
 	WORD charE_Color = 0x0C;
 	
-	g_Console.writeToBuffer(g_sEnemy.m_cLocation, (char)169, charE_Color);
+	g_Console.writeToBuffer(g_sEnemy.m_cLocation, (char)128, charE_Color);
 }
 
 timer cycle;
@@ -311,26 +311,11 @@ void renderGame()
 {
     renderMap();        // renders the map to the buffer first
     renderCharacter();  // renders the character into the buffer
+	renderEnemies();
 }
 
 void renderMap()
 {
-	/*
-	// Set up sample colours, and output shadings
-	const WORD colors[] = {
-		0x1A, 0x2B, 0x3C, 0x4D, 0x5E, 0x6F,
-		0xA1, 0xB2, 0xC3, 0xD4, 0xE5, 0xF6
-	};
-
-	COORD c;
-	for (int i = 0; i < 12; ++i)
-	{
-		c.X = 5 * i;
-		c.Y = i + 1;
-		colour(colors[i]);
-		g_Console.writeToBuffer(c, " °±²Û", colors[i]);
-	}
-	*/
 	//Render Map
 	string level1;
 	ifstream level1File;
@@ -531,12 +516,12 @@ void renderMap()
 void renderCharacter()
 {
     // Draw the location of the character
-    WORD charColor = 0x0C;
+    WORD charColor = 0x0F;
     if (g_sChar.m_bActive)
     {
-        charColor = 0x0A;
+        charColor = 0x0E;
     }
-    g_Console.writeToBuffer(g_sChar.m_cLocation, (char)1, charColor);
+    g_Console.writeToBuffer(g_sChar.m_cLocation, (char)14, charColor);
 }
 
 void renderFramerate()
