@@ -11,6 +11,8 @@
 
 using namespace std;
 
+int money; // define variables
+
 double  g_dElapsedTime;
 double  g_dDeltaTime;
 bool    g_abKeyPressed[K_COUNT];
@@ -152,12 +154,16 @@ void gameplay()            // gameplay logic
                         // sound can be played here too.
 }
 
-void inventory()
+void inventory()		// handles inventory, inventory[0] contains money, inventory[1] && inventory[2] contains the 2 weapons held
 {
 	vector<int> inventory;
+	inventory.push_back(10);
 	inventory.push_back(0);
 	inventory.push_back(0);
-	inventory.push_back(0);
+	if (money >= 1) {
+		inventory[0] += money;
+		money = 0;
+	}
 }
 
 void moveCharacter()
