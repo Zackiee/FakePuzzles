@@ -75,6 +75,6 @@ struct ranged {
 	char targetX;
 	char targetY;
 };
-double enemybouncetime;
-bool fooeyhappened;
+extern bool fooeyhappened;
+extern double enemybouncetime;
 #endif // _GAME_H

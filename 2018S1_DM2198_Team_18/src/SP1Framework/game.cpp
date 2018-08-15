@@ -154,6 +154,8 @@ void splashScreenWait()    // waits for time to pass in splash screen
 
 timer cycle;
 void enemydata() {
+	bool fooeyhappened;
+	double enemybouncetime;
 	melee hugger;
 	ranged gunner;
 
