@@ -152,6 +152,14 @@ void gameplay()            // gameplay logic
                         // sound can be played here too.
 }
 
+void inventory()
+{
+	vector<int> inventory;
+	inventory.push_back(0);
+	inventory.push_back(0);
+	inventory.push_back(0);
+}
+
 void moveCharacter()
 {
     bool bSomethingHappened = false;
