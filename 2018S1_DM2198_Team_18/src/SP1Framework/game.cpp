@@ -54,7 +54,7 @@ void init( void )
 
     g_sChar.m_cLocation.X = g_Console.getConsoleSize().X / 2;
     g_sChar.m_cLocation.Y = g_Console.getConsoleSize().Y / 2;
-	g_sEnemy.m_cLocation.X = 3;
+	g_sEnemy.m_cLocation.X = 6;
 	g_sEnemy.m_cLocation.Y = 3;
     g_sChar.m_bActive = true;
     // sets the width, height and the font name to use in the console
@@ -165,7 +165,7 @@ void renderEnemies()
 	// Draw the location of the enemies
 	WORD charE_Color = 0x0C;
 	
-	g_Console.writeToBuffer(g_sEnemy.m_cLocation, (char)169, charE_Color);
+	g_Console.writeToBuffer(g_sEnemy.m_cLocation, (char)128, charE_Color);
 }
 
 timer cycle;
@@ -304,6 +304,7 @@ void renderGame()
 {
     renderMap();        // renders the map to the buffer first
     renderCharacter();  // renders the character into the buffer
+	renderEnemies();
 }
 
 void renderMap()
