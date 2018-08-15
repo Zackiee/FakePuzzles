@@ -13,6 +13,8 @@ using namespace std;
 
 int money; // define variables
 
+bool shop = false;
+
 double  g_dElapsedTime;
 double  g_dDeltaTime;
 bool    g_abKeyPressed[K_COUNT];
@@ -25,7 +27,6 @@ double  g_dBounceTime; // this is to prevent key bouncing, so we won't trigger k
 // Console object
 Console g_Console(109, 30, "SP1 Framework");
 char** map = new char*[30];
-
 
 //--------------------------------------------------------------
 // Purpose  : Initialisation function
@@ -174,25 +175,26 @@ void moveCharacter()
 
     // Updating the location of the character based on the key press
     // providing a beep sound whenver we shift the character
-    if (g_abKeyPressed[K_UP] && map[g_sChar.m_cLocation.Y - 1][g_sChar.m_cLocation.X] == 46)
+    if (g_abKeyPressed[K_UP] && map[g_sChar.m_cLocation.Y - 1][g_sChar.m_cLocation.X] == ' ')
     {
         //Beep(1440, 30);
         g_sChar.m_cLocation.Y--;
         bSomethingHappened = true;
+		
     }
-    if (g_abKeyPressed[K_LEFT] && map[g_sChar.m_cLocation.Y][g_sChar.m_cLocation.X - 1] == 46)
+    if (g_abKeyPressed[K_LEFT] && map[g_sChar.m_cLocation.Y][g_sChar.m_cLocation.X - 1] == ' ')
     {
         //Beep(1440, 30);
         g_sChar.m_cLocation.X--;
         bSomethingHappened = true;
     }
-    if (g_abKeyPressed[K_DOWN] && map[g_sChar.m_cLocation.Y + 1][g_sChar.m_cLocation.X] == 46)
+    if (g_abKeyPressed[K_DOWN] && map[g_sChar.m_cLocation.Y + 1][g_sChar.m_cLocation.X] == ' ')
     {
         //Beep(1440, 30);
         g_sChar.m_cLocation.Y++;
         bSomethingHappened = true;
     }
-    if (g_abKeyPressed[K_RIGHT] && map[g_sChar.m_cLocation.Y][g_sChar.m_cLocation.X + 1] == 46)
+    if (g_abKeyPressed[K_RIGHT] && map[g_sChar.m_cLocation.Y][g_sChar.m_cLocation.X + 1] == ' ')
     {
         //Beep(1440, 30);
         g_sChar.m_cLocation.X++;
@@ -209,6 +211,15 @@ void moveCharacter()
         // set the bounce time to some time in the future to prevent accidental triggers
         g_dBounceTime = g_dElapsedTime + 0.125; // 125ms should be enough
     }
+
+	if (map[g_sChar.m_cLocation.Y - 1][g_sChar.m_cLocation.X] == '_' || map[g_sChar.m_cLocation.Y][g_sChar.m_cLocation.X - 1] == '_' || map[g_sChar.m_cLocation.Y + 1][g_sChar.m_cLocation.X] == '_' || map[g_sChar.m_cLocation.Y][g_sChar.m_cLocation.X + 1] == '_')
+	{
+		shop = true;
+	}
+	else
+	{
+		shop = false;
+	}
 }
 void processUserInput()
 {
@@ -317,7 +328,35 @@ void renderMap()
 				{
 					inventory[a] = 219;
 				}
-				else if (inventory[a] == '1' || inventory[a] == '2' || inventory[a] == '3' || inventory[a] == '4' || inventory[a] == '5')
+				else if (inventory[a] == '$')
+				{
+					inventory[a] = ' ';
+				}
+				else if (inventory[a] == '%')
+				{
+					inventory[a] = ' ';
+				}
+				else if (inventory[a] == '1')
+				{
+					inventory[a] = 251;
+				}
+				else if (inventory[a] == '2')
+				{
+					inventory[a] = 'x';
+				}
+				else if (inventory[a] == '3')
+				{
+					inventory[a] = 'x';
+				}
+				else if (inventory[a] == '4')
+				{
+					inventory[a] = 'x';
+				}
+				else if (inventory[a] == '5')
+				{
+					inventory[a] = 'x';
+				}
+				else if (inventory[a] == '6')
 				{
 					inventory[a] = 'x';
 				}
@@ -330,34 +369,38 @@ void renderMap()
 	}
 	inventoryFile.close();
 
-	//Render Shop
-	string shop;
-	ifstream shopFile;
-	i = 0;
-
-	shopFile.open("Shop.txt");
-	if (shopFile.is_open())
+	if (shop == true)
 	{
-		while (getline(shopFile, shop))
+		//Render Shop
+		string shop;
+		ifstream shopFile;
+		i = 0;
+
+		shopFile.open("Shop.txt");
+		if (shopFile.is_open())
 		{
-			for (a = 0; a < shop.length(); a++)
+			while (getline(shopFile, shop))
 			{
-				if (shop[a] == '#')
+				for (a = 0; a < shop.length(); a++)
 				{
-					shop[a] = 223;
+					if (shop[a] == '#')
+					{
+						shop[a] = 223;
+					}
+					else if (shop[a] == '@')
+					{
+						shop[a] = 219;
+					}
 				}
-				else if (shop[a] == '@')
-				{
-					shop[a] = 219;
-				}
+				c.X = 22;
+				c.Y = 17 + i;
+				i++;
+				g_Console.writeToBuffer(c, shop, 0x00 + i);
 			}
-			c.X = 15;
-			c.Y = 17 + i;
-			i++;
-			g_Console.writeToBuffer(c, shop, 0x00 + i);
 		}
+		shopFile.close();
 	}
-	shopFile.close();
+	
 }
 
 void renderCharacter()
