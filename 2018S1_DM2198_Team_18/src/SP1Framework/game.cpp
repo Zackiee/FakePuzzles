@@ -323,9 +323,9 @@ void renderMap()
 				{
 					mapString[a] = 219;
 				}
-				else if (mapString[a] == '.')
+				else if (mapString[a] == 'f' || mapString[a] == 's')
 				{
-					mapString[a] == 255;
+					mapString[a] = 176;
 				}
 				map[i][a] = mapString[a];
 			}
@@ -358,10 +358,6 @@ void renderMap()
 					inventory[a] = 219;
 				}
 				else if (inventory[a] == '$')
-				{
-					inventory[a] = ' ';
-				}
-				else if (inventory[a] == '%')
 				{
 					inventory[a] = ' ';
 				}
