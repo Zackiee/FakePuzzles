@@ -14,9 +14,10 @@ using namespace std;
 int money;
 
 bool shop = false;
-bool levelOne = false;
+bool levelOne = true;
 bool levelTwo = false;
 bool levelThree = false;
+bool levelFour = false;
 
 double  g_dElapsedTime;
 double  g_dDeltaTime;
@@ -255,52 +256,52 @@ void inventory()		// handles inventory, inventory[0] contains money, inventory[1
 
 void moveCharacter()
 {
-    bool bSomethingHappened = false;
-    if (g_dBounceTime > g_dElapsedTime)
-        return;
+	bool bSomethingHappened = false;
+	if (g_dBounceTime > g_dElapsedTime)
+		return;
 
-    // Updating the location of the character based on the key press
-    // providing a beep sound whenver we shift the character
-    if (g_abKeyPressed[K_UP] && map[g_sChar.m_cLocation.Y - 1][g_sChar.m_cLocation.X] == ' ')
-    {
-        //Beep(1440, 30);
-        g_sChar.m_cLocation.Y--;
-        bSomethingHappened = true;
-		
-    }
-    if (g_abKeyPressed[K_LEFT] && map[g_sChar.m_cLocation.Y][g_sChar.m_cLocation.X - 1] == ' ')
-    {
-        //Beep(1440, 30);
-        g_sChar.m_cLocation.X--;
-        bSomethingHappened = true;
-    }
-    if (g_abKeyPressed[K_DOWN] && map[g_sChar.m_cLocation.Y + 1][g_sChar.m_cLocation.X] == ' ')
-    {
-        //Beep(1440, 30);
-        g_sChar.m_cLocation.Y++;
-        bSomethingHappened = true;
-    }
-    if (g_abKeyPressed[K_RIGHT] && map[g_sChar.m_cLocation.Y][g_sChar.m_cLocation.X + 1] == ' ')
-    {
-        //Beep(1440, 30);
-        g_sChar.m_cLocation.X++;
-        bSomethingHappened = true;
-    }
-    if (g_abKeyPressed[K_SPACE])
-    {
-        g_sChar.m_bActive = !g_sChar.m_bActive;
-        bSomethingHappened = true;
-    }
+	// Updating the location of the character based on the key press
+	// providing a beep sound whenver we shift the character
+	if (g_abKeyPressed[K_UP] && map[g_sChar.m_cLocation.Y - 1][g_sChar.m_cLocation.X] == ' ')
+	{
+		//Beep(1440, 30);
+		g_sChar.m_cLocation.Y--;
+		bSomethingHappened = true;
 
-    if (bSomethingHappened)
-    {
-        // set the bounce time to some time in the future to prevent accidental triggers
-        g_dBounceTime = g_dElapsedTime + 0.125; // 125ms should be enough
-    }
+	}
+	if (g_abKeyPressed[K_LEFT] && map[g_sChar.m_cLocation.Y][g_sChar.m_cLocation.X - 1] == ' ')
+	{
+		//Beep(1440, 30);
+		g_sChar.m_cLocation.X--;
+		bSomethingHappened = true;
+	}
+	if (g_abKeyPressed[K_DOWN] && map[g_sChar.m_cLocation.Y + 1][g_sChar.m_cLocation.X] == ' ')
+	{
+		//Beep(1440, 30);
+		g_sChar.m_cLocation.Y++;
+		bSomethingHappened = true;
+	}
+	if (g_abKeyPressed[K_RIGHT] && map[g_sChar.m_cLocation.Y][g_sChar.m_cLocation.X + 1] == ' ')
+	{
+		//Beep(1440, 30);
+		g_sChar.m_cLocation.X++;
+		bSomethingHappened = true;
+	}
+	if (g_abKeyPressed[K_SPACE])
+	{
+		g_sChar.m_bActive = !g_sChar.m_bActive;
+		bSomethingHappened = true;
+	}
+
+	if (bSomethingHappened)
+	{
+		// set the bounce time to some time in the future to prevent accidental triggers
+		g_dBounceTime = g_dElapsedTime + 0.125; // 125ms should be enough
+	}
 
 	if (map[g_sChar.m_cLocation.Y - 1][g_sChar.m_cLocation.X] == 'S' || map[g_sChar.m_cLocation.Y][g_sChar.m_cLocation.X - 1] == 'S' || map[g_sChar.m_cLocation.Y + 1][g_sChar.m_cLocation.X] == 'S' || map[g_sChar.m_cLocation.Y][g_sChar.m_cLocation.X + 1] == 'S' ||
-		map[g_sChar.m_cLocation.Y - 1][g_sChar.m_cLocation.X] == 'H' || map[g_sChar.m_cLocation.Y][g_sChar.m_cLocation.X - 1] == 'H' || map[g_sChar.m_cLocation.Y + 1][g_sChar.m_cLocation.X] == 'H' || map[g_sChar.m_cLocation.Y][g_sChar.m_cLocation.X + 1] == 'H' || 
-		map[g_sChar.m_cLocation.Y - 1][g_sChar.m_cLocation.X] == 'O' || map[g_sChar.m_cLocation.Y][g_sChar.m_cLocation.X - 1] == 'O' || map[g_sChar.m_cLocation.Y + 1][g_sChar.m_cLocation.X] == 'O' || map[g_sChar.m_cLocation.Y][g_sChar.m_cLocation.X + 1] == 'O' || 
+		map[g_sChar.m_cLocation.Y - 1][g_sChar.m_cLocation.X] == 'H' || map[g_sChar.m_cLocation.Y][g_sChar.m_cLocation.X - 1] == 'H' || map[g_sChar.m_cLocation.Y + 1][g_sChar.m_cLocation.X] == 'H' || map[g_sChar.m_cLocation.Y][g_sChar.m_cLocation.X + 1] == 'H' ||
+		map[g_sChar.m_cLocation.Y - 1][g_sChar.m_cLocation.X] == 'O' || map[g_sChar.m_cLocation.Y][g_sChar.m_cLocation.X - 1] == 'O' || map[g_sChar.m_cLocation.Y + 1][g_sChar.m_cLocation.X] == 'O' || map[g_sChar.m_cLocation.Y][g_sChar.m_cLocation.X + 1] == 'O' ||
 		map[g_sChar.m_cLocation.Y - 1][g_sChar.m_cLocation.X] == 'P' || map[g_sChar.m_cLocation.Y][g_sChar.m_cLocation.X - 1] == 'P' || map[g_sChar.m_cLocation.Y + 1][g_sChar.m_cLocation.X] == 'P' || map[g_sChar.m_cLocation.Y][g_sChar.m_cLocation.X + 1] == 'P')
 	{
 		shop = true;
@@ -309,10 +310,34 @@ void moveCharacter()
 	{
 		shop = false;
 	}
-	if (map[g_sChar.m_cLocation.Y - 1][g_sChar.m_cLocation.X] == 'f' || map[g_sChar.m_cLocation.Y][g_sChar.m_cLocation.X - 1] == 'f' || map[g_sChar.m_cLocation.Y + 1][g_sChar.m_cLocation.X] == 'f' || map[g_sChar.m_cLocation.Y][g_sChar.m_cLocation.X + 1] == 'f')
+	if (levelOne == true)
+	{
+		if (map[g_sChar.m_cLocation.Y - 1][g_sChar.m_cLocation.X] == '%' || map[g_sChar.m_cLocation.Y][g_sChar.m_cLocation.X - 1] == '%' || map[g_sChar.m_cLocation.Y + 1][g_sChar.m_cLocation.X] == '%' || map[g_sChar.m_cLocation.Y][g_sChar.m_cLocation.X + 1] == '%')
+		{
+			levelOne = false;
+			levelTwo = true;
+		}
+	}
+	else if (levelTwo == true)
+	{
+		if (map[g_sChar.m_cLocation.Y - 1][g_sChar.m_cLocation.X] == '%' || map[g_sChar.m_cLocation.Y][g_sChar.m_cLocation.X - 1] == '%' || map[g_sChar.m_cLocation.Y + 1][g_sChar.m_cLocation.X] == '%' || map[g_sChar.m_cLocation.Y][g_sChar.m_cLocation.X + 1] == '%')
+		{
+			levelTwo = false;
+			levelThree = true;
+		}
+	}
+	else if (levelThree == true)
+	{
+		if (map[g_sChar.m_cLocation.Y - 1][g_sChar.m_cLocation.X] == '%' || map[g_sChar.m_cLocation.Y][g_sChar.m_cLocation.X - 1] == '%' || map[g_sChar.m_cLocation.Y + 1][g_sChar.m_cLocation.X] == '%' || map[g_sChar.m_cLocation.Y][g_sChar.m_cLocation.X + 1] == '%')
+		{
+			levelThree = false;
+			levelFour = true;
+		}
+	}
+	/*else if (levelFour == true)
 	{
 
-	}
+	}*/
 }
 void processUserInput()
 {
@@ -350,58 +375,129 @@ void renderGame()
 
 void renderMap()
 {
-	/*
-	// Set up sample colours, and output shadings
-	const WORD colors[] = {
-		0x1A, 0x2B, 0x3C, 0x4D, 0x5E, 0x6F,
-		0xA1, 0xB2, 0xC3, 0xD4, 0xE5, 0xF6
-	};
-
-	COORD c;
-	for (int i = 0; i < 12; ++i)
-	{
-		c.X = 5 * i;
-		c.Y = i + 1;
-		colour(colors[i]);
-		g_Console.writeToBuffer(c, " °±²Û", colors[i]);
-	}
-	*/
 	//Render Map
-	string mapString;
-	ifstream mapFile;
+	string level1;
+	ifstream level1File;
 	COORD c;
 	int i = 0;
 	int a = 0;
 
-	mapFile.open("Level1.txt");
-	if (mapFile.is_open())
+	if (levelOne == true)
 	{
-		while (getline(mapFile, mapString))
+		level1File.open("Level1.txt");
+		if (level1File.is_open())
 		{
-			for (a = 0; a < mapString.length(); a++)
+			while (getline(level1File, level1))
 			{
-				if (mapString[a] == '#')
+				for (a = 0; a < level1.length(); a++)
 				{
-					mapString[a] = 223;
+					if (level1[a] == '#')
+					{
+						level1[a] = 223;
+					}
+					else if (level1[a] == '@')
+					{
+						level1[a] = 219;
+					}
+					map[i][a] = level1[a];
 				}
-				else if (mapString[a] == '@')
-				{
-					mapString[a] = 219;
-				}
-				else if (mapString[a] == 'f')
-				{
-					mapString[a] = 176;
-				}
-				map[i][a] = mapString[a];
+				c.X = 0;
+				c.Y = i;
+				i++;
+				g_Console.writeToBuffer(c, level1, 0x09);
 			}
-			c.X = 0;
-			c.Y = i;
-			i++;
-			g_Console.writeToBuffer(c, mapString, 0x09);
 		}
+		level1File.close();
 	}
-	mapFile.close();
-
+	if (levelTwo == true)
+	{
+		string level2;
+		ifstream level2File;
+		i = 0;
+		level2File.open("Level2.txt");
+		if (level2File.is_open())
+		{
+			while (getline(level2File, level2))
+			{
+				for (a = 0; a < level2.length(); a++)
+				{
+					if (level2[a] == '#')
+					{
+						level2[a] = 223;
+					}
+					if (level2[a] == '@')
+					{
+						level2[a] = 219;
+					}
+					map[i][a] = level2[a];
+				}
+				c.X = 0;
+				c.Y = i;
+				i++;
+				g_Console.writeToBuffer(c, level2, 0x09);
+			}
+		}
+		level2File.close();
+	}
+	if (levelThree == true)
+	{
+		string level3;
+		ifstream level3File;
+		i = 0;
+		level3File.open("Level3.txt");
+		if (level3File.is_open())
+		{
+			while (getline(level3File, level3))
+			{
+				for (a = 0; a < level3.length(); a++)
+				{
+					if (level3[a] == '#')
+					{
+						level3[a] = 223;
+					}
+					if (level3[a] == '@')
+					{
+						level3[a] = 219;
+					}
+					map[i][a] = level3[a];
+				}
+				c.X = 0;
+				c.Y = i;
+				i++;
+				g_Console.writeToBuffer(c, level3, 0x09);
+			}
+		}
+		level3File.close();
+	}
+	if (levelFour == true)
+	{
+		string level4;
+		ifstream level4File;
+		i = 0;
+		level4File.open("Level4.txt");
+		if (level4File.is_open())
+		{
+			while (getline(level4File, level4))
+			{
+				for (a = 0; a < level4.length(); a++)
+				{
+					if (level4[a] == '#')
+					{
+						level4[a] = 223;
+					}
+					if (level4[a] == '@')
+					{
+						level4[a] = 219;
+					}
+				}
+				c.X = 0;
+				c.Y = i;
+				i++;
+				g_Console.writeToBuffer(c, level4, 0x09);
+			}
+		}
+		level4File.close();
+	}
 	//Render Inventory
 	string inventory;
 	ifstream inventoryFile;
@@ -495,12 +591,12 @@ void renderMap()
 void renderCharacter()
 {
     // Draw the location of the character
-    WORD charColor = 0x0C;
+    WORD charColor = 0x0F;
     if (g_sChar.m_bActive)
     {
-        charColor = 0x0A;
+        charColor = 0x0E;
     }
-    g_Console.writeToBuffer(g_sChar.m_cLocation, (char)1, charColor);
+    g_Console.writeToBuffer(g_sChar.m_cLocation, (char)14, charColor);
 }
 
 void renderFramerate()
