@@ -1,9 +1,8 @@
 
  @###########@
- @ Inventory @
- @           @
  @ Coins: $$ @
  @___________@
+ @           @
  @  Weapons  @
  @           @
  @ 1 Pistol  @

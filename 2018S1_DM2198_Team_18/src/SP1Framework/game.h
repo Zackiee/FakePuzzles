@@ -4,6 +4,8 @@
 #include "Framework\timer.h"
 #include <chrono>
 #include <ctime>
+#include <vector>
+using namespace std;
 
 extern CStopWatch g_swTimer;
 extern bool g_bQuitGame;
@@ -52,16 +54,15 @@ void renderMap();           // renders the map to the buffer first
 void renderCharacter();     // renders the character into the buffer
 void renderFramerate();     // renders debug information, frame rate, elapsed time, etc
 void renderToScreen();      // dump the contents of the buffer to the screen, one frame worth of game
+void inventory();
 
-typedef struct boxscan boxscan;
-struct boxscan {
-	float a;
-	float b;
-	float height;
-	float width;
-	int boxitself;
-}; boxscan* collider(float a, float b, float c, float d,int boxitself);
-void collide(boxscan *surround);
-int colliding(boxscan *surround, boxscan *enos);
+struct pistol
+{
+	int id = 1;
+};
+struct butterknife
+{
+	int id = 2;
+};
 
 #endif // _GAME_H
