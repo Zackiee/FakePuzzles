@@ -14,6 +14,9 @@ using namespace std;
 int money;
 
 bool shop = false;
+bool levelOne = false;
+bool levelTwo = false;
+bool levelThree = false;
 
 double  g_dElapsedTime;
 double  g_dDeltaTime;
@@ -153,35 +156,35 @@ void splashScreenWait()    // waits for time to pass in splash screen
 }
 
 timer cycle;
-void enemydata() {
-	bool fooeyhappened;
-	double enemybouncetime;
-	melee hugger;
-	ranged gunner;
-
-	cycle.enemytimer = g_dElapsedTime;
-
-	fooeyhappened = false;
-	if (enemybouncetime > cycle.enemytimer)
-		return;
-
-		hugger.targetX = g_sChar.m_cLocation.X;
-		hugger.targetY = g_sChar.m_cLocation.Y;
-
-
-
-	fooeyhappened = true;
-
-	if (fooeyhappened)
-	enemybouncetime = cycle.enemytimer + 0.25; // enemies act every 1/4 seconds
-}
+//void enemydata() {
+//	bool fooeyhappened;
+//	double enemybouncetime;
+//	melee hugger;
+//	ranged gunner;
+//
+//	cycle.enemytimer = g_dElapsedTime;
+//
+//	fooeyhappened = false;
+//	if (enemybouncetime > cycle.enemytimer)
+//		return;
+//
+//		hugger.targetX = g_sChar.m_cLocation.X;
+//		hugger.targetY = g_sChar.m_cLocation.Y;
+//
+//
+//
+//	fooeyhappened = true;
+//
+//	if (fooeyhappened)
+//	enemybouncetime = cycle.enemytimer + 0.25; // enemies act every 1/4 seconds
+//}
 
 void gameplay()            // gameplay logic
 {
     processUserInput(); // checks if you should change states or do something else with the game, e.g. pause, exit
     moveCharacter();    // moves the character, collision detection, physics, etc
                         // sound can be played here too.
-	enemydata();
+	//enemydata();
 }
 
 void inventory()		// handles inventory, inventory[0] contains money, inventory[1] && inventory[2] contains the 2 weapons held
@@ -241,13 +244,20 @@ void moveCharacter()
         g_dBounceTime = g_dElapsedTime + 0.125; // 125ms should be enough
     }
 
-	if (map[g_sChar.m_cLocation.Y - 1][g_sChar.m_cLocation.X] == '_' || map[g_sChar.m_cLocation.Y][g_sChar.m_cLocation.X - 1] == '_' || map[g_sChar.m_cLocation.Y + 1][g_sChar.m_cLocation.X] == '_' || map[g_sChar.m_cLocation.Y][g_sChar.m_cLocation.X + 1] == '_')
+	if (map[g_sChar.m_cLocation.Y - 1][g_sChar.m_cLocation.X] == 'S' || map[g_sChar.m_cLocation.Y][g_sChar.m_cLocation.X - 1] == 'S' || map[g_sChar.m_cLocation.Y + 1][g_sChar.m_cLocation.X] == 'S' || map[g_sChar.m_cLocation.Y][g_sChar.m_cLocation.X + 1] == 'S' ||
+		map[g_sChar.m_cLocation.Y - 1][g_sChar.m_cLocation.X] == 'H' || map[g_sChar.m_cLocation.Y][g_sChar.m_cLocation.X - 1] == 'H' || map[g_sChar.m_cLocation.Y + 1][g_sChar.m_cLocation.X] == 'H' || map[g_sChar.m_cLocation.Y][g_sChar.m_cLocation.X + 1] == 'H' || 
+		map[g_sChar.m_cLocation.Y - 1][g_sChar.m_cLocation.X] == 'O' || map[g_sChar.m_cLocation.Y][g_sChar.m_cLocation.X - 1] == 'O' || map[g_sChar.m_cLocation.Y + 1][g_sChar.m_cLocation.X] == 'O' || map[g_sChar.m_cLocation.Y][g_sChar.m_cLocation.X + 1] == 'O' || 
+		map[g_sChar.m_cLocation.Y - 1][g_sChar.m_cLocation.X] == 'P' || map[g_sChar.m_cLocation.Y][g_sChar.m_cLocation.X - 1] == 'P' || map[g_sChar.m_cLocation.Y + 1][g_sChar.m_cLocation.X] == 'P' || map[g_sChar.m_cLocation.Y][g_sChar.m_cLocation.X + 1] == 'P')
 	{
 		shop = true;
 	}
 	else
 	{
 		shop = false;
+	}
+	if (map[g_sChar.m_cLocation.Y - 1][g_sChar.m_cLocation.X] == 'f' || map[g_sChar.m_cLocation.Y][g_sChar.m_cLocation.X - 1] == 'f' || map[g_sChar.m_cLocation.Y + 1][g_sChar.m_cLocation.X] == 'f' || map[g_sChar.m_cLocation.Y][g_sChar.m_cLocation.X + 1] == 'f')
+	{
+
 	}
 }
 void processUserInput()
@@ -308,7 +318,7 @@ void renderMap()
 	int i = 0;
 	int a = 0;
 
-	mapFile.open("map_data_02.txt");
+	mapFile.open("Level1.txt");
 	if (mapFile.is_open())
 	{
 		while (getline(mapFile, mapString))
@@ -323,7 +333,7 @@ void renderMap()
 				{
 					mapString[a] = 219;
 				}
-				else if (mapString[a] == 'f' || mapString[a] == 's')
+				else if (mapString[a] == 'f')
 				{
 					mapString[a] = 176;
 				}
@@ -425,7 +435,6 @@ void renderMap()
 		}
 		shopFile.close();
 	}
-	
 }
 
 void renderCharacter()
