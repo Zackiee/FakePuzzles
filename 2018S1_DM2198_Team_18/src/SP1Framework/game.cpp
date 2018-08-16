@@ -663,7 +663,7 @@ void renderMap()
 						shop[a] = 219;
 					}
 				}
-				c.X = 22;
+				c.X = 14;
 				c.Y = 17 + i;
 				i++;
 				g_Console.writeToBuffer(c, shop, 0x00 + i);
@@ -676,8 +676,7 @@ void renderMap()
 void renderCharacter()
 {
     // Draw the location of the character
-    WORD charColor = 0x0F;
-
+    //WORD charColor = 0x0F;
     /*if (g_sChar.m_bActive)
     {
         charColor = 0x0E;
@@ -732,27 +731,27 @@ void renderCharacter()
 	//Characters' rendering
 	if (firstChar == true)
 	{
-		g_Console.writeToBuffer(g_sChar.m_cLocation, (char)1, charColor);
+		g_Console.writeToBuffer(g_sChar.m_cLocation, (char)1, 0x0F);
 	}
 	else if (secondChar == true)
 	{
-		g_Console.writeToBuffer(g_sChar.m_cLocation, (char)2, charColor);
+		g_Console.writeToBuffer(g_sChar.m_cLocation, (char)2, 0x0F);
 	}
 	else if (thirdChar == true)
 	{
-		g_Console.writeToBuffer(g_sChar.m_cLocation, (char)3, charColor);
+		g_Console.writeToBuffer(g_sChar.m_cLocation, (char)3, 0x0C);
 	}
 	else if (fourthChar == true)
 	{
-		g_Console.writeToBuffer(g_sChar.m_cLocation, (char)4, charColor);
+		g_Console.writeToBuffer(g_sChar.m_cLocation, (char)4, 0x09);
 	}
 	else if (fifthChar == true)
 	{
-		g_Console.writeToBuffer(g_sChar.m_cLocation, (char)5, charColor);
+		g_Console.writeToBuffer(g_sChar.m_cLocation, (char)5, 0x0A);
 	}
 	else if (sixthChar == true)
 	{
-		g_Console.writeToBuffer(g_sChar.m_cLocation, (char)6, charColor);
+		g_Console.writeToBuffer(g_sChar.m_cLocation, (char)6, 0x0E);
 	}
 }
 
