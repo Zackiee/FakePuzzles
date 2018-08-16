@@ -71,7 +71,7 @@ void init( void )
     g_eGameState = S_SPLASHSCREEN;
 
 	g_sChar.m_cLocation.X = 5;
-	g_sChar.m_cLocation.Y = 8;
+	g_sChar.m_cLocation.Y = 2;
 	g_sHugger.m_cLocation.X = 5;
 	g_sHugger.m_cLocation.Y = 16;
 	g_sGunner.m_cLocation.X = 6;
@@ -519,15 +519,6 @@ void processUserInput()
     // quits the game if player hits the escape key
     if (g_abKeyPressed[K_ESCAPE])
         g_bQuitGame = true;
-	if (g_sChar.m_cLocation.X == 3 && g_sChar.m_cLocation.Y == 10 && mainMenu)
-	{
-		mainMenu = false;
-		HQ = true;
-	}
-	if (g_sChar.m_cLocation.X == 14 && g_sChar.m_cLocation.Y == 11 && mainMenu)
-	{
-		g_bQuitGame = true;
-	}
 	
 }
 
