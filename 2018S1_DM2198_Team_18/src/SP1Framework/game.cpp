@@ -28,6 +28,13 @@ bool fourthChar = false;
 bool fifthChar = false;
 bool sixthChar = false;
 
+bool equipPistol = true;
+bool equipSmg = false;
+bool equipRifle = false;
+bool equipSniper = false;
+bool equipRocket = false;
+bool equipGrenade = false;
+
 double  g_dElapsedTime;
 double  huggerbouncetime = g_dElapsedTime;
 double  gunnerbouncetime = g_dElapsedTime;
@@ -117,6 +124,11 @@ void getInput( void )
     g_abKeyPressed[K_RIGHT]  = isKeyPressed(VK_RIGHT);
     g_abKeyPressed[K_SPACE]  = isKeyPressed(VK_SPACE);
     g_abKeyPressed[K_ESCAPE] = isKeyPressed(VK_ESCAPE);
+	g_abKeyPressed[K_ONE]	 = isKeyPressed(0x31);
+	g_abKeyPressed[K_TWO]	 = isKeyPressed(0X32);
+	g_abKeyPressed[K_THREE]	 = isKeyPressed(0x33);
+	g_abKeyPressed[K_FOUR]	 = isKeyPressed(0x34);
+	g_abKeyPressed[K_FIVE]	 = isKeyPressed(0x35);
 }
 
 //--------------------------------------------------------------
@@ -368,6 +380,7 @@ void moveCharacter()
 	{
 		shop = false;
 	}
+
 	if (map[g_sChar.m_cLocation.Y - 1][g_sChar.m_cLocation.X] == 'Q' || map[g_sChar.m_cLocation.Y][g_sChar.m_cLocation.X - 1] == 'Q' || map[g_sChar.m_cLocation.Y + 1][g_sChar.m_cLocation.X] == 'Q' || map[g_sChar.m_cLocation.Y][g_sChar.m_cLocation.X + 1] == 'Q' ||
 		map[g_sChar.m_cLocation.Y - 1][g_sChar.m_cLocation.X] == 'U' || map[g_sChar.m_cLocation.Y][g_sChar.m_cLocation.X - 1] == 'U' || map[g_sChar.m_cLocation.Y + 1][g_sChar.m_cLocation.X] == 'U' || map[g_sChar.m_cLocation.Y][g_sChar.m_cLocation.X + 1] == 'U' ||
 		map[g_sChar.m_cLocation.Y - 1][g_sChar.m_cLocation.X] == 'I' || map[g_sChar.m_cLocation.Y][g_sChar.m_cLocation.X - 1] == 'I' || map[g_sChar.m_cLocation.Y + 1][g_sChar.m_cLocation.X] == 'I' || map[g_sChar.m_cLocation.Y][g_sChar.m_cLocation.X + 1] == 'I' ||
@@ -653,6 +666,60 @@ void renderMap()
 		}
 		level4File.close();
 	}
+
+	if (shop == true)
+	{
+		//Render Shop
+		string shop;
+		ifstream shopFile;
+		i = 0;
+
+		shopFile.open("Shop.txt");
+		if (shopFile.is_open())
+		{
+			while (getline(shopFile, shop))
+			{
+				for (a = 0; a < shop.length(); a++)
+				{
+					if (shop[a] == '#')
+					{
+						shop[a] = 223;
+					}
+					else if (shop[a] == '@')
+					{
+						shop[a] = 219;
+					}
+				}
+				c.X = 14;
+				c.Y = 17 + i;
+				i++;
+				g_Console.writeToBuffer(c, shop, 0x00 + i);
+			}
+		}
+		shopFile.close();
+
+		if (g_abKeyPressed[K_ONE])
+		{
+			equipSmg = true;
+		}
+		 if (g_abKeyPressed[K_TWO])
+		{
+			equipRifle = true;
+		}
+		if (g_abKeyPressed[K_THREE])
+		{
+			equipSniper = true;
+		}
+		if (g_abKeyPressed[K_FOUR])
+		{
+			equipRocket = true;
+		}
+		if (g_abKeyPressed[K_FIVE])
+		{
+			equipGrenade = true;
+		}
+	}
+
 	//Render Inventory
 	string inventory;
 	ifstream inventoryFile;
@@ -679,27 +746,69 @@ void renderMap()
 				}
 				else if (inventory[a] == '1')
 				{
-					inventory[a] = 251;
+					if (equipPistol == true)
+					{
+						inventory[a] = 251;
+					}
+					else
+					{
+						inventory[a] = 'x';
+					}
 				}
 				else if (inventory[a] == '2')
 				{
-					inventory[a] = 'x';
+					if (equipSmg == true)
+					{
+						inventory[a] = 251;
+					}
+					else
+					{
+						inventory[a] = 'x';
+					}
 				}
 				else if (inventory[a] == '3')
 				{
-					inventory[a] = 'x';
+					if (equipRifle == true)
+					{
+						inventory[a] = 251;
+					}
+					else
+					{
+						inventory[a] = 'x';
+					}
 				}
 				else if (inventory[a] == '4')
 				{
-					inventory[a] = 'x';
+					if (equipSniper == true)
+					{
+						inventory[a] = 251;
+					}
+					else
+					{
+						inventory[a] = 'x';
+					}
 				}
 				else if (inventory[a] == '5')
 				{
-					inventory[a] = 'x';
+					if (equipRocket == true)
+					{
+						inventory[a] = 251;
+					}
+					else
+					{
+						inventory[a] = 'x';
+					}
 				}
 				else if (inventory[a] == '6')
 				{
-					inventory[a] = 'x';
+					if (equipGrenade == true)
+					{
+						inventory[a] = 251;
+					}
+					else
+					{
+						inventory[a] = 'x';
+					}
 				}
 			}
 			c.X = 0;
@@ -710,44 +819,13 @@ void renderMap()
 	}
 	inventoryFile.close();
 
-	if (shop == true)
-	{
-		//Render Shop
-		string shop;
-		ifstream shopFile;
-		i = 0;
-
-		shopFile.open("Shop.txt");
-		if (shopFile.is_open())
-		{
-			while (getline(shopFile, shop))
-			{
-				for (a = 0; a < shop.length(); a++)
-				{
-					if (shop[a] == '#')
-					{
-						shop[a] = 223;
-					}
-					else if (shop[a] == '@')
-					{
-						shop[a] = 219;
-					}
-				}
-				c.X = 22;
-				c.Y = 17 + i;
-				i++;
-				g_Console.writeToBuffer(c, shop, 0x00 + i);
-			}
-		}
-		shopFile.close();
-	}
+	
 }
 
 void renderCharacter()
 {
     // Draw the location of the character
-    WORD charColor = 0x0F;
-
+    //WORD charColor = 0x0F;
     /*if (g_sChar.m_bActive)
     {
         charColor = 0x0E;
@@ -802,27 +880,27 @@ void renderCharacter()
 	//Characters' rendering
 	if (firstChar == true)
 	{
-		g_Console.writeToBuffer(g_sChar.m_cLocation, (char)1, charColor);
+		g_Console.writeToBuffer(g_sChar.m_cLocation, (char)1, 0x0F);
 	}
 	else if (secondChar == true)
 	{
-		g_Console.writeToBuffer(g_sChar.m_cLocation, (char)2, charColor);
+		g_Console.writeToBuffer(g_sChar.m_cLocation, (char)2, 0x0F);
 	}
 	else if (thirdChar == true)
 	{
-		g_Console.writeToBuffer(g_sChar.m_cLocation, (char)3, charColor);
+		g_Console.writeToBuffer(g_sChar.m_cLocation, (char)3, 0x0C);
 	}
 	else if (fourthChar == true)
 	{
-		g_Console.writeToBuffer(g_sChar.m_cLocation, (char)4, charColor);
+		g_Console.writeToBuffer(g_sChar.m_cLocation, (char)4, 0x09);
 	}
 	else if (fifthChar == true)
 	{
-		g_Console.writeToBuffer(g_sChar.m_cLocation, (char)5, charColor);
+		g_Console.writeToBuffer(g_sChar.m_cLocation, (char)5, 0x0A);
 	}
 	else if (sixthChar == true)
 	{
-		g_Console.writeToBuffer(g_sChar.m_cLocation, (char)6, charColor);
+		g_Console.writeToBuffer(g_sChar.m_cLocation, (char)6, 0x0E);
 	}
 }
 
