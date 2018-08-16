@@ -24,10 +24,6 @@ double  g_dElapsedTime;
 double  g_dDeltaTime;
 bool    g_abKeyPressed[K_COUNT];
 
-struct timer
-{
-	double enemytimer;
-};
 // Game specific variables here
 SGameChar   g_sChar;
 SGameChar   g_sEnemy;
@@ -58,8 +54,8 @@ void init( void )
     g_sChar.m_cLocation.Y = g_Console.getConsoleSize().Y / 2;*/
 	g_sChar.m_cLocation.X = 5;
 	g_sChar.m_cLocation.Y = 2;
-	g_sEnemy.m_cLocation.X = 6;
-	g_sEnemy.m_cLocation.Y = 3;
+	g_sEnemy.m_cLocation.X = 5;
+	g_sEnemy.m_cLocation.Y = 16;
     g_sChar.m_bActive = true;
     // sets the width, height and the font name to use in the console
     g_Console.setConsoleFont(0, 16, L"Consolas");
@@ -172,60 +168,51 @@ void renderEnemies()
 	g_Console.writeToBuffer(g_sEnemy.m_cLocation, (char)128, charE_Color);
 }
 
-timer cycle;
 void enemydata() {
 	bool fooeyhappened;
-	double enemybouncetime, up, left, down, right, min_double;
+	double enemybouncetime = g_dElapsedTime, up, left, down, right, min_double;
 	melee hugger;
 	ranged gunner;
 
-		cycle.enemytimer = g_dElapsedTime;
-
 		fooeyhappened = false;
-		if (enemybouncetime > cycle.enemytimer)
+		if (enemybouncetime > g_dElapsedTime)
 			return;
 
 		up = 99.0; left = 99.0; down = 99.0; right = 99.0;
 
-		hugger.targetX = g_sChar.m_cLocation.X;
-		hugger.targetY = g_sChar.m_cLocation.Y;
-
-		hugger.selfX = g_sEnemy.m_cLocation.X;
-		hugger.selfY = g_sEnemy.m_cLocation.Y;
-
-		if (hugger.selfY - 1 == ' ') {
-			up = sqrt(pow(g_sChar.m_cLocation.X - (hugger.selfX), 2) + pow(g_sChar.m_cLocation.Y - (hugger.selfY - 1), 2));
+		if (g_sEnemy.m_cLocation.Y - 1 == ' ') {
+			up = sqrt(pow(g_sChar.m_cLocation.X - (g_sEnemy.m_cLocation.X), 2) + pow(g_sChar.m_cLocation.Y - (g_sEnemy.m_cLocation.Y - 1), 2));
 		}
-		if (hugger.selfX - 1 == ' ') {
-			left = sqrt(pow(g_sChar.m_cLocation.X - (hugger.selfX - 1), 2) + pow(g_sChar.m_cLocation.Y - (hugger.selfY), 2));
+		if (g_sEnemy.m_cLocation.X - 1 == ' ') {
+			left = sqrt(pow(g_sChar.m_cLocation.X - (g_sEnemy.m_cLocation.X - 1), 2) + pow(g_sChar.m_cLocation.Y - (g_sEnemy.m_cLocation.Y), 2));
 		}
-		if (hugger.selfY + 1 == ' ') {
-			down = sqrt(pow(g_sChar.m_cLocation.X - (hugger.selfX), 2) + pow(g_sChar.m_cLocation.Y - (hugger.selfY + 1), 2));
+		if (g_sEnemy.m_cLocation.Y + 1 == ' ') {
+			down = sqrt(pow(g_sChar.m_cLocation.X - (g_sEnemy.m_cLocation.X), 2) + pow(g_sChar.m_cLocation.Y - (g_sEnemy.m_cLocation.Y + 1), 2));
 		}
-		if (hugger.selfX + 1 == ' ') {
-			right = sqrt(pow(g_sChar.m_cLocation.X - (hugger.selfX + 1), 2) + pow(g_sChar.m_cLocation.Y - (hugger.selfY), 2));
+		if (g_sEnemy.m_cLocation.X + 1 == ' ') {
+			right = sqrt(pow(g_sChar.m_cLocation.X - (g_sEnemy.m_cLocation.X + 1), 2) + pow(g_sChar.m_cLocation.Y - (g_sEnemy.m_cLocation.Y), 2));
 		}
 		min_double = min(min(up, down), min(left, right));
 		if (min_double == up && min_double == left) {
-			if (sqrt(pow(g_sChar.m_cLocation.X - hugger.selfX, 2)) > sqrt(pow(g_sChar.m_cLocation.Y - hugger.selfY, 2))) {
+			if (sqrt(pow(g_sChar.m_cLocation.X - g_sEnemy.m_cLocation.X, 2)) > sqrt(pow(g_sChar.m_cLocation.Y - g_sEnemy.m_cLocation.Y, 2))) {
 				g_sEnemy.m_cLocation.X--;
 			}
 			else g_sEnemy.m_cLocation.Y--;
 		}
 		if (min_double == up && min_double == right) {
-			if (sqrt(pow(g_sChar.m_cLocation.X - hugger.selfX, 2)) > sqrt(pow(g_sChar.m_cLocation.Y - hugger.selfY, 2))) {
+			if (sqrt(pow(g_sChar.m_cLocation.X - g_sEnemy.m_cLocation.X, 2)) > sqrt(pow(g_sChar.m_cLocation.Y - g_sEnemy.m_cLocation.Y, 2))) {
 				g_sEnemy.m_cLocation.X++;
 			}
 			else g_sEnemy.m_cLocation.Y--;
 		}
 		if (min_double == down && min_double == right) {
-			if (sqrt(pow(g_sChar.m_cLocation.X - hugger.selfX, 2)) > sqrt(pow(g_sChar.m_cLocation.Y - hugger.selfY, 2))) {
+			if (sqrt(pow(g_sChar.m_cLocation.X - g_sEnemy.m_cLocation.X, 2)) > sqrt(pow(g_sChar.m_cLocation.Y - g_sEnemy.m_cLocation.Y, 2))) {
 				g_sEnemy.m_cLocation.X++;
 			}
 			else g_sEnemy.m_cLocation.Y++;
 		}
 		if (min_double == down && min_double == left) {
-			if (sqrt(pow(g_sChar.m_cLocation.X - hugger.selfX, 2)) > sqrt(pow(g_sChar.m_cLocation.Y - hugger.selfY, 2))) {
+			if (sqrt(pow(g_sChar.m_cLocation.X - g_sEnemy.m_cLocation.X, 2)) > sqrt(pow(g_sChar.m_cLocation.Y - g_sEnemy.m_cLocation.Y, 2))) {
 				g_sEnemy.m_cLocation.X--;
 			}
 			else g_sEnemy.m_cLocation.Y++;
@@ -234,7 +221,7 @@ void enemydata() {
 		fooeyhappened = true;
 
 		if (fooeyhappened)
-			enemybouncetime = cycle.enemytimer + 0.25; // enemies act every 1/4 seconds
+			enemybouncetime = g_dElapsedTime + 0.25; // enemies act every 1/4 seconds
 }
 
 void gameplay()            // gameplay logic
@@ -242,7 +229,7 @@ void gameplay()            // gameplay logic
     processUserInput(); // checks if you should change states or do something else with the game, e.g. pause, exit
     moveCharacter();    // moves the character, collision detection, physics, etc
                         // sound can be played here too.
-	//enemydata();
+	enemydata();
 }
 
 void inventory()		// handles inventory, inventory[0] contains money, inventory[1] && inventory[2] contains the 2 weapons held
