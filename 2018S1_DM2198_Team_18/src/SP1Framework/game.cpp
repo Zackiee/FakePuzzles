@@ -13,11 +13,12 @@ using namespace std;
 
 int money;
 
+bool HQ = true;
 bool shop = false;
-bool levelOne = true;
-bool levelTwo = false;
-bool levelThree = false;
-bool levelFour = false;
+bool levelA = false;
+bool levelB = false;
+bool levelC = false;
+bool levelD = false;
 bool playerRespawn = false;
 
 double  g_dElapsedTime;
@@ -289,38 +290,38 @@ void moveCharacter()
 	{
 		shop = false;
 	}
-	if (levelOne == true)
+	if (levelA == true)
 	{
 		if (map[g_sChar.m_cLocation.Y - 1][g_sChar.m_cLocation.X] == '%' || map[g_sChar.m_cLocation.Y][g_sChar.m_cLocation.X - 1] == '%' || map[g_sChar.m_cLocation.Y + 1][g_sChar.m_cLocation.X] == '%' || map[g_sChar.m_cLocation.Y][g_sChar.m_cLocation.X + 1] == '%')
 		{
-			levelOne = false;
-			levelTwo = true;
+			levelA = false;
+			levelB = true;
 			playerRespawn = true;
 		}
 	}
-	else if (levelTwo == true)
-	{
-		playerRespawn = false;
-
-		if (map[g_sChar.m_cLocation.Y - 1][g_sChar.m_cLocation.X] == '%' || map[g_sChar.m_cLocation.Y][g_sChar.m_cLocation.X - 1] == '%' || map[g_sChar.m_cLocation.Y + 1][g_sChar.m_cLocation.X] == '%' || map[g_sChar.m_cLocation.Y][g_sChar.m_cLocation.X + 1] == '%')
-		{
-			levelTwo = false;
-			levelThree = true;
-			playerRespawn = true;
-		}
-	}
-	else if (levelThree == true)
+	else if (levelB == true)
 	{
 		playerRespawn = false;
 
 		if (map[g_sChar.m_cLocation.Y - 1][g_sChar.m_cLocation.X] == '%' || map[g_sChar.m_cLocation.Y][g_sChar.m_cLocation.X - 1] == '%' || map[g_sChar.m_cLocation.Y + 1][g_sChar.m_cLocation.X] == '%' || map[g_sChar.m_cLocation.Y][g_sChar.m_cLocation.X + 1] == '%')
 		{
-			levelThree = false;
-			levelFour = true;
+			levelB = false;
+			levelC = true;
 			playerRespawn = true;
 		}
 	}
-	else if (levelFour == true)
+	else if (levelC == true)
+	{
+		playerRespawn = false;
+
+		if (map[g_sChar.m_cLocation.Y - 1][g_sChar.m_cLocation.X] == '%' || map[g_sChar.m_cLocation.Y][g_sChar.m_cLocation.X - 1] == '%' || map[g_sChar.m_cLocation.Y + 1][g_sChar.m_cLocation.X] == '%' || map[g_sChar.m_cLocation.Y][g_sChar.m_cLocation.X + 1] == '%')
+		{
+			levelC = false;
+			levelD = true;
+			playerRespawn = true;
+		}
+	}
+	else if (levelD == true)
 	{
 		playerRespawn = false;
 
@@ -373,15 +374,48 @@ void renderGame()
 void renderMap()
 {
 	//Render Map
-	string level1;
-	ifstream level1File;
 	COORD c;
 	int i = 0;
 	int a = 0;
 
-	if (levelOne == true)
+	if (HQ == true)
 	{
-		level1File.open("Level1.txt");
+		string headquarters;
+		ifstream headquartersFile;
+
+		headquartersFile.open("Headquarters.txt");
+		if (headquartersFile.is_open())
+		{
+			while (getline(headquartersFile, headquarters))
+			{
+				for (a = 0; a < headquarters.length(); a++)
+				{
+					if (headquarters[a] == '#')
+					{
+						headquarters[a] = 223;
+					}
+					else if (headquarters[a] == '@')
+					{
+						headquarters[a] = 219;
+					}
+					map[i][a] = headquarters[a];
+				}
+				c.X = 0;
+				c.Y = i;
+				i++;
+				g_Console.writeToBuffer(c, headquarters, 0x09);
+			}
+		}
+		headquartersFile.close();
+	}
+
+	else if (levelA == true)
+	{
+		string level1;
+		ifstream level1File;
+		i = 0;
+
+		level1File.open("LevelA.txt");
 		if (level1File.is_open())
 		{
 			while (getline(level1File, level1))
@@ -406,12 +440,13 @@ void renderMap()
 		}
 		level1File.close();
 	}
-	if (levelTwo == true)
+
+	else if (levelB == true)
 	{
 		string level2;
 		ifstream level2File;
 		i = 0;
-		level2File.open("Level2.txt");
+		level2File.open("LevelB.txt");
 		if (level2File.is_open())
 		{
 			while (getline(level2File, level2))
@@ -436,12 +471,13 @@ void renderMap()
 		}
 		level2File.close();
 	}
-	if (levelThree == true)
+
+	else if (levelC == true)
 	{
 		string level3;
 		ifstream level3File;
 		i = 0;
-		level3File.open("Level3.txt");
+		level3File.open("LevelC.txt");
 		if (level3File.is_open())
 		{
 			while (getline(level3File, level3))
@@ -466,12 +502,13 @@ void renderMap()
 		}
 		level3File.close();
 	}
-	if (levelFour == true)
+
+	else if (levelD == true)
 	{
 		string level4;
 		ifstream level4File;
 		i = 0;
-		level4File.open("Level4.txt");
+		level4File.open("LevelD.txt");
 		if (level4File.is_open())
 		{
 			while (getline(level4File, level4))
