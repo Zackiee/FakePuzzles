@@ -13,20 +13,19 @@ using namespace std;
 
 int money;
 
+bool HQ = true;
 bool shop = false;
-bool levelOne = true;
-bool levelTwo = false;
-bool levelThree = false;
-bool levelFour = false;
+bool levelA = false;
+bool levelB = false;
+bool levelC = false;
+bool levelD = false;
+bool playerRespawn = false;
 
 double  g_dElapsedTime;
+double enemybouncetime = g_dElapsedTime;
 double  g_dDeltaTime;
 bool    g_abKeyPressed[K_COUNT];
 
-struct timer
-{
-	double enemytimer;
-};
 // Game specific variables here
 SGameChar   g_sChar;
 SGameChar   g_sEnemy;
@@ -53,10 +52,12 @@ void init( void )
     // sets the initial state for the game
     g_eGameState = S_SPLASHSCREEN;
 
-    g_sChar.m_cLocation.X = g_Console.getConsoleSize().X / 2;
-    g_sChar.m_cLocation.Y = g_Console.getConsoleSize().Y / 2;
-	g_sEnemy.m_cLocation.X = 6;
-	g_sEnemy.m_cLocation.Y = 3;
+    /*g_sChar.m_cLocation.X = g_Console.getConsoleSize().X / 2;
+    g_sChar.m_cLocation.Y = g_Console.getConsoleSize().Y / 2;*/
+	g_sChar.m_cLocation.X = 5;
+	g_sChar.m_cLocation.Y = 2;
+	g_sEnemy.m_cLocation.X = 5;
+	g_sEnemy.m_cLocation.Y = 16;
     g_sChar.m_bActive = true;
     // sets the width, height and the font name to use in the console
     g_Console.setConsoleFont(0, 16, L"Consolas");
@@ -169,28 +170,48 @@ void renderEnemies()
 	g_Console.writeToBuffer(g_sEnemy.m_cLocation, (char)128, charE_Color);
 }
 
-timer cycle;
 void enemydata() {
 	bool fooeyhappened;
-	double enemybouncetime;
+	double up, left, down, right, min_double;
 	melee hugger;
 	ranged gunner;
 
-	cycle.enemytimer = g_dElapsedTime;
+		fooeyhappened = false;
+		if (enemybouncetime > g_dElapsedTime)
+			return;
 
-	fooeyhappened = false;
-	if (enemybouncetime > cycle.enemytimer)
-		return;
+		up = 99.0; left = 99.0; down = 99.0; right = 99.0;
 
-		hugger.targetX = g_sChar.m_cLocation.X;
-		hugger.targetY = g_sChar.m_cLocation.Y;
+		if (map[g_sEnemy.m_cLocation.Y - 1][g_sEnemy.m_cLocation.X] == ' ') {
+			up = sqrt(pow(g_sChar.m_cLocation.X - (g_sEnemy.m_cLocation.X), 2) + pow(g_sChar.m_cLocation.Y - (g_sEnemy.m_cLocation.Y - 1), 2));
+		}
+		if (map[g_sEnemy.m_cLocation.Y][g_sEnemy.m_cLocation.X - 1] == ' ') {
+			left = sqrt(pow(g_sChar.m_cLocation.X - (g_sEnemy.m_cLocation.X - 1), 2) + pow(g_sChar.m_cLocation.Y - (g_sEnemy.m_cLocation.Y), 2));
+		}
+		if (map[g_sEnemy.m_cLocation.Y + 1][g_sEnemy.m_cLocation.X] == ' ') {
+			down = sqrt(pow(g_sChar.m_cLocation.X - (g_sEnemy.m_cLocation.X), 2) + pow(g_sChar.m_cLocation.Y - (g_sEnemy.m_cLocation.Y + 1), 2));
+		}
+		if (map[g_sEnemy.m_cLocation.Y][g_sEnemy.m_cLocation.X + 1] == ' ') {
+			right = sqrt(pow(g_sChar.m_cLocation.X - (g_sEnemy.m_cLocation.X + 1), 2) + pow(g_sChar.m_cLocation.Y - (g_sEnemy.m_cLocation.Y), 2));
+		}
+		min_double = min(min(up, down), min(left, right));
+		if (min_double == up) {
+			g_sEnemy.m_cLocation.Y--;
+		}
+		if (min_double == left) {
+			g_sEnemy.m_cLocation.X--;
+		}
+		if (min_double == down) {
+			g_sEnemy.m_cLocation.Y++;
+		}
+		if (min_double == right) {
+			g_sEnemy.m_cLocation.X++;
+		}
 
+		fooeyhappened = true;
 
-
-	fooeyhappened = true;
-
-	if (fooeyhappened)
-	enemybouncetime = cycle.enemytimer + 0.25; // enemies act every 1/4 seconds
+		if (fooeyhappened)
+			enemybouncetime = g_dElapsedTime + 0.25; // enemies act every 1/4 seconds
 }
 
 void gameplay()            // gameplay logic
@@ -198,7 +219,7 @@ void gameplay()            // gameplay logic
     processUserInput(); // checks if you should change states or do something else with the game, e.g. pause, exit
     moveCharacter();    // moves the character, collision detection, physics, etc
                         // sound can be played here too.
-	//enemydata();
+	enemydata();
 }
 
 void inventory()		// handles inventory, inventory[0] contains money, inventory[1] && inventory[2] contains the 2 weapons held
@@ -269,34 +290,52 @@ void moveCharacter()
 	{
 		shop = false;
 	}
-	if (levelOne == true)
+	if (levelA == true)
 	{
 		if (map[g_sChar.m_cLocation.Y - 1][g_sChar.m_cLocation.X] == '%' || map[g_sChar.m_cLocation.Y][g_sChar.m_cLocation.X - 1] == '%' || map[g_sChar.m_cLocation.Y + 1][g_sChar.m_cLocation.X] == '%' || map[g_sChar.m_cLocation.Y][g_sChar.m_cLocation.X + 1] == '%')
 		{
-			levelOne = false;
-			levelTwo = true;
+			levelA = false;
+			levelB = true;
+			playerRespawn = true;
 		}
 	}
-	else if (levelTwo == true)
+	else if (levelB == true)
 	{
-		if (map[g_sChar.m_cLocation.Y - 1][g_sChar.m_cLocation.X] == '%' || map[g_sChar.m_cLocation.Y][g_sChar.m_cLocation.X - 1] == '%' || map[g_sChar.m_cLocation.Y + 1][g_sChar.m_cLocation.X] == '%' || map[g_sChar.m_cLocation.Y][g_sChar.m_cLocation.X + 1] == '%')
-		{
-			levelTwo = false;
-			levelThree = true;
-		}
-	}
-	else if (levelThree == true)
-	{
-		if (map[g_sChar.m_cLocation.Y - 1][g_sChar.m_cLocation.X] == '%' || map[g_sChar.m_cLocation.Y][g_sChar.m_cLocation.X - 1] == '%' || map[g_sChar.m_cLocation.Y + 1][g_sChar.m_cLocation.X] == '%' || map[g_sChar.m_cLocation.Y][g_sChar.m_cLocation.X + 1] == '%')
-		{
-			levelThree = false;
-			levelFour = true;
-		}
-	}
-	/*else if (levelFour == true)
-	{
+		playerRespawn = false;
 
-	}*/
+		if (map[g_sChar.m_cLocation.Y - 1][g_sChar.m_cLocation.X] == '%' || map[g_sChar.m_cLocation.Y][g_sChar.m_cLocation.X - 1] == '%' || map[g_sChar.m_cLocation.Y + 1][g_sChar.m_cLocation.X] == '%' || map[g_sChar.m_cLocation.Y][g_sChar.m_cLocation.X + 1] == '%')
+		{
+			levelB = false;
+			levelC = true;
+			playerRespawn = true;
+		}
+	}
+	else if (levelC == true)
+	{
+		playerRespawn = false;
+
+		if (map[g_sChar.m_cLocation.Y - 1][g_sChar.m_cLocation.X] == '%' || map[g_sChar.m_cLocation.Y][g_sChar.m_cLocation.X - 1] == '%' || map[g_sChar.m_cLocation.Y + 1][g_sChar.m_cLocation.X] == '%' || map[g_sChar.m_cLocation.Y][g_sChar.m_cLocation.X + 1] == '%')
+		{
+			levelC = false;
+			levelD = true;
+			playerRespawn = true;
+		}
+	}
+	else if (levelD == true)
+	{
+		playerRespawn = false;
+
+		if (map[g_sChar.m_cLocation.Y - 1][g_sChar.m_cLocation.X] == '%' || map[g_sChar.m_cLocation.Y][g_sChar.m_cLocation.X - 1] == '%' || map[g_sChar.m_cLocation.Y + 1][g_sChar.m_cLocation.X] == '%' || map[g_sChar.m_cLocation.Y][g_sChar.m_cLocation.X + 1] == '%')
+		{
+			g_bQuitGame = true;
+		}
+
+	}
+	if (playerRespawn == true)
+	{
+		g_sChar.m_cLocation.X = 5;
+		g_sChar.m_cLocation.Y = 2;
+	}
 }
 void processUserInput()
 {
@@ -335,15 +374,48 @@ void renderGame()
 void renderMap()
 {
 	//Render Map
-	string level1;
-	ifstream level1File;
 	COORD c;
 	int i = 0;
 	int a = 0;
 
-	if (levelOne == true)
+	if (HQ == true)
 	{
-		level1File.open("Level1.txt");
+		string headquarters;
+		ifstream headquartersFile;
+
+		headquartersFile.open("Headquarters.txt");
+		if (headquartersFile.is_open())
+		{
+			while (getline(headquartersFile, headquarters))
+			{
+				for (a = 0; a < headquarters.length(); a++)
+				{
+					if (headquarters[a] == '#')
+					{
+						headquarters[a] = 223;
+					}
+					else if (headquarters[a] == '@')
+					{
+						headquarters[a] = 219;
+					}
+					map[i][a] = headquarters[a];
+				}
+				c.X = 0;
+				c.Y = i;
+				i++;
+				g_Console.writeToBuffer(c, headquarters, 0x09);
+			}
+		}
+		headquartersFile.close();
+	}
+
+	else if (levelA == true)
+	{
+		string level1;
+		ifstream level1File;
+		i = 0;
+
+		level1File.open("LevelA.txt");
 		if (level1File.is_open())
 		{
 			while (getline(level1File, level1))
@@ -368,12 +440,13 @@ void renderMap()
 		}
 		level1File.close();
 	}
-	if (levelTwo == true)
+
+	else if (levelB == true)
 	{
 		string level2;
 		ifstream level2File;
 		i = 0;
-		level2File.open("Level2.txt");
+		level2File.open("LevelB.txt");
 		if (level2File.is_open())
 		{
 			while (getline(level2File, level2))
@@ -398,12 +471,13 @@ void renderMap()
 		}
 		level2File.close();
 	}
-	if (levelThree == true)
+
+	else if (levelC == true)
 	{
 		string level3;
 		ifstream level3File;
 		i = 0;
-		level3File.open("Level3.txt");
+		level3File.open("LevelC.txt");
 		if (level3File.is_open())
 		{
 			while (getline(level3File, level3))
@@ -428,12 +502,13 @@ void renderMap()
 		}
 		level3File.close();
 	}
-	if (levelFour == true)
+
+	else if (levelD == true)
 	{
 		string level4;
 		ifstream level4File;
 		i = 0;
-		level4File.open("Level4.txt");
+		level4File.open("LevelD.txt");
 		if (level4File.is_open())
 		{
 			while (getline(level4File, level4))
@@ -448,6 +523,7 @@ void renderMap()
 					{
 						level4[a] = 219;
 					}
+					map[i][a] = level4[a];
 				}
 				c.X = 0;
 				c.Y = i;
