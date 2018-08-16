@@ -21,6 +21,13 @@ bool levelC = false;
 bool levelD = false;
 bool playerRespawn = false;
 
+bool firstChar = true;
+bool secondChar = false;
+bool thirdChar = false;
+bool fourthChar = false;
+bool fifthChar = false;
+bool sixthChar = false;
+
 double  g_dElapsedTime;
 double  huggerbouncetime = g_dElapsedTime;
 double  g_dDeltaTime;
@@ -52,8 +59,6 @@ void init( void )
     // sets the initial state for the game
     g_eGameState = S_SPLASHSCREEN;
 
-    /*g_sChar.m_cLocation.X = g_Console.getConsoleSize().X / 2;
-    g_sChar.m_cLocation.Y = g_Console.getConsoleSize().Y / 2;*/
 	g_sChar.m_cLocation.X = 5;
 	g_sChar.m_cLocation.Y = 2;
 	g_sEnemy.m_cLocation.X = 5;
@@ -293,12 +298,52 @@ void moveCharacter()
 	{
 		shop = false;
 	}
-	if (levelA == true)
+	if (map[g_sChar.m_cLocation.Y - 1][g_sChar.m_cLocation.X] == 'Q' || map[g_sChar.m_cLocation.Y][g_sChar.m_cLocation.X - 1] == 'Q' || map[g_sChar.m_cLocation.Y + 1][g_sChar.m_cLocation.X] == 'Q' || map[g_sChar.m_cLocation.Y][g_sChar.m_cLocation.X + 1] == 'Q' ||
+		map[g_sChar.m_cLocation.Y - 1][g_sChar.m_cLocation.X] == 'U' || map[g_sChar.m_cLocation.Y][g_sChar.m_cLocation.X - 1] == 'U' || map[g_sChar.m_cLocation.Y + 1][g_sChar.m_cLocation.X] == 'U' || map[g_sChar.m_cLocation.Y][g_sChar.m_cLocation.X + 1] == 'U' ||
+		map[g_sChar.m_cLocation.Y - 1][g_sChar.m_cLocation.X] == 'I' || map[g_sChar.m_cLocation.Y][g_sChar.m_cLocation.X - 1] == 'I' || map[g_sChar.m_cLocation.Y + 1][g_sChar.m_cLocation.X] == 'I' || map[g_sChar.m_cLocation.Y][g_sChar.m_cLocation.X + 1] == 'I' ||
+		map[g_sChar.m_cLocation.Y - 1][g_sChar.m_cLocation.X] == 'T' || map[g_sChar.m_cLocation.Y][g_sChar.m_cLocation.X - 1] == 'T' || map[g_sChar.m_cLocation.Y + 1][g_sChar.m_cLocation.X] == 'T' || map[g_sChar.m_cLocation.Y][g_sChar.m_cLocation.X + 1] == 'T')
 	{
+		g_bQuitGame = true;
+	}
+
+	if (HQ == true)
+	{
+		playerRespawn = false;
+
+		if (map[g_sChar.m_cLocation.Y - 1][g_sChar.m_cLocation.X] == 'a' || map[g_sChar.m_cLocation.Y][g_sChar.m_cLocation.X - 1] == 'a' || map[g_sChar.m_cLocation.Y + 1][g_sChar.m_cLocation.X] == 'a' || map[g_sChar.m_cLocation.Y][g_sChar.m_cLocation.X + 1] == 'a')
+		{
+			HQ = false;
+			levelA = true;
+			playerRespawn = true;
+		}
+		else if (map[g_sChar.m_cLocation.Y - 1][g_sChar.m_cLocation.X] == 'b' || map[g_sChar.m_cLocation.Y][g_sChar.m_cLocation.X - 1] == 'b' || map[g_sChar.m_cLocation.Y + 1][g_sChar.m_cLocation.X] == 'b' || map[g_sChar.m_cLocation.Y][g_sChar.m_cLocation.X + 1] == 'b')
+		{
+			HQ = false;
+			levelB = true;
+			playerRespawn = true;
+		}
+		else if (map[g_sChar.m_cLocation.Y - 1][g_sChar.m_cLocation.X] == 'c' || map[g_sChar.m_cLocation.Y][g_sChar.m_cLocation.X - 1] == 'c' || map[g_sChar.m_cLocation.Y + 1][g_sChar.m_cLocation.X] == 'c' || map[g_sChar.m_cLocation.Y][g_sChar.m_cLocation.X + 1] == 'c')
+		{
+			HQ = false;
+			levelC = true;
+			playerRespawn = true;
+		}
+		else if (map[g_sChar.m_cLocation.Y - 1][g_sChar.m_cLocation.X] == 'd' || map[g_sChar.m_cLocation.Y][g_sChar.m_cLocation.X - 1] == 'd' || map[g_sChar.m_cLocation.Y + 1][g_sChar.m_cLocation.X] == 'd' || map[g_sChar.m_cLocation.Y][g_sChar.m_cLocation.X + 1] == 'd')
+		{
+			HQ = false;
+			levelD = true;
+			playerRespawn = true;
+		}
+	}
+
+	else if (levelA == true)
+	{
+		playerRespawn = false;
+
 		if (map[g_sChar.m_cLocation.Y - 1][g_sChar.m_cLocation.X] == '%' || map[g_sChar.m_cLocation.Y][g_sChar.m_cLocation.X - 1] == '%' || map[g_sChar.m_cLocation.Y + 1][g_sChar.m_cLocation.X] == '%' || map[g_sChar.m_cLocation.Y][g_sChar.m_cLocation.X + 1] == '%')
 		{
 			levelA = false;
-			levelB = true;
+			HQ = true;
 			playerRespawn = true;
 		}
 	}
@@ -309,7 +354,7 @@ void moveCharacter()
 		if (map[g_sChar.m_cLocation.Y - 1][g_sChar.m_cLocation.X] == '%' || map[g_sChar.m_cLocation.Y][g_sChar.m_cLocation.X - 1] == '%' || map[g_sChar.m_cLocation.Y + 1][g_sChar.m_cLocation.X] == '%' || map[g_sChar.m_cLocation.Y][g_sChar.m_cLocation.X + 1] == '%')
 		{
 			levelB = false;
-			levelC = true;
+			HQ = true;
 			playerRespawn = true;
 		}
 	}
@@ -320,7 +365,7 @@ void moveCharacter()
 		if (map[g_sChar.m_cLocation.Y - 1][g_sChar.m_cLocation.X] == '%' || map[g_sChar.m_cLocation.Y][g_sChar.m_cLocation.X - 1] == '%' || map[g_sChar.m_cLocation.Y + 1][g_sChar.m_cLocation.X] == '%' || map[g_sChar.m_cLocation.Y][g_sChar.m_cLocation.X + 1] == '%')
 		{
 			levelC = false;
-			levelD = true;
+			HQ = true;
 			playerRespawn = true;
 		}
 	}
@@ -330,7 +375,9 @@ void moveCharacter()
 
 		if (map[g_sChar.m_cLocation.Y - 1][g_sChar.m_cLocation.X] == '%' || map[g_sChar.m_cLocation.Y][g_sChar.m_cLocation.X - 1] == '%' || map[g_sChar.m_cLocation.Y + 1][g_sChar.m_cLocation.X] == '%' || map[g_sChar.m_cLocation.Y][g_sChar.m_cLocation.X + 1] == '%')
 		{
-			g_bQuitGame = true;
+			levelD = false;
+			HQ = true;
+			playerRespawn = true;
 		}
 
 	}
@@ -376,11 +423,11 @@ void renderGame()
 
 void renderMap()
 {
-	//Render Map
 	COORD c;
 	int i = 0;
 	int a = 0;
 
+	//Render Headquarters
 	if (HQ == true)
 	{
 		string headquarters;
@@ -411,7 +458,7 @@ void renderMap()
 		}
 		headquartersFile.close();
 	}
-
+	//Render Level A
 	else if (levelA == true)
 	{
 		string level1;
@@ -443,7 +490,7 @@ void renderMap()
 		}
 		level1File.close();
 	}
-
+	//Render Level B
 	else if (levelB == true)
 	{
 		string level2;
@@ -474,7 +521,7 @@ void renderMap()
 		}
 		level2File.close();
 	}
-
+	//Render Level C
 	else if (levelC == true)
 	{
 		string level3;
@@ -505,7 +552,7 @@ void renderMap()
 		}
 		level3File.close();
 	}
-
+	//Render Level D
 	else if (levelD == true)
 	{
 		string level4;
@@ -630,11 +677,83 @@ void renderCharacter()
 {
     // Draw the location of the character
     WORD charColor = 0x0F;
-    if (g_sChar.m_bActive)
+
+    /*if (g_sChar.m_bActive)
     {
         charColor = 0x0E;
-    }
-    g_Console.writeToBuffer(g_sChar.m_cLocation, (char)14, charColor);
+    }*/
+
+	if (map[g_sChar.m_cLocation.Y - 1][g_sChar.m_cLocation.X] == 'q' || map[g_sChar.m_cLocation.Y][g_sChar.m_cLocation.X - 1] == 'q' || map[g_sChar.m_cLocation.Y + 1][g_sChar.m_cLocation.X] == 'q' || map[g_sChar.m_cLocation.Y][g_sChar.m_cLocation.X + 1] == 'q')
+	{
+		secondChar = true;
+		firstChar = false;
+		thirdChar = false;
+		fourthChar = false;
+		fifthChar = false;
+		sixthChar = false;
+	}
+	if (map[g_sChar.m_cLocation.Y - 1][g_sChar.m_cLocation.X] == 'w' || map[g_sChar.m_cLocation.Y][g_sChar.m_cLocation.X - 1] == 'w' || map[g_sChar.m_cLocation.Y + 1][g_sChar.m_cLocation.X] == 'w' || map[g_sChar.m_cLocation.Y][g_sChar.m_cLocation.X + 1] == 'w')
+	{
+		thirdChar = true;
+		firstChar = false;
+		secondChar = false;
+		fourthChar = false;
+		fifthChar = false;
+		sixthChar = false;
+	}
+	if (map[g_sChar.m_cLocation.Y - 1][g_sChar.m_cLocation.X] == 'e' || map[g_sChar.m_cLocation.Y][g_sChar.m_cLocation.X - 1] == 'e' || map[g_sChar.m_cLocation.Y + 1][g_sChar.m_cLocation.X] == 'e' || map[g_sChar.m_cLocation.Y][g_sChar.m_cLocation.X + 1] == 'e')
+	{
+		fourthChar = true;
+		firstChar = false;
+		secondChar = false;
+		thirdChar = false;
+		fifthChar = false;
+		sixthChar = false;
+	}
+	if (map[g_sChar.m_cLocation.Y - 1][g_sChar.m_cLocation.X] == 'r' || map[g_sChar.m_cLocation.Y][g_sChar.m_cLocation.X - 1] == 'r' || map[g_sChar.m_cLocation.Y + 1][g_sChar.m_cLocation.X] == 'r' || map[g_sChar.m_cLocation.Y][g_sChar.m_cLocation.X + 1] == 'r')
+	{
+		fifthChar = true;
+		firstChar = false;
+		secondChar = false;
+		thirdChar = false;
+		fourthChar = false;
+		sixthChar = false;
+	}
+	if (map[g_sChar.m_cLocation.Y - 1][g_sChar.m_cLocation.X] == 't' || map[g_sChar.m_cLocation.Y][g_sChar.m_cLocation.X - 1] == 't' || map[g_sChar.m_cLocation.Y + 1][g_sChar.m_cLocation.X] == 't' || map[g_sChar.m_cLocation.Y][g_sChar.m_cLocation.X + 1] == 't')
+	{
+		sixthChar = true;
+		firstChar = false;
+		secondChar = false;
+		thirdChar = false;
+		fourthChar = false;
+		fifthChar = false;
+	}
+
+	//Characters' rendering
+	if (firstChar == true)
+	{
+		g_Console.writeToBuffer(g_sChar.m_cLocation, (char)1, charColor);
+	}
+	else if (secondChar == true)
+	{
+		g_Console.writeToBuffer(g_sChar.m_cLocation, (char)2, charColor);
+	}
+	else if (thirdChar == true)
+	{
+		g_Console.writeToBuffer(g_sChar.m_cLocation, (char)3, charColor);
+	}
+	else if (fourthChar == true)
+	{
+		g_Console.writeToBuffer(g_sChar.m_cLocation, (char)4, charColor);
+	}
+	else if (fifthChar == true)
+	{
+		g_Console.writeToBuffer(g_sChar.m_cLocation, (char)5, charColor);
+	}
+	else if (sixthChar == true)
+	{
+		g_Console.writeToBuffer(g_sChar.m_cLocation, (char)6, charColor);
+	}
 }
 
 void renderFramerate()
