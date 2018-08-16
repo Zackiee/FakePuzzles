@@ -68,8 +68,6 @@ struct melee {
 	int hp = 3;
 	char targetX;
 	char targetY;
-	char selfX;
-	char selfY;
 };
 
 struct ranged {
