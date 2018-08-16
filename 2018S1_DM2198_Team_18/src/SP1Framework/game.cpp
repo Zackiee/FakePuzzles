@@ -28,6 +28,13 @@ bool fourthChar = false;
 bool fifthChar = false;
 bool sixthChar = false;
 
+bool equipPistol = true;
+bool equipSmg = false;
+bool equipRifle = false;
+bool equipSniper = false;
+bool equipRocket = false;
+bool equipGrenade = false;
+
 double  g_dElapsedTime;
 double  huggerbouncetime = g_dElapsedTime;
 double  g_dDeltaTime;
@@ -107,6 +114,11 @@ void getInput( void )
     g_abKeyPressed[K_RIGHT]  = isKeyPressed(VK_RIGHT);
     g_abKeyPressed[K_SPACE]  = isKeyPressed(VK_SPACE);
     g_abKeyPressed[K_ESCAPE] = isKeyPressed(VK_ESCAPE);
+	g_abKeyPressed[K_ONE]	 = isKeyPressed(0x31);
+	g_abKeyPressed[K_TWO]	 = isKeyPressed(0X32);
+	g_abKeyPressed[K_THREE]	 = isKeyPressed(0x33);
+	g_abKeyPressed[K_FOUR]	 = isKeyPressed(0x34);
+	g_abKeyPressed[K_FIVE]	 = isKeyPressed(0x35);
 }
 
 //--------------------------------------------------------------
@@ -298,6 +310,7 @@ void moveCharacter()
 	{
 		shop = false;
 	}
+
 	if (map[g_sChar.m_cLocation.Y - 1][g_sChar.m_cLocation.X] == 'Q' || map[g_sChar.m_cLocation.Y][g_sChar.m_cLocation.X - 1] == 'Q' || map[g_sChar.m_cLocation.Y + 1][g_sChar.m_cLocation.X] == 'Q' || map[g_sChar.m_cLocation.Y][g_sChar.m_cLocation.X + 1] == 'Q' ||
 		map[g_sChar.m_cLocation.Y - 1][g_sChar.m_cLocation.X] == 'U' || map[g_sChar.m_cLocation.Y][g_sChar.m_cLocation.X - 1] == 'U' || map[g_sChar.m_cLocation.Y + 1][g_sChar.m_cLocation.X] == 'U' || map[g_sChar.m_cLocation.Y][g_sChar.m_cLocation.X + 1] == 'U' ||
 		map[g_sChar.m_cLocation.Y - 1][g_sChar.m_cLocation.X] == 'I' || map[g_sChar.m_cLocation.Y][g_sChar.m_cLocation.X - 1] == 'I' || map[g_sChar.m_cLocation.Y + 1][g_sChar.m_cLocation.X] == 'I' || map[g_sChar.m_cLocation.Y][g_sChar.m_cLocation.X + 1] == 'I' ||
@@ -583,62 +596,6 @@ void renderMap()
 		}
 		level4File.close();
 	}
-	//Render Inventory
-	string inventory;
-	ifstream inventoryFile;
-	i = 0;
-
-	inventoryFile.open("Inventory.txt");
-	if (inventoryFile.is_open())
-	{
-		while (getline(inventoryFile, inventory))
-		{
-			for (a = 0; a < inventory.length(); a++)
-			{
-				if (inventory[a] == '#')
-				{
-					inventory[a] = 223;
-				}
-				else if (inventory[a] == '@')
-				{
-					inventory[a] = 219;
-				}
-				else if (inventory[a] == '$')
-				{
-					inventory[a] = ' ';
-				}
-				else if (inventory[a] == '1')
-				{
-					inventory[a] = 251;
-				}
-				else if (inventory[a] == '2')
-				{
-					inventory[a] = 'x';
-				}
-				else if (inventory[a] == '3')
-				{
-					inventory[a] = 'x';
-				}
-				else if (inventory[a] == '4')
-				{
-					inventory[a] = 'x';
-				}
-				else if (inventory[a] == '5')
-				{
-					inventory[a] = 'x';
-				}
-				else if (inventory[a] == '6')
-				{
-					inventory[a] = 'x';
-				}
-			}
-			c.X = 0;
-			c.Y = 17 + i;
-			i++;
-			g_Console.writeToBuffer(c, inventory, 0x00 + i);
-		}
-	}
-	inventoryFile.close();
 
 	if (shop == true)
 	{
@@ -670,7 +627,129 @@ void renderMap()
 			}
 		}
 		shopFile.close();
+
+		if (g_abKeyPressed[K_ONE])
+		{
+			equipSmg = true;
+		}
+		 if (g_abKeyPressed[K_TWO])
+		{
+			equipRifle = true;
+		}
+		if (g_abKeyPressed[K_THREE])
+		{
+			equipSniper = true;
+		}
+		if (g_abKeyPressed[K_FOUR])
+		{
+			equipRocket = true;
+		}
+		if (g_abKeyPressed[K_FIVE])
+		{
+			equipGrenade = true;
+		}
 	}
+
+	//Render Inventory
+	string inventory;
+	ifstream inventoryFile;
+	i = 0;
+
+	inventoryFile.open("Inventory.txt");
+	if (inventoryFile.is_open())
+	{
+		while (getline(inventoryFile, inventory))
+		{
+			for (a = 0; a < inventory.length(); a++)
+			{
+				if (inventory[a] == '#')
+				{
+					inventory[a] = 223;
+				}
+				else if (inventory[a] == '@')
+				{
+					inventory[a] = 219;
+				}
+				else if (inventory[a] == '$')
+				{
+					inventory[a] = ' ';
+				}
+				else if (inventory[a] == '1')
+				{
+					if (equipPistol == true)
+					{
+						inventory[a] = 251;
+					}
+					else
+					{
+						inventory[a] = 'x';
+					}
+				}
+				else if (inventory[a] == '2')
+				{
+					if (equipSmg == true)
+					{
+						inventory[a] = 251;
+					}
+					else
+					{
+						inventory[a] = 'x';
+					}
+				}
+				else if (inventory[a] == '3')
+				{
+					if (equipRifle == true)
+					{
+						inventory[a] = 251;
+					}
+					else
+					{
+						inventory[a] = 'x';
+					}
+				}
+				else if (inventory[a] == '4')
+				{
+					if (equipSniper == true)
+					{
+						inventory[a] = 251;
+					}
+					else
+					{
+						inventory[a] = 'x';
+					}
+				}
+				else if (inventory[a] == '5')
+				{
+					if (equipRocket == true)
+					{
+						inventory[a] = 251;
+					}
+					else
+					{
+						inventory[a] = 'x';
+					}
+				}
+				else if (inventory[a] == '6')
+				{
+					if (equipGrenade == true)
+					{
+						inventory[a] = 251;
+					}
+					else
+					{
+						inventory[a] = 'x';
+					}
+				}
+			}
+			c.X = 0;
+			c.Y = 17 + i;
+			i++;
+			g_Console.writeToBuffer(c, inventory, 0x00 + i);
+		}
+	}
+	inventoryFile.close();
+
+	
 }
 
 void renderCharacter()
