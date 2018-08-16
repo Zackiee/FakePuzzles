@@ -13,7 +13,7 @@ using namespace std;
 
 int money = 0, x = 0, shootdirection = 0, i = 0;
 
-bool HQ = true;
+bool HQ = false;
 bool shop = false;
 bool levelA = false;
 bool levelB = false;
@@ -21,6 +21,7 @@ bool levelC = false;
 bool levelD = false;
 bool HQspawn = false;
 bool playerRespawn = false;
+bool mainMenu = true;
 
 bool firstChar = true;
 bool secondChar = false;
@@ -559,7 +560,33 @@ void renderMap()
 	COORD c;
 	int i = 0;
 	int a = 0;
+	//Render Main Menu
+	if (mainMenu == true)
+	{
+		string mainMenu;
+		ifstream menuFile;
 
+		menuFile.open("MainMenu.txt");
+		if (menuFile.is_open())
+		{
+			while (getline(menuFile, mainMenu))
+			{
+				for (a = 0; a < mainMenu.length(); a++)
+				{
+					if (mainMenu[a] == 'F')
+					{
+						mainMenu[a] = 178;
+					}
+					map[i][a] = mainMenu[a];
+				}
+				c.X = 0;
+				c.Y = i;
+				i++;
+				g_Console.writeToBuffer(c, mainMenu, 0x0B);
+			}
+		}
+		menuFile.close();
+	}
 	//Render Headquarters
 	if (HQ == true)
 	{
