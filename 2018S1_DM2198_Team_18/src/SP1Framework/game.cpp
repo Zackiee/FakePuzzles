@@ -28,19 +28,29 @@ bool fourthChar = false;
 bool fifthChar = false;
 bool sixthChar = false;
 
+bool equipPistol = true;
+bool equipSmg = false;
+bool equipRifle = false;
+bool equipSniper = false;
+bool equipMinigun = false;
+
 double  g_dElapsedTime;
-double enemybouncetime = g_dElapsedTime;
+double  huggerbouncetime = g_dElapsedTime;
+double  gunnerbouncetime = g_dElapsedTime;
+double  bulletbouncetime = g_dElapsedTime;
 double  g_dDeltaTime;
 bool    g_abKeyPressed[K_COUNT];
 
 // Game specific variables here
 SGameChar   g_sChar;
-SGameChar   g_sEnemy;
+SGameChar   g_sHugger;
+SGameChar	g_sGunner;
+SGameChar	g_sBullets[128]; // consider bullets as characters in the code
 EGAMESTATES g_eGameState = S_SPLASHSCREEN;
 double  g_dBounceTime; // this is to prevent key bouncing, so we won't trigger keypresses more than once
 
 // Console object
-Console g_Console(109, 30, "SP1 Framework");
+Console g_Console(110, 30, "SP1 Framework");
 char** map = new char*[30];
 
 //--------------------------------------------------------------
@@ -61,8 +71,14 @@ void init( void )
 
 	g_sChar.m_cLocation.X = 5;
 	g_sChar.m_cLocation.Y = 2;
-	g_sEnemy.m_cLocation.X = 5;
-	g_sEnemy.m_cLocation.Y = 16;
+	g_sHugger.m_cLocation.X = 5;
+	g_sHugger.m_cLocation.Y = 16;
+	g_sGunner.m_cLocation.X = 6;
+	g_sGunner.m_cLocation.Y = 16;
+	for (int i = 0; i < 128; i++) {
+		g_sBullets[i].m_cLocation.X = false;
+		g_sBullets[i].m_cLocation.Y = false;
+	}
     g_sChar.m_bActive = true;
     // sets the width, height and the font name to use in the console
     g_Console.setConsoleFont(0, 16, L"Consolas");
@@ -107,6 +123,10 @@ void getInput( void )
     g_abKeyPressed[K_RIGHT]  = isKeyPressed(VK_RIGHT);
     g_abKeyPressed[K_SPACE]  = isKeyPressed(VK_SPACE);
     g_abKeyPressed[K_ESCAPE] = isKeyPressed(VK_ESCAPE);
+	g_abKeyPressed[K_ONE]	 = isKeyPressed(0x31);
+	g_abKeyPressed[K_TWO]	 = isKeyPressed(0X32);
+	g_abKeyPressed[K_THREE]	 = isKeyPressed(0x33);
+	g_abKeyPressed[K_FOUR]	 = isKeyPressed(0x34);
 }
 
 //--------------------------------------------------------------
@@ -172,54 +192,114 @@ void renderEnemies()
 	// Draw the location of the enemies
 	WORD charE_Color = 0x0C;
 	
-	g_Console.writeToBuffer(g_sEnemy.m_cLocation, (char)128, charE_Color);
+	g_Console.writeToBuffer(g_sHugger.m_cLocation, (char)128, charE_Color);
+	g_Console.writeToBuffer(g_sGunner.m_cLocation, (char)83, charE_Color);
+	for (int i = 0; i < 128; i++) {
+		g_Console.writeToBuffer(g_sBullets[i].m_cLocation, (char)7, charE_Color);
+	}
 }
 
 void enemydata() {
-	bool fooeyhappened;
+	bool fooeyhappened1, fooeyhappened2, fooeyhappened3;
 	double up, left, down, right, min_double;
 	melee hugger;
 	ranged gunner;
 
-		fooeyhappened = false;
-		if (enemybouncetime > g_dElapsedTime)
+		fooeyhappened1 = false;
+
+		if (huggerbouncetime > g_dElapsedTime)
 			return;
 
 		up = 99.0; left = 99.0; down = 99.0; right = 99.0;
 
-		if (map[g_sEnemy.m_cLocation.Y - 1][g_sEnemy.m_cLocation.X] == ' ' && x != 3) {
-			up = sqrt(pow(g_sChar.m_cLocation.X - (g_sEnemy.m_cLocation.X), 2) + pow(g_sChar.m_cLocation.Y - (g_sEnemy.m_cLocation.Y - 1), 2));
+		if (map[g_sHugger.m_cLocation.Y - 1][g_sHugger.m_cLocation.X] == ' ' && x != 3) {
+			up = sqrt(pow(g_sChar.m_cLocation.X - (g_sHugger.m_cLocation.X), 2) + pow(g_sChar.m_cLocation.Y - (g_sHugger.m_cLocation.Y - 1), 2));
 		}
-		if (map[g_sEnemy.m_cLocation.Y][g_sEnemy.m_cLocation.X - 1] == ' ' && x != 4) {
-			left = sqrt(pow(g_sChar.m_cLocation.X - (g_sEnemy.m_cLocation.X - 1), 2) + pow(g_sChar.m_cLocation.Y - (g_sEnemy.m_cLocation.Y), 2));
+		if (map[g_sHugger.m_cLocation.Y][g_sHugger.m_cLocation.X - 1] == ' ' && x != 4) {
+			left = sqrt(pow(g_sChar.m_cLocation.X - (g_sHugger.m_cLocation.X - 1), 2) + pow(g_sChar.m_cLocation.Y - (g_sHugger.m_cLocation.Y), 2));
 		}
-		if (map[g_sEnemy.m_cLocation.Y + 1][g_sEnemy.m_cLocation.X] == ' ' && x != 1) {
-			down = sqrt(pow(g_sChar.m_cLocation.X - (g_sEnemy.m_cLocation.X), 2) + pow(g_sChar.m_cLocation.Y - (g_sEnemy.m_cLocation.Y + 1), 2));
+		if (map[g_sHugger.m_cLocation.Y + 1][g_sHugger.m_cLocation.X] == ' ' && x != 1) {
+			down = sqrt(pow(g_sChar.m_cLocation.X - (g_sHugger.m_cLocation.X), 2) + pow(g_sChar.m_cLocation.Y - (g_sHugger.m_cLocation.Y + 1), 2));
 		}
-		if (map[g_sEnemy.m_cLocation.Y][g_sEnemy.m_cLocation.X + 1] == ' ' && x != 2) {
-			right = sqrt(pow(g_sChar.m_cLocation.X - (g_sEnemy.m_cLocation.X + 1), 2) + pow(g_sChar.m_cLocation.Y - (g_sEnemy.m_cLocation.Y), 2));
+		if (map[g_sHugger.m_cLocation.Y][g_sHugger.m_cLocation.X + 1] == ' ' && x != 2) {
+			right = sqrt(pow(g_sChar.m_cLocation.X - (g_sHugger.m_cLocation.X + 1), 2) + pow(g_sChar.m_cLocation.Y - (g_sHugger.m_cLocation.Y), 2));
 		}
 		min_double = min(min(up, down), min(left, right));
 		if (min_double == up && x != 3) {
-			g_sEnemy.m_cLocation.Y--;
+			g_sHugger.m_cLocation.Y--;
 			x = 1;
 		}
 		else if (min_double == left && x != 4) {
-			g_sEnemy.m_cLocation.X--;
+			g_sHugger.m_cLocation.X--;
 			x = 2;
 		}
 		else if (min_double == down && x != 1) {
-			g_sEnemy.m_cLocation.Y++;
+			g_sHugger.m_cLocation.Y++;
 			x = 3;
 		}
 		else if (min_double == right && x != 2) {
-			g_sEnemy.m_cLocation.X++;
+			g_sHugger.m_cLocation.X++;
 			x = 4;
 		}
-		fooeyhappened = true;
+		fooeyhappened1 = true;
 
-		if (fooeyhappened)
-			enemybouncetime = g_dElapsedTime + 0.17; // enemies act around every 1/6 seconds
+		if (fooeyhappened1)
+			huggerbouncetime = g_dElapsedTime + 0.167; // huggers act around every 1/6 seconds
+
+
+		fooeyhappened2 = false;
+
+		if (gunnerbouncetime > g_dElapsedTime)
+			return;
+
+		if (sqrt(pow((g_sGunner.m_cLocation.X - g_sChar.m_cLocation.X), 2)) <= 7 && sqrt(pow((g_sGunner.m_cLocation.Y - g_sChar.m_cLocation.Y), 2)) <= 7) {
+			if (g_sGunner.m_cLocation.Y < g_sChar.m_cLocation.Y) {
+				g_sGunner.m_cLocation.Y--;
+			}
+			if (g_sGunner.m_cLocation.Y > g_sChar.m_cLocation.Y) {
+				g_sGunner.m_cLocation.Y++;
+			}
+			if (g_sGunner.m_cLocation.X < g_sChar.m_cLocation.X) {
+				g_sGunner.m_cLocation.X--;
+			}
+			if (g_sGunner.m_cLocation.X > g_sChar.m_cLocation.X) {
+				g_sGunner.m_cLocation.X++;
+			}
+		}
+		else {
+			if (g_sGunner.m_cLocation.Y < g_sChar.m_cLocation.Y) {
+				g_sGunner.m_cLocation.Y++;
+			}
+			if (g_sGunner.m_cLocation.Y > g_sChar.m_cLocation.Y) {
+				g_sGunner.m_cLocation.Y--;
+			}
+			if (g_sGunner.m_cLocation.X < g_sChar.m_cLocation.X) {
+				g_sGunner.m_cLocation.X++;
+			}
+			if (g_sGunner.m_cLocation.X > g_sChar.m_cLocation.X) {
+				g_sGunner.m_cLocation.X--;
+			}
+		}
+		if (g_sGunner.m_cLocation.X == g_sChar.m_cLocation.X) {
+			if (g_sGunner.m_cLocation.Y < g_sChar.m_cLocation.Y) {
+				// shoot down
+			}
+			else; //shoot up
+		}
+		if (g_sGunner.m_cLocation.Y == g_sChar.m_cLocation.Y) {
+			if (g_sGunner.m_cLocation.X < g_sChar.m_cLocation.X) {
+				// shoot right
+			}
+			else; //shoot left
+		}
+		
+		fooeyhappened2 = true;
+
+		if (fooeyhappened2)
+			gunnerbouncetime = g_dElapsedTime + 0.5; // gunners act around every 1/2 seconds
+
+
+
 }
 
 void gameplay()            // gameplay logic
@@ -298,6 +378,7 @@ void moveCharacter()
 	{
 		shop = false;
 	}
+
 	if (map[g_sChar.m_cLocation.Y - 1][g_sChar.m_cLocation.X] == 'Q' || map[g_sChar.m_cLocation.Y][g_sChar.m_cLocation.X - 1] == 'Q' || map[g_sChar.m_cLocation.Y + 1][g_sChar.m_cLocation.X] == 'Q' || map[g_sChar.m_cLocation.Y][g_sChar.m_cLocation.X + 1] == 'Q' ||
 		map[g_sChar.m_cLocation.Y - 1][g_sChar.m_cLocation.X] == 'U' || map[g_sChar.m_cLocation.Y][g_sChar.m_cLocation.X - 1] == 'U' || map[g_sChar.m_cLocation.Y + 1][g_sChar.m_cLocation.X] == 'U' || map[g_sChar.m_cLocation.Y][g_sChar.m_cLocation.X + 1] == 'U' ||
 		map[g_sChar.m_cLocation.Y - 1][g_sChar.m_cLocation.X] == 'I' || map[g_sChar.m_cLocation.Y][g_sChar.m_cLocation.X - 1] == 'I' || map[g_sChar.m_cLocation.Y + 1][g_sChar.m_cLocation.X] == 'I' || map[g_sChar.m_cLocation.Y][g_sChar.m_cLocation.X + 1] == 'I' ||
@@ -463,6 +544,10 @@ void renderMap()
 					{
 						headquarters[a] = 219;
 					}
+					else if (headquarters[a] == 'u' || headquarters[a] == 'i' || headquarters[a] == 'o' || headquarters[a] == 'p')
+					{
+						headquarters[a] = 255;
+					}
 					map[i][a] = headquarters[a];
 				}
 				c.X = 0;
@@ -598,6 +683,56 @@ void renderMap()
 		}
 		level4File.close();
 	}
+
+	if (shop == true)
+	{
+		//Render Shop
+		string shop;
+		ifstream shopFile;
+		i = 0;
+
+		shopFile.open("Shop.txt");
+		if (shopFile.is_open())
+		{
+			while (getline(shopFile, shop))
+			{
+				for (a = 0; a < shop.length(); a++)
+				{
+					if (shop[a] == '#')
+					{
+						shop[a] = 223;
+					}
+					else if (shop[a] == '@')
+					{
+						shop[a] = 219;
+					}
+				}
+				c.X = 14;
+				c.Y = 17 + i;
+				i++;
+				g_Console.writeToBuffer(c, shop, 0x00 + i);
+			}
+		}
+		shopFile.close();
+
+		if (g_abKeyPressed[K_ONE])
+		{
+			equipSmg = true;
+		}
+		 if (g_abKeyPressed[K_TWO])
+		{
+			equipRifle = true;
+		}
+		if (g_abKeyPressed[K_THREE])
+		{
+			equipSniper = true;
+		}
+		if (g_abKeyPressed[K_FOUR])
+		{
+			equipMinigun = true;
+		}
+	}
+
 	//Render Inventory
 	string inventory;
 	ifstream inventoryFile;
@@ -624,27 +759,58 @@ void renderMap()
 				}
 				else if (inventory[a] == '1')
 				{
-					inventory[a] = 251;
+					if (equipPistol == true)
+					{
+						inventory[a] = 251;
+					}
+					else
+					{
+						inventory[a] = 'x';
+					}
 				}
 				else if (inventory[a] == '2')
 				{
-					inventory[a] = 'x';
+					if (equipSmg == true)
+					{
+						inventory[a] = 251;
+					}
+					else
+					{
+						inventory[a] = 'x';
+					}
 				}
 				else if (inventory[a] == '3')
 				{
-					inventory[a] = 'x';
+					if (equipRifle == true)
+					{
+						inventory[a] = 251;
+					}
+					else
+					{
+						inventory[a] = 'x';
+					}
 				}
 				else if (inventory[a] == '4')
 				{
-					inventory[a] = 'x';
+					if (equipSniper == true)
+					{
+						inventory[a] = 251;
+					}
+					else
+					{
+						inventory[a] = 'x';
+					}
 				}
 				else if (inventory[a] == '5')
 				{
-					inventory[a] = 'x';
-				}
-				else if (inventory[a] == '6')
-				{
-					inventory[a] = 'x';
+					if (equipMinigun == true)
+					{
+						inventory[a] = 251;
+					}
+					else
+					{
+						inventory[a] = 'x';
+					}
 				}
 			}
 			c.X = 0;
@@ -655,44 +821,13 @@ void renderMap()
 	}
 	inventoryFile.close();
 
-	if (shop == true)
-	{
-		//Render Shop
-		string shop;
-		ifstream shopFile;
-		i = 0;
-
-		shopFile.open("Shop.txt");
-		if (shopFile.is_open())
-		{
-			while (getline(shopFile, shop))
-			{
-				for (a = 0; a < shop.length(); a++)
-				{
-					if (shop[a] == '#')
-					{
-						shop[a] = 223;
-					}
-					else if (shop[a] == '@')
-					{
-						shop[a] = 219;
-					}
-				}
-				c.X = 22;
-				c.Y = 17 + i;
-				i++;
-				g_Console.writeToBuffer(c, shop, 0x00 + i);
-			}
-		}
-		shopFile.close();
-	}
+	
 }
 
 void renderCharacter()
 {
     // Draw the location of the character
-    WORD charColor = 0x0F;
-
+    //WORD charColor = 0x0F;
     /*if (g_sChar.m_bActive)
     {
         charColor = 0x0E;
@@ -747,27 +882,27 @@ void renderCharacter()
 	//Characters' rendering
 	if (firstChar == true)
 	{
-		g_Console.writeToBuffer(g_sChar.m_cLocation, (char)1, charColor);
+		g_Console.writeToBuffer(g_sChar.m_cLocation, (char)1, 0x0F);
 	}
 	else if (secondChar == true)
 	{
-		g_Console.writeToBuffer(g_sChar.m_cLocation, (char)2, charColor);
+		g_Console.writeToBuffer(g_sChar.m_cLocation, (char)2, 0x0F);
 	}
 	else if (thirdChar == true)
 	{
-		g_Console.writeToBuffer(g_sChar.m_cLocation, (char)3, charColor);
+		g_Console.writeToBuffer(g_sChar.m_cLocation, (char)3, 0x0C);
 	}
 	else if (fourthChar == true)
 	{
-		g_Console.writeToBuffer(g_sChar.m_cLocation, (char)4, charColor);
+		g_Console.writeToBuffer(g_sChar.m_cLocation, (char)4, 0x09);
 	}
 	else if (fifthChar == true)
 	{
-		g_Console.writeToBuffer(g_sChar.m_cLocation, (char)5, charColor);
+		g_Console.writeToBuffer(g_sChar.m_cLocation, (char)5, 0x0A);
 	}
 	else if (sixthChar == true)
 	{
-		g_Console.writeToBuffer(g_sChar.m_cLocation, (char)6, charColor);
+		g_Console.writeToBuffer(g_sChar.m_cLocation, (char)6, 0x0E);
 	}
 }
 
