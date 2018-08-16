@@ -11,7 +11,7 @@
 
 using namespace std;
 
-int money = 0, x = 0, shootdirection = 0, i = 0;
+int money = 0, x = 0, shootdirection = 0;
 
 bool HQ = false;
 bool shop = false;
@@ -19,6 +19,7 @@ bool levelA = false;
 bool levelB = false;
 bool levelC = false;
 bool levelD = false;
+bool HQspawn = false;
 bool playerRespawn = false;
 bool mainMenu = true;
 
@@ -70,13 +71,13 @@ void init( void )
     // sets the initial state for the game
     g_eGameState = S_SPLASHSCREEN;
 
-	g_sChar.m_cLocation.X = 5;
-	g_sChar.m_cLocation.Y = 2;
+	g_sChar.m_cLocation.X = 46;
+	g_sChar.m_cLocation.Y = 10;
 	g_sHugger.m_cLocation.X = 5;
 	g_sHugger.m_cLocation.Y = 16;
 	g_sGunner.m_cLocation.X = 6;
 	g_sGunner.m_cLocation.Y = 16;
-	for (i = 0; i < 128; i++) {
+	for (int i = 0; i < 128; i++) {
 		g_sBullets[i].m_cLocation.X = 1;
 		g_sBullets[i].m_cLocation.Y = 1;
 	}
@@ -194,12 +195,11 @@ void renderEnemies()
 	
 	g_Console.writeToBuffer(g_sHugger.m_cLocation, (char)128, charE_Color);
 	g_Console.writeToBuffer(g_sGunner.m_cLocation, (char)83, charE_Color);
-	for (i = 0; i < 128; i++) {
+	for (int i = 0; i < 128; i++) {
 		g_Console.writeToBuffer(g_sBullets[i].m_cLocation, (char)7, charE_Color);
 	}
-	i = 0;
 }
-
+int i = 0;
 void enemydata() {
 	bool fooeyhappened1, fooeyhappened2, fooeyhappened3;
 	double up, left, down, right, min_double;
@@ -293,6 +293,15 @@ void enemydata() {
 			}
 			else shootdirection = 2; //shoot left
 		}
+		if (shootdirection != 0) {
+			g_sBullets[i].m_cLocation.X = g_sGunner.m_cLocation.X;
+			g_sBullets[i].m_cLocation.Y = g_sGunner.m_cLocation.Y;
+			i += 1;
+			if (i >= 127) {
+				i = 0;
+			}
+			shootdirection = 0;
+		}
 		
 		fooeyhappened2 = true;
 
@@ -305,11 +314,6 @@ void enemydata() {
 		if (bulletbouncetime > g_dElapsedTime)
 			return;
 
-		if (shootdirection != 0) {
-			g_sBullets[i].m_cLocation.X = g_sGunner.m_cLocation.X;
-			g_sBullets[i].m_cLocation.Y = g_sGunner.m_cLocation.Y;
-			shootdirection = 0;
-		}
 		if (shootdirection = 1) { // shoot up
 			g_sBullets[i].m_cLocation.Y--;
 		}
@@ -321,10 +325,6 @@ void enemydata() {
 		}
 		if (shootdirection = 4) { // shoot right
 			g_sBullets[i].m_cLocation.X++;
-		}
-		i += 1;
-		if (i >= 127) {
-			i = 0;
 		}
 
 		fooeyhappened3 = true;
@@ -420,7 +420,7 @@ void moveCharacter()
 
 	if (HQ == true)
 	{
-		playerRespawn = false;
+		HQspawn = false;
 
 		if (map[g_sChar.m_cLocation.Y - 1][g_sChar.m_cLocation.X] == 'a' || map[g_sChar.m_cLocation.Y][g_sChar.m_cLocation.X - 1] == 'a' || map[g_sChar.m_cLocation.Y + 1][g_sChar.m_cLocation.X] == 'a' || map[g_sChar.m_cLocation.Y][g_sChar.m_cLocation.X + 1] == 'a')
 		{
@@ -456,7 +456,7 @@ void moveCharacter()
 		{
 			levelA = false;
 			HQ = true;
-			playerRespawn = true;
+			HQspawn = true;
 		}
 	}
 	else if (levelB == true)
@@ -467,7 +467,7 @@ void moveCharacter()
 		{
 			levelB = false;
 			HQ = true;
-			playerRespawn = true;
+			HQspawn = true;
 		}
 		if (map[g_sChar.m_cLocation.Y - 1][g_sChar.m_cLocation.X] == '&' || map[g_sChar.m_cLocation.Y][g_sChar.m_cLocation.X - 1] == '&' || map[g_sChar.m_cLocation.Y + 1][g_sChar.m_cLocation.X] == '&' || map[g_sChar.m_cLocation.Y][g_sChar.m_cLocation.X + 1] == '&')
 		{
@@ -483,7 +483,7 @@ void moveCharacter()
 		{
 			levelC = false;
 			HQ = true;
-			playerRespawn = true;
+			HQspawn = true;
 		}
 		if (map[g_sChar.m_cLocation.Y - 1][g_sChar.m_cLocation.X] == '&' || map[g_sChar.m_cLocation.Y][g_sChar.m_cLocation.X - 1] == '&' || map[g_sChar.m_cLocation.Y + 1][g_sChar.m_cLocation.X] == '&' || map[g_sChar.m_cLocation.Y][g_sChar.m_cLocation.X + 1] == '&')
 		{
@@ -499,7 +499,7 @@ void moveCharacter()
 		{
 			levelD = false;
 			HQ = true;
-			playerRespawn = true;
+			HQspawn = true;
 		}
 		if (map[g_sChar.m_cLocation.Y - 1][g_sChar.m_cLocation.X] == '&' || map[g_sChar.m_cLocation.Y][g_sChar.m_cLocation.X - 1] == '&' || map[g_sChar.m_cLocation.Y + 1][g_sChar.m_cLocation.X] == '&' || map[g_sChar.m_cLocation.Y][g_sChar.m_cLocation.X + 1] == '&')
 		{
@@ -508,6 +508,12 @@ void moveCharacter()
 		}
 
 	}
+	if (HQspawn == true)
+	{
+		g_sChar.m_cLocation.X = 46;
+		g_sChar.m_cLocation.Y = 10;
+	}
+
 	if (playerRespawn == true)
 	{
 		g_sChar.m_cLocation.X = 5;
@@ -582,7 +588,7 @@ void renderMap()
 		menuFile.close();
 	}
 	//Render Headquarters
-	if (HQ == true)
+	else if (HQ == true)
 	{
 		string headquarters;
 		ifstream headquartersFile;
