@@ -588,7 +588,7 @@ void renderMap()
 		menuFile.close();
 	}
 	//Render Headquarters
-	if (HQ == true)
+	else if (HQ == true)
 	{
 		string headquarters;
 		ifstream headquartersFile;
