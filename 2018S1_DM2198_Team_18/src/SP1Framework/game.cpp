@@ -525,7 +525,15 @@ void processUserInput()
     // quits the game if player hits the escape key
     if (g_abKeyPressed[K_ESCAPE])
         g_bQuitGame = true;
-	
+	if (g_sChar.m_cLocation.X == 3 && g_sChar.m_cLocation.Y == 10 && mainMenu)
+	{
+		mainMenu = false;
+		HQ = true;
+	}
+	if (g_sChar.m_cLocation.X == 14 && g_sChar.m_cLocation.Y == 11 && mainMenu)
+	{
+		g_bQuitGame = true;
+	}
 }
 
 void clearScreen()
