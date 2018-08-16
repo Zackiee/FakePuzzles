@@ -13,13 +13,15 @@ using namespace std;
 
 int money = 0, x = 0, shootdirection = 0;
 
-bool HQ = true;
+bool HQ = false;
 bool shop = false;
 bool levelA = false;
 bool levelB = false;
 bool levelC = false;
 bool levelD = false;
+bool HQspawn = false;
 bool playerRespawn = false;
+bool mainMenu = true;
 
 bool firstChar = true;
 bool secondChar = false;
@@ -69,8 +71,8 @@ void init( void )
     // sets the initial state for the game
     g_eGameState = S_SPLASHSCREEN;
 
-	g_sChar.m_cLocation.X = 5;
-	g_sChar.m_cLocation.Y = 2;
+	g_sChar.m_cLocation.X = 46;
+	g_sChar.m_cLocation.Y = 10;
 	g_sHugger.m_cLocation.X = 5;
 	g_sHugger.m_cLocation.Y = 16;
 	g_sGunner.m_cLocation.X = 6;
@@ -418,7 +420,7 @@ void moveCharacter()
 
 	if (HQ == true)
 	{
-		playerRespawn = false;
+		HQspawn = false;
 
 		if (map[g_sChar.m_cLocation.Y - 1][g_sChar.m_cLocation.X] == 'a' || map[g_sChar.m_cLocation.Y][g_sChar.m_cLocation.X - 1] == 'a' || map[g_sChar.m_cLocation.Y + 1][g_sChar.m_cLocation.X] == 'a' || map[g_sChar.m_cLocation.Y][g_sChar.m_cLocation.X + 1] == 'a')
 		{
@@ -454,7 +456,7 @@ void moveCharacter()
 		{
 			levelA = false;
 			HQ = true;
-			playerRespawn = true;
+			HQspawn = true;
 		}
 	}
 	else if (levelB == true)
@@ -465,7 +467,7 @@ void moveCharacter()
 		{
 			levelB = false;
 			HQ = true;
-			playerRespawn = true;
+			HQspawn = true;
 		}
 		if (map[g_sChar.m_cLocation.Y - 1][g_sChar.m_cLocation.X] == '&' || map[g_sChar.m_cLocation.Y][g_sChar.m_cLocation.X - 1] == '&' || map[g_sChar.m_cLocation.Y + 1][g_sChar.m_cLocation.X] == '&' || map[g_sChar.m_cLocation.Y][g_sChar.m_cLocation.X + 1] == '&')
 		{
@@ -481,7 +483,7 @@ void moveCharacter()
 		{
 			levelC = false;
 			HQ = true;
-			playerRespawn = true;
+			HQspawn = true;
 		}
 		if (map[g_sChar.m_cLocation.Y - 1][g_sChar.m_cLocation.X] == '&' || map[g_sChar.m_cLocation.Y][g_sChar.m_cLocation.X - 1] == '&' || map[g_sChar.m_cLocation.Y + 1][g_sChar.m_cLocation.X] == '&' || map[g_sChar.m_cLocation.Y][g_sChar.m_cLocation.X + 1] == '&')
 		{
@@ -497,7 +499,7 @@ void moveCharacter()
 		{
 			levelD = false;
 			HQ = true;
-			playerRespawn = true;
+			HQspawn = true;
 		}
 		if (map[g_sChar.m_cLocation.Y - 1][g_sChar.m_cLocation.X] == '&' || map[g_sChar.m_cLocation.Y][g_sChar.m_cLocation.X - 1] == '&' || map[g_sChar.m_cLocation.Y + 1][g_sChar.m_cLocation.X] == '&' || map[g_sChar.m_cLocation.Y][g_sChar.m_cLocation.X + 1] == '&')
 		{
@@ -506,6 +508,12 @@ void moveCharacter()
 		}
 
 	}
+	if (HQspawn == true)
+	{
+		g_sChar.m_cLocation.X = 46;
+		g_sChar.m_cLocation.Y = 10;
+	}
+
 	if (playerRespawn == true)
 	{
 		g_sChar.m_cLocation.X = 5;
@@ -551,9 +559,35 @@ void renderMap()
 	COORD c;
 	int i = 0;
 	int a = 0;
+	//Render Main Menu
+	if (mainMenu == true)
+	{
+		string mainMenu;
+		ifstream menuFile;
 
+		menuFile.open("MainMenu.txt");
+		if (menuFile.is_open())
+		{
+			while (getline(menuFile, mainMenu))
+			{
+				for (a = 0; a < mainMenu.length(); a++)
+				{
+					if (mainMenu[a] == 'F')
+					{
+						mainMenu[a] = 178;
+					}
+					map[i][a] = mainMenu[a];
+				}
+				c.X = 0;
+				c.Y = i;
+				i++;
+				g_Console.writeToBuffer(c, mainMenu, 0x0B);
+			}
+		}
+		menuFile.close();
+	}
 	//Render Headquarters
-	if (HQ == true)
+	else if (HQ == true)
 	{
 		string headquarters;
 		ifstream headquartersFile;
