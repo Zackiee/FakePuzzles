@@ -29,7 +29,7 @@ bool fifthChar = false;
 bool sixthChar = false;
 
 double  g_dElapsedTime;
-double enemybouncetime = g_dElapsedTime;
+double  huggerbouncetime = g_dElapsedTime;
 double  g_dDeltaTime;
 bool    g_abKeyPressed[K_COUNT];
 
@@ -182,7 +182,7 @@ void enemydata() {
 	ranged gunner;
 
 		fooeyhappened = false;
-		if (enemybouncetime > g_dElapsedTime)
+		if (huggerbouncetime > g_dElapsedTime)
 			return;
 
 		up = 99.0; left = 99.0; down = 99.0; right = 99.0;
@@ -219,7 +219,7 @@ void enemydata() {
 		fooeyhappened = true;
 
 		if (fooeyhappened)
-			enemybouncetime = g_dElapsedTime + 0.17; // enemies act around every 1/6 seconds
+			huggerbouncetime = g_dElapsedTime + 0.17; // enemies act around every 1/6 seconds
 }
 
 void gameplay()            // gameplay logic

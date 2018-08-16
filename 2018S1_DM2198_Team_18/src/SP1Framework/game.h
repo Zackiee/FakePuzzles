@@ -72,5 +72,5 @@ struct ranged {
 	int hp = 1;
 };
 extern bool fooeyhappened;
-extern double enemybouncetime;
+extern double huggerbouncetime;
 #endif // _GAME_H
