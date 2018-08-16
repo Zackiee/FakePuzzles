@@ -11,7 +11,7 @@
 
 using namespace std;
 
-int money = 0, x = 0;
+int money = 0, x = 0, shootdirection = 0, i = 0;
 
 bool HQ = true;
 bool shop = false;
@@ -76,9 +76,9 @@ void init( void )
 	g_sHugger.m_cLocation.Y = 16;
 	g_sGunner.m_cLocation.X = 6;
 	g_sGunner.m_cLocation.Y = 16;
-	for (int i = 0; i < 128; i++) {
-		g_sBullets[i].m_cLocation.X = false;
-		g_sBullets[i].m_cLocation.Y = false;
+	for (i = 0; i < 128; i++) {
+		g_sBullets[i].m_cLocation.X = 1;
+		g_sBullets[i].m_cLocation.Y = 1;
 	}
     g_sChar.m_bActive = true;
     // sets the width, height and the font name to use in the console
@@ -186,7 +186,6 @@ void splashScreenWait()    // waits for time to pass in splash screen
     if (g_dElapsedTime > 3.0) // wait for 3 seconds to switch to game mode, else do nothing
         g_eGameState = S_GAME;
 }
-
 melee hugger;
 ranged gunner;
 void renderEnemies()
@@ -196,9 +195,10 @@ void renderEnemies()
 	
 	g_Console.writeToBuffer(g_sHugger.m_cLocation, (char)128, charE_Color);
 	g_Console.writeToBuffer(g_sGunner.m_cLocation, (char)83, charE_Color);
-	for (int i = 0; i < 128; i++) {
+	for (i = 0; i < 128; i++) {
 		g_Console.writeToBuffer(g_sBullets[i].m_cLocation, (char)7, charE_Color);
 	}
+	i = 0;
 }
 
 void enemydata() {
@@ -226,7 +226,7 @@ void enemydata() {
 		if (map[g_sHugger.m_cLocation.Y][g_sHugger.m_cLocation.X + 1] == ' ' && x != 2) {
 			right = sqrt(pow(g_sChar.m_cLocation.X - (g_sHugger.m_cLocation.X + 1), 2) + pow(g_sChar.m_cLocation.Y - (g_sHugger.m_cLocation.Y), 2));
 		}
-		min_double = min(min(up, down), min(left, right));
+		min_double = min(min(up, down), min(left, right)); // note for bug fix in future : if hugger goes into a spot where it has no choice but to reverse direction, since it's not allowed to reverse direction, it moves up through walls and breaks the game
 		if (min_double == up && x != 3) {
 			g_sHugger.m_cLocation.Y--;
 			x = 1;
@@ -246,7 +246,7 @@ void enemydata() {
 		fooeyhappened1 = true;
 
 		if (fooeyhappened1)
-			huggerbouncetime = g_dElapsedTime + 0.167; // huggers act around every 1/6 seconds
+			huggerbouncetime = g_dElapsedTime + 0.167; // huggers act around six times per second
 
 
 		fooeyhappened2 = false;
@@ -284,24 +284,54 @@ void enemydata() {
 		}
 		if (g_sGunner.m_cLocation.X == g_sChar.m_cLocation.X) {
 			if (g_sGunner.m_cLocation.Y < g_sChar.m_cLocation.Y) {
-				// shoot down
+				shootdirection = 3; // shoot down
 			}
-			else; //shoot up
+			else shootdirection = 1; //shoot up
 		}
 		if (g_sGunner.m_cLocation.Y == g_sChar.m_cLocation.Y) {
 			if (g_sGunner.m_cLocation.X < g_sChar.m_cLocation.X) {
-				// shoot right
+				shootdirection = 4;// shoot right
 			}
-			else; //shoot left
+			else shootdirection = 2; //shoot left
 		}
 		
 		fooeyhappened2 = true;
 
 		if (fooeyhappened2)
-			gunnerbouncetime = g_dElapsedTime + 0.5; // gunners act around every 1/2 seconds
+			gunnerbouncetime = g_dElapsedTime + 0.5; // gunners act around twice per second
 
 
+		fooeyhappened3 = false;
 
+		if (bulletbouncetime > g_dElapsedTime)
+			return;
+
+		if (shootdirection != 0) {
+			g_sBullets[i].m_cLocation.X = g_sGunner.m_cLocation.X;
+			g_sBullets[i].m_cLocation.Y = g_sGunner.m_cLocation.Y;
+			shootdirection = 0;
+		}
+		if (shootdirection = 1) { // shoot up
+			g_sBullets[i].m_cLocation.Y--;
+		}
+		if (shootdirection = 2) { // shoot left
+			g_sBullets[i].m_cLocation.X--;
+		}
+		if (shootdirection = 3) { // shoot down
+			g_sBullets[i].m_cLocation.Y++;
+		}
+		if (shootdirection = 4) { // shoot right
+			g_sBullets[i].m_cLocation.X++;
+		}
+		i += 1;
+		if (i >= 127) {
+			i = 0;
+		}
+
+		fooeyhappened3 = true;
+
+		if (fooeyhappened3)
+			bulletbouncetime = g_dElapsedTime + 0.071; // bullets move around 14 tiles per second
 }
 
 void gameplay()            // gameplay logic
