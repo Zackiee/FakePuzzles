@@ -32,8 +32,7 @@ bool equipPistol = true;
 bool equipSmg = false;
 bool equipRifle = false;
 bool equipSniper = false;
-bool equipRocket = false;
-bool equipGrenade = false;
+bool equipMinigun = false;
 
 double  g_dElapsedTime;
 double  huggerbouncetime = g_dElapsedTime;
@@ -118,7 +117,6 @@ void getInput( void )
 	g_abKeyPressed[K_TWO]	 = isKeyPressed(0X32);
 	g_abKeyPressed[K_THREE]	 = isKeyPressed(0x33);
 	g_abKeyPressed[K_FOUR]	 = isKeyPressed(0x34);
-	g_abKeyPressed[K_FIVE]	 = isKeyPressed(0x35);
 }
 
 //--------------------------------------------------------------
@@ -461,6 +459,10 @@ void renderMap()
 					{
 						headquarters[a] = 219;
 					}
+					else if (headquarters[a] == 'u' || headquarters[a] == 'i' || headquarters[a] == 'o' || headquarters[a] == 'p')
+					{
+						headquarters[a] = 255;
+					}
 					map[i][a] = headquarters[a];
 				}
 				c.X = 0;
@@ -642,11 +644,7 @@ void renderMap()
 		}
 		if (g_abKeyPressed[K_FOUR])
 		{
-			equipRocket = true;
-		}
-		if (g_abKeyPressed[K_FIVE])
-		{
-			equipGrenade = true;
+			equipMinigun = true;
 		}
 	}
 
@@ -720,18 +718,7 @@ void renderMap()
 				}
 				else if (inventory[a] == '5')
 				{
-					if (equipRocket == true)
-					{
-						inventory[a] = 251;
-					}
-					else
-					{
-						inventory[a] = 'x';
-					}
-				}
-				else if (inventory[a] == '6')
-				{
-					if (equipGrenade == true)
+					if (equipMinigun == true)
 					{
 						inventory[a] = 251;
 					}
