@@ -19,6 +19,7 @@ bool levelA = false;
 bool levelB = false;
 bool levelC = false;
 bool levelD = false;
+bool HQspawn = false;
 bool playerRespawn = false;
 
 bool firstChar = true;
@@ -69,8 +70,8 @@ void init( void )
     // sets the initial state for the game
     g_eGameState = S_SPLASHSCREEN;
 
-	g_sChar.m_cLocation.X = 5;
-	g_sChar.m_cLocation.Y = 2;
+	g_sChar.m_cLocation.X = 46;
+	g_sChar.m_cLocation.Y = 10;
 	g_sHugger.m_cLocation.X = 5;
 	g_sHugger.m_cLocation.Y = 16;
 	g_sGunner.m_cLocation.X = 6;
@@ -419,7 +420,7 @@ void moveCharacter()
 
 	if (HQ == true)
 	{
-		playerRespawn = false;
+		HQspawn = false;
 
 		if (map[g_sChar.m_cLocation.Y - 1][g_sChar.m_cLocation.X] == 'a' || map[g_sChar.m_cLocation.Y][g_sChar.m_cLocation.X - 1] == 'a' || map[g_sChar.m_cLocation.Y + 1][g_sChar.m_cLocation.X] == 'a' || map[g_sChar.m_cLocation.Y][g_sChar.m_cLocation.X + 1] == 'a')
 		{
@@ -455,7 +456,7 @@ void moveCharacter()
 		{
 			levelA = false;
 			HQ = true;
-			playerRespawn = true;
+			HQspawn = true;
 		}
 	}
 	else if (levelB == true)
@@ -466,7 +467,7 @@ void moveCharacter()
 		{
 			levelB = false;
 			HQ = true;
-			playerRespawn = true;
+			HQspawn = true;
 		}
 		if (map[g_sChar.m_cLocation.Y - 1][g_sChar.m_cLocation.X] == '&' || map[g_sChar.m_cLocation.Y][g_sChar.m_cLocation.X - 1] == '&' || map[g_sChar.m_cLocation.Y + 1][g_sChar.m_cLocation.X] == '&' || map[g_sChar.m_cLocation.Y][g_sChar.m_cLocation.X + 1] == '&')
 		{
@@ -482,7 +483,7 @@ void moveCharacter()
 		{
 			levelC = false;
 			HQ = true;
-			playerRespawn = true;
+			HQspawn = true;
 		}
 		if (map[g_sChar.m_cLocation.Y - 1][g_sChar.m_cLocation.X] == '&' || map[g_sChar.m_cLocation.Y][g_sChar.m_cLocation.X - 1] == '&' || map[g_sChar.m_cLocation.Y + 1][g_sChar.m_cLocation.X] == '&' || map[g_sChar.m_cLocation.Y][g_sChar.m_cLocation.X + 1] == '&')
 		{
@@ -498,7 +499,7 @@ void moveCharacter()
 		{
 			levelD = false;
 			HQ = true;
-			playerRespawn = true;
+			HQspawn = true;
 		}
 		if (map[g_sChar.m_cLocation.Y - 1][g_sChar.m_cLocation.X] == '&' || map[g_sChar.m_cLocation.Y][g_sChar.m_cLocation.X - 1] == '&' || map[g_sChar.m_cLocation.Y + 1][g_sChar.m_cLocation.X] == '&' || map[g_sChar.m_cLocation.Y][g_sChar.m_cLocation.X + 1] == '&')
 		{
@@ -507,6 +508,12 @@ void moveCharacter()
 		}
 
 	}
+	if (HQspawn == true)
+	{
+		g_sChar.m_cLocation.X = 46;
+		g_sChar.m_cLocation.Y = 10;
+	}
+
 	if (playerRespawn == true)
 	{
 		g_sChar.m_cLocation.X = 5;
