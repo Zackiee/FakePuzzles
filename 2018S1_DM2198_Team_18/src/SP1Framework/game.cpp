@@ -71,8 +71,8 @@ void init( void )
     // sets the initial state for the game
     g_eGameState = S_SPLASHSCREEN;
 
-	g_sChar.m_cLocation.X = 46;
-	g_sChar.m_cLocation.Y = 10;
+	g_sChar.m_cLocation.X = 5;
+	g_sChar.m_cLocation.Y = 8;
 	g_sHugger.m_cLocation.X = 5;
 	g_sHugger.m_cLocation.Y = 16;
 	g_sGunner.m_cLocation.X = 6;
