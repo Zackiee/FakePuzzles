@@ -66,14 +66,10 @@ struct smg
 };
 struct melee {
 	int hp = 3;
-	char targetX;
-	char targetY;
 };
 
 struct ranged {
 	int hp = 1;
-	char targetX;
-	char targetY;
 };
 extern bool fooeyhappened;
 extern double enemybouncetime;
