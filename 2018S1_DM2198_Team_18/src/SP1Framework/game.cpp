@@ -36,17 +36,21 @@ bool equipMinigun = false;
 
 double  g_dElapsedTime;
 double  huggerbouncetime = g_dElapsedTime;
+double  gunnerbouncetime = g_dElapsedTime;
+double  bulletbouncetime = g_dElapsedTime;
 double  g_dDeltaTime;
 bool    g_abKeyPressed[K_COUNT];
 
 // Game specific variables here
 SGameChar   g_sChar;
-SGameChar   g_sEnemy;
+SGameChar   g_sHugger;
+SGameChar	g_sGunner;
+SGameChar	g_sBullets[128]; // consider bullets as characters in the code
 EGAMESTATES g_eGameState = S_SPLASHSCREEN;
 double  g_dBounceTime; // this is to prevent key bouncing, so we won't trigger keypresses more than once
 
 // Console object
-Console g_Console(109, 30, "SP1 Framework");
+Console g_Console(110, 30, "SP1 Framework");
 char** map = new char*[30];
 
 //--------------------------------------------------------------
@@ -67,8 +71,14 @@ void init( void )
 
 	g_sChar.m_cLocation.X = 5;
 	g_sChar.m_cLocation.Y = 2;
-	g_sEnemy.m_cLocation.X = 5;
-	g_sEnemy.m_cLocation.Y = 16;
+	g_sHugger.m_cLocation.X = 5;
+	g_sHugger.m_cLocation.Y = 16;
+	g_sGunner.m_cLocation.X = 6;
+	g_sGunner.m_cLocation.Y = 16;
+	for (int i = 0; i < 128; i++) {
+		g_sBullets[i].m_cLocation.X = false;
+		g_sBullets[i].m_cLocation.Y = false;
+	}
     g_sChar.m_bActive = true;
     // sets the width, height and the font name to use in the console
     g_Console.setConsoleFont(0, 16, L"Consolas");
@@ -182,54 +192,114 @@ void renderEnemies()
 	// Draw the location of the enemies
 	WORD charE_Color = 0x0C;
 	
-	g_Console.writeToBuffer(g_sEnemy.m_cLocation, (char)128, charE_Color);
+	g_Console.writeToBuffer(g_sHugger.m_cLocation, (char)128, charE_Color);
+	g_Console.writeToBuffer(g_sGunner.m_cLocation, (char)83, charE_Color);
+	for (int i = 0; i < 128; i++) {
+		g_Console.writeToBuffer(g_sBullets[i].m_cLocation, (char)7, charE_Color);
+	}
 }
 
 void enemydata() {
-	bool fooeyhappened;
+	bool fooeyhappened1, fooeyhappened2, fooeyhappened3;
 	double up, left, down, right, min_double;
 	melee hugger;
 	ranged gunner;
 
-		fooeyhappened = false;
+		fooeyhappened1 = false;
+
 		if (huggerbouncetime > g_dElapsedTime)
 			return;
 
 		up = 99.0; left = 99.0; down = 99.0; right = 99.0;
 
-		if (map[g_sEnemy.m_cLocation.Y - 1][g_sEnemy.m_cLocation.X] == ' ' && x != 3) {
-			up = sqrt(pow(g_sChar.m_cLocation.X - (g_sEnemy.m_cLocation.X), 2) + pow(g_sChar.m_cLocation.Y - (g_sEnemy.m_cLocation.Y - 1), 2));
+		if (map[g_sHugger.m_cLocation.Y - 1][g_sHugger.m_cLocation.X] == ' ' && x != 3) {
+			up = sqrt(pow(g_sChar.m_cLocation.X - (g_sHugger.m_cLocation.X), 2) + pow(g_sChar.m_cLocation.Y - (g_sHugger.m_cLocation.Y - 1), 2));
 		}
-		if (map[g_sEnemy.m_cLocation.Y][g_sEnemy.m_cLocation.X - 1] == ' ' && x != 4) {
-			left = sqrt(pow(g_sChar.m_cLocation.X - (g_sEnemy.m_cLocation.X - 1), 2) + pow(g_sChar.m_cLocation.Y - (g_sEnemy.m_cLocation.Y), 2));
+		if (map[g_sHugger.m_cLocation.Y][g_sHugger.m_cLocation.X - 1] == ' ' && x != 4) {
+			left = sqrt(pow(g_sChar.m_cLocation.X - (g_sHugger.m_cLocation.X - 1), 2) + pow(g_sChar.m_cLocation.Y - (g_sHugger.m_cLocation.Y), 2));
 		}
-		if (map[g_sEnemy.m_cLocation.Y + 1][g_sEnemy.m_cLocation.X] == ' ' && x != 1) {
-			down = sqrt(pow(g_sChar.m_cLocation.X - (g_sEnemy.m_cLocation.X), 2) + pow(g_sChar.m_cLocation.Y - (g_sEnemy.m_cLocation.Y + 1), 2));
+		if (map[g_sHugger.m_cLocation.Y + 1][g_sHugger.m_cLocation.X] == ' ' && x != 1) {
+			down = sqrt(pow(g_sChar.m_cLocation.X - (g_sHugger.m_cLocation.X), 2) + pow(g_sChar.m_cLocation.Y - (g_sHugger.m_cLocation.Y + 1), 2));
 		}
-		if (map[g_sEnemy.m_cLocation.Y][g_sEnemy.m_cLocation.X + 1] == ' ' && x != 2) {
-			right = sqrt(pow(g_sChar.m_cLocation.X - (g_sEnemy.m_cLocation.X + 1), 2) + pow(g_sChar.m_cLocation.Y - (g_sEnemy.m_cLocation.Y), 2));
+		if (map[g_sHugger.m_cLocation.Y][g_sHugger.m_cLocation.X + 1] == ' ' && x != 2) {
+			right = sqrt(pow(g_sChar.m_cLocation.X - (g_sHugger.m_cLocation.X + 1), 2) + pow(g_sChar.m_cLocation.Y - (g_sHugger.m_cLocation.Y), 2));
 		}
 		min_double = min(min(up, down), min(left, right));
 		if (min_double == up && x != 3) {
-			g_sEnemy.m_cLocation.Y--;
+			g_sHugger.m_cLocation.Y--;
 			x = 1;
 		}
 		else if (min_double == left && x != 4) {
-			g_sEnemy.m_cLocation.X--;
+			g_sHugger.m_cLocation.X--;
 			x = 2;
 		}
 		else if (min_double == down && x != 1) {
-			g_sEnemy.m_cLocation.Y++;
+			g_sHugger.m_cLocation.Y++;
 			x = 3;
 		}
 		else if (min_double == right && x != 2) {
-			g_sEnemy.m_cLocation.X++;
+			g_sHugger.m_cLocation.X++;
 			x = 4;
 		}
-		fooeyhappened = true;
+		fooeyhappened1 = true;
 
-		if (fooeyhappened)
-			huggerbouncetime = g_dElapsedTime + 0.17; // enemies act around every 1/6 seconds
+		if (fooeyhappened1)
+			huggerbouncetime = g_dElapsedTime + 0.167; // huggers act around every 1/6 seconds
+
+
+		fooeyhappened2 = false;
+
+		if (gunnerbouncetime > g_dElapsedTime)
+			return;
+
+		if (sqrt(pow((g_sGunner.m_cLocation.X - g_sChar.m_cLocation.X), 2)) <= 7 && sqrt(pow((g_sGunner.m_cLocation.Y - g_sChar.m_cLocation.Y), 2)) <= 7) {
+			if (g_sGunner.m_cLocation.Y < g_sChar.m_cLocation.Y) {
+				g_sGunner.m_cLocation.Y--;
+			}
+			if (g_sGunner.m_cLocation.Y > g_sChar.m_cLocation.Y) {
+				g_sGunner.m_cLocation.Y++;
+			}
+			if (g_sGunner.m_cLocation.X < g_sChar.m_cLocation.X) {
+				g_sGunner.m_cLocation.X--;
+			}
+			if (g_sGunner.m_cLocation.X > g_sChar.m_cLocation.X) {
+				g_sGunner.m_cLocation.X++;
+			}
+		}
+		else {
+			if (g_sGunner.m_cLocation.Y < g_sChar.m_cLocation.Y) {
+				g_sGunner.m_cLocation.Y++;
+			}
+			if (g_sGunner.m_cLocation.Y > g_sChar.m_cLocation.Y) {
+				g_sGunner.m_cLocation.Y--;
+			}
+			if (g_sGunner.m_cLocation.X < g_sChar.m_cLocation.X) {
+				g_sGunner.m_cLocation.X++;
+			}
+			if (g_sGunner.m_cLocation.X > g_sChar.m_cLocation.X) {
+				g_sGunner.m_cLocation.X--;
+			}
+		}
+		if (g_sGunner.m_cLocation.X == g_sChar.m_cLocation.X) {
+			if (g_sGunner.m_cLocation.Y < g_sChar.m_cLocation.Y) {
+				// shoot down
+			}
+			else; //shoot up
+		}
+		if (g_sGunner.m_cLocation.Y == g_sChar.m_cLocation.Y) {
+			if (g_sGunner.m_cLocation.X < g_sChar.m_cLocation.X) {
+				// shoot right
+			}
+			else; //shoot left
+		}
+		
+		fooeyhappened2 = true;
+
+		if (fooeyhappened2)
+			gunnerbouncetime = g_dElapsedTime + 0.5; // gunners act around every 1/2 seconds
+
+
+
 }
 
 void gameplay()            // gameplay logic

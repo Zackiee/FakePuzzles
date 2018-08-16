@@ -75,6 +75,6 @@ struct melee {
 struct ranged {
 	int hp = 1;
 };
-extern bool fooeyhappened;
-extern double huggerbouncetime;
+extern bool fooeyhappened1, fooeyhappened2, fooeyhappened3;
+extern double huggerbouncetime, gunnerbouncetime, bulletbouncetime;
 #endif // _GAME_H
