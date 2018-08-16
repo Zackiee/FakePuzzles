@@ -11,7 +11,7 @@
 
 using namespace std;
 
-int money;
+int money = 0, x = 0;
 
 bool HQ = true;
 bool shop = false;
@@ -182,36 +182,39 @@ void enemydata() {
 
 		up = 99.0; left = 99.0; down = 99.0; right = 99.0;
 
-		if (map[g_sEnemy.m_cLocation.Y - 1][g_sEnemy.m_cLocation.X] == ' ') {
+		if (map[g_sEnemy.m_cLocation.Y - 1][g_sEnemy.m_cLocation.X] == ' ' && x != 3) {
 			up = sqrt(pow(g_sChar.m_cLocation.X - (g_sEnemy.m_cLocation.X), 2) + pow(g_sChar.m_cLocation.Y - (g_sEnemy.m_cLocation.Y - 1), 2));
 		}
-		if (map[g_sEnemy.m_cLocation.Y][g_sEnemy.m_cLocation.X - 1] == ' ') {
+		if (map[g_sEnemy.m_cLocation.Y][g_sEnemy.m_cLocation.X - 1] == ' ' && x != 4) {
 			left = sqrt(pow(g_sChar.m_cLocation.X - (g_sEnemy.m_cLocation.X - 1), 2) + pow(g_sChar.m_cLocation.Y - (g_sEnemy.m_cLocation.Y), 2));
 		}
-		if (map[g_sEnemy.m_cLocation.Y + 1][g_sEnemy.m_cLocation.X] == ' ') {
+		if (map[g_sEnemy.m_cLocation.Y + 1][g_sEnemy.m_cLocation.X] == ' ' && x != 1) {
 			down = sqrt(pow(g_sChar.m_cLocation.X - (g_sEnemy.m_cLocation.X), 2) + pow(g_sChar.m_cLocation.Y - (g_sEnemy.m_cLocation.Y + 1), 2));
 		}
-		if (map[g_sEnemy.m_cLocation.Y][g_sEnemy.m_cLocation.X + 1] == ' ') {
+		if (map[g_sEnemy.m_cLocation.Y][g_sEnemy.m_cLocation.X + 1] == ' ' && x != 2) {
 			right = sqrt(pow(g_sChar.m_cLocation.X - (g_sEnemy.m_cLocation.X + 1), 2) + pow(g_sChar.m_cLocation.Y - (g_sEnemy.m_cLocation.Y), 2));
 		}
 		min_double = min(min(up, down), min(left, right));
-		if (min_double == up) {
+		if (min_double == up && x != 3) {
 			g_sEnemy.m_cLocation.Y--;
+			x = 1;
 		}
-		if (min_double == left) {
+		else if (min_double == left && x != 4) {
 			g_sEnemy.m_cLocation.X--;
+			x = 2;
 		}
-		if (min_double == down) {
+		else if (min_double == down && x != 1) {
 			g_sEnemy.m_cLocation.Y++;
+			x = 3;
 		}
-		if (min_double == right) {
+		else if (min_double == right && x != 2) {
 			g_sEnemy.m_cLocation.X++;
+			x = 4;
 		}
-
 		fooeyhappened = true;
 
 		if (fooeyhappened)
-			enemybouncetime = g_dElapsedTime + 0.25; // enemies act every 1/4 seconds
+			enemybouncetime = g_dElapsedTime + 0.17; // enemies act around every 1/6 seconds
 }
 
 void gameplay()            // gameplay logic
