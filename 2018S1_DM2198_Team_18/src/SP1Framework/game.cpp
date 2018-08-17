@@ -14,8 +14,8 @@ using namespace std;
 int money = 0, x = 0;
 int shootdirection[128] = { 0, };
 
-bool mainMenu = true;
-bool HQ = false;
+bool mainMenu = false;
+bool HQ = true;
 bool inven = true;
 bool shop = false;
 bool levelA = false;
@@ -189,7 +189,7 @@ void render()
 
 void splashScreenWait()    // waits for time to pass in splash screen
 {
-    if (g_dElapsedTime > 0.1) // wait for 3 seconds to switch to game mode, else do nothing
+    if (g_dElapsedTime > 3) // wait for 3 seconds to switch to game mode, else do nothing
         g_eGameState = S_GAME;
 }
 melee hugger;
@@ -575,8 +575,7 @@ void clearScreen()
 
 void renderSplashScreen()  // renders the splash screen
 {
-    COORD c = g_Console.getConsoleSize();
-    c.Y /= 3;
+    /*c.Y /= 3;
     c.X = c.X / 2 - 9;
     g_Console.writeToBuffer(c, "A game in 3 seconds", 0x03);
     c.Y += 1;
@@ -584,7 +583,50 @@ void renderSplashScreen()  // renders the splash screen
     g_Console.writeToBuffer(c, "Press <Space> to change character colour", 0x09);
     c.Y += 1;
     c.X = g_Console.getConsoleSize().X / 2 - 9;
-    g_Console.writeToBuffer(c, "Press 'Esc' to quit", 0x09);
+    g_Console.writeToBuffer(c, "Press 'Esc' to quit", 0x09);*/
+
+	int i = 0;
+	int a = 0;
+	COORD c = g_Console.getConsoleSize();
+	string splashscreen;
+	ifstream splashscreenFile;
+
+	splashscreenFile.open("Splashscreen.txt");
+	if (splashscreenFile.is_open())
+	{
+		while (getline(splashscreenFile, splashscreen))
+		{
+			for (a = 0; a < splashscreen.length(); a++)
+			{
+				if (splashscreen[a] == 'F')
+				{
+					splashscreen[a] = 178;
+				}
+				map[i][a] = splashscreen[a];
+			}
+			c.X = 0;
+			c.Y = i;
+			i++;
+			g_Console.writeToBuffer(c, splashscreen, 0x0B);
+
+			if (g_dElapsedTime > 0.5)
+			{
+				c.X++;
+				g_Console.writeToBuffer(c, splashscreen, 0x0C);
+			}
+			if (g_dElapsedTime > 1.5)
+			{
+				c.X++;
+				g_Console.writeToBuffer(c, splashscreen, 0x0A);
+			}
+			if (g_dElapsedTime > 2.5)
+			{
+				c.X++;
+				g_Console.writeToBuffer(c, splashscreen, 0x09);
+			}
+		}
+	}
+	splashscreenFile.close();
 }
 
 void renderGame()
