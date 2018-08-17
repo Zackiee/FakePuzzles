@@ -11,7 +11,8 @@
 
 using namespace std;
 
-int money = 0, x = 0, shootdirection = 0;
+int money = 0, x = 0;
+int shootdirection[128] = { 0, };
 
 bool HQ = false;
 bool shop = false;
@@ -78,8 +79,8 @@ void init( void )
 	g_sGunner.m_cLocation.X = 6;
 	g_sGunner.m_cLocation.Y = 16;
 	for (int i = 0; i < 128; i++) {
-		g_sBullets[i].m_cLocation.X = 1;
-		g_sBullets[i].m_cLocation.Y = 1;
+		g_sBullets[i].m_cLocation.X = 0;
+		g_sBullets[i].m_cLocation.Y = 0;
 	}
     g_sChar.m_bActive = true;
     // sets the width, height and the font name to use in the console
@@ -283,25 +284,29 @@ void enemydata() {
 		}
 		if (g_sGunner.m_cLocation.X == g_sChar.m_cLocation.X) {
 			if (g_sGunner.m_cLocation.Y < g_sChar.m_cLocation.Y) {
-				shootdirection = 3; // shoot down
+				shootdirection[i] = 3; // shoot down
+				g_sBullets[i].m_cLocation.X = g_sGunner.m_cLocation.X;
+				g_sBullets[i].m_cLocation.Y = g_sGunner.m_cLocation.Y;
 			}
-			else shootdirection = 1; //shoot up
+			else shootdirection[i] = 1; //shoot up
+			g_sBullets[i].m_cLocation.X = g_sGunner.m_cLocation.X;
+			g_sBullets[i].m_cLocation.Y = g_sGunner.m_cLocation.Y;
 		}
 		if (g_sGunner.m_cLocation.Y == g_sChar.m_cLocation.Y) {
 			if (g_sGunner.m_cLocation.X < g_sChar.m_cLocation.X) {
-				shootdirection = 4;// shoot right
+				shootdirection[i] = 4;// shoot right
+				g_sBullets[i].m_cLocation.X = g_sGunner.m_cLocation.X;
+				g_sBullets[i].m_cLocation.Y = g_sGunner.m_cLocation.Y;
 			}
-			else shootdirection = 2; //shoot left
-		}
-		if (shootdirection != 0) {
+			else shootdirection[i] = 2; //shoot left
 			g_sBullets[i].m_cLocation.X = g_sGunner.m_cLocation.X;
 			g_sBullets[i].m_cLocation.Y = g_sGunner.m_cLocation.Y;
-			i += 1;
-			if (i >= 127) {
-				i = 0;
-			}
-			shootdirection = 0;
 		}
+		i++;
+		if (i >= 128) {
+			i = 0;
+		}
+		shootdirection[i] = 0;
 		
 		fooeyhappened2 = true;
 
@@ -314,17 +319,19 @@ void enemydata() {
 		if (bulletbouncetime > g_dElapsedTime)
 			return;
 
-		if (shootdirection = 1) { // shoot up
-			g_sBullets[i].m_cLocation.Y--;
-		}
-		if (shootdirection = 2) { // shoot left
-			g_sBullets[i].m_cLocation.X--;
-		}
-		if (shootdirection = 3) { // shoot down
-			g_sBullets[i].m_cLocation.Y++;
-		}
-		if (shootdirection = 4) { // shoot right
-			g_sBullets[i].m_cLocation.X++;
+		for (int i = 0; i < 128; i++) {
+			if (shootdirection[i] = 1) { // shoot up
+				g_Console.writeToBuffer(g_sBullets[i].m_cLocation.Y--, (char)7, 0x0C);
+			}
+			if (shootdirection[i] = 2) { // shoot left
+				g_Console.writeToBuffer(g_sBullets[i].m_cLocation.X--, (char)7, 0x0C);
+			}
+			if (shootdirection[i] = 3) { // shoot down
+				g_Console.writeToBuffer(g_sBullets[i].m_cLocation.Y++, (char)7, 0x0C);
+			}
+			if (shootdirection[i] = 4) { // shoot right
+				g_Console.writeToBuffer(g_sBullets[i].m_cLocation.X++, (char)7, 0x0C);
+			}
 		}
 
 		fooeyhappened3 = true;
