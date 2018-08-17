@@ -28,7 +28,7 @@ bool levelCgem = false;
 bool levelDgem = false;
 bool HQspawn = false;
 bool playerRespawn = false;
-bool mainMenu = true;
+bool Instructions = true;
 
 bool firstChar = true;
 bool secondChar = false;
@@ -647,26 +647,26 @@ void renderMap()
 	//Render Main Menu
 	if (mainMenu == true)
 	{
-		string mainMenu;
+		string MainMenu;
 		ifstream menuFile;
 
 		menuFile.open("MainMenu.txt");
 		if (menuFile.is_open())
 		{
-			while (getline(menuFile, mainMenu))
+			while (getline(menuFile, MainMenu))
 			{
-				for (a = 0; a < mainMenu.length(); a++)
+				for (a = 0; a < MainMenu.length(); a++)
 				{
-					if (mainMenu[a] == 'F')
+					if (MainMenu[a] == 'F')
 					{
-						mainMenu[a] = 178;
+						MainMenu[a] = 178;
 					}
-					map[i][a] = mainMenu[a];
+					map[i][a] = MainMenu[a];
 				}
 				c.X = 0;
 				c.Y = i;
 				i++;
-				g_Console.writeToBuffer(c, mainMenu, 0x0B);
+				g_Console.writeToBuffer(c, MainMenu, 0x0B);
 			}
 		}
 		menuFile.close();
