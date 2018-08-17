@@ -22,7 +22,8 @@ bool levelC = false;
 bool levelD = false;
 bool HQspawn = false;
 bool playerRespawn = false;
-bool mainMenu = true;
+bool mainMenu = false;
+bool Instructions = true;
 
 bool firstChar = true;
 bool secondChar = false;
@@ -515,7 +516,7 @@ void moveCharacter()
 	}
 	if (HQspawn == true)
 	{
-		g_sChar.m_cLocation.X = 46;
+		g_sChar.m_cLocation.X = 49;
 		g_sChar.m_cLocation.Y = 10;
 	}
 
@@ -534,6 +535,7 @@ void processUserInput()
 	{
 		mainMenu = false;
 		HQ = true;
+		HQspawn = true;
 	}
 	if (g_sChar.m_cLocation.X == 14 && g_sChar.m_cLocation.Y == 11 && mainMenu)
 	{
@@ -600,6 +602,33 @@ void renderMap()
 		}
 		menuFile.close();
 	}
+
+	//Render Instructions
+	else if (Instructions == true)
+	{
+		c.Y = 10;
+		c.X = 45;
+		g_Console.writeToBuffer(c, "Instructions", 0x0B);
+		c.Y = 11;
+		c.X = 25;
+		g_Console.writeToBuffer(c, "- Use arrow keys to nagivate through the game.", 0x0B);
+		c.Y = 12;
+		c.X = 25;
+		g_Console.writeToBuffer(c, "- Space bar to use weapon.", 0x0B);
+		c.Y = 13;
+		c.X = 25;
+		g_Console.writeToBuffer(c, "- You will spawn at a headquarter, and enter the levels from there.", 0x0B);
+		c.Y = 14;
+		c.X = 25;
+		g_Console.writeToBuffer(c, "- Buy weapons using coin earned in headquarters.", 0x0B);
+		c.Y = 15;
+		c.X = 25;
+		g_Console.writeToBuffer(c, "- Collect the stars in all 4 levels to win the game.", 0x0B);
+		c.Y = 17;
+		c.X = 45;
+		g_Console.writeToBuffer(c, "Press start!", 0x0B);
+	}
+
 	//Render Headquarters
 	else if (HQ == true)
 	{
