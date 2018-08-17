@@ -283,24 +283,21 @@ void enemydata() {
 			}
 		}
 		if (g_sGunner.m_cLocation.X == g_sChar.m_cLocation.X) {
+			g_sBullets[i].m_cLocation.X = g_sGunner.m_cLocation.X;
+			g_sBullets[i].m_cLocation.Y = g_sGunner.m_cLocation.Y;
 			if (g_sGunner.m_cLocation.Y < g_sChar.m_cLocation.Y) {
 				shootdirection[i] = 3; // shoot down
-				g_sBullets[i].m_cLocation.X = g_sGunner.m_cLocation.X;
-				g_sBullets[i].m_cLocation.Y = g_sGunner.m_cLocation.Y;
 			}
 			else shootdirection[i] = 1; //shoot up
-			g_sBullets[i].m_cLocation.X = g_sGunner.m_cLocation.X;
-			g_sBullets[i].m_cLocation.Y = g_sGunner.m_cLocation.Y;
+
 		}
 		if (g_sGunner.m_cLocation.Y == g_sChar.m_cLocation.Y) {
-			if (g_sGunner.m_cLocation.X < g_sChar.m_cLocation.X) {
-				shootdirection[i] = 4;// shoot right
-				g_sBullets[i].m_cLocation.X = g_sGunner.m_cLocation.X;
-				g_sBullets[i].m_cLocation.Y = g_sGunner.m_cLocation.Y;
-			}
-			else shootdirection[i] = 2; //shoot left
 			g_sBullets[i].m_cLocation.X = g_sGunner.m_cLocation.X;
 			g_sBullets[i].m_cLocation.Y = g_sGunner.m_cLocation.Y;
+			if (g_sGunner.m_cLocation.X < g_sChar.m_cLocation.X) {
+				shootdirection[i] = 4;// shoot right
+			}
+			else shootdirection[i] = 2; //shoot left
 		}
 		i++;
 		if (i >= 128) {
