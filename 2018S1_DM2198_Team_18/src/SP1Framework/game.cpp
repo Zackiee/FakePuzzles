@@ -283,7 +283,7 @@ void enemydata() {
 	fooeyhappened1 = true;
 
 	if (fooeyhappened1)
-		huggerbouncetime = g_dElapsedTime + 0.15; // huggers act around six times per second
+		huggerbouncetime = g_dElapsedTime + 0.2; // huggers act around five times per second
 
 
 	fooeyhappened2 = false;
@@ -291,7 +291,7 @@ void enemydata() {
 	if (gunnerbouncetime > g_dElapsedTime)
 		return;
 
-	if (sqrt(pow((g_sGunner.m_cLocation.X - g_sChar.m_cLocation.X), 2)) <= 7 && sqrt(pow((g_sGunner.m_cLocation.Y - g_sChar.m_cLocation.Y), 2)) <= 7) {
+	if (sqrt(pow((g_sGunner.m_cLocation.X - g_sChar.m_cLocation.X), 2)) <= 8 && sqrt(pow((g_sGunner.m_cLocation.Y - g_sChar.m_cLocation.Y), 2)) <= 8) {
 		if (g_sGunner.m_cLocation.Y < g_sChar.m_cLocation.Y && map[g_sGunner.m_cLocation.Y - 1][g_sGunner.m_cLocation.X] == ' ') {
 			g_sGunner.m_cLocation.Y--;
 		}
@@ -342,7 +342,7 @@ void enemydata() {
 	fooeyhappened2 = true;
 
 	if (fooeyhappened2)
-		gunnerbouncetime = g_dElapsedTime + 0.45; // gunners act around twice per second
+		gunnerbouncetime = g_dElapsedTime + 0.6; // gunners act around twice per second
 }
 
 void gameplay()            // gameplay logic
