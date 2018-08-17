@@ -205,7 +205,7 @@ void renderEnemies()
 		g_Console.writeToBuffer(g_sBullets[i].m_cLocation, (char)7, charE_Color);
 	}
 }
-int i = 0;
+int i = 0, n = 0;
 void enemydata() {
 	bool fooeyhappened1, fooeyhappened2, fooeyhappened3;
 	double up, left, down, right, min_double;
@@ -306,6 +306,7 @@ void enemydata() {
 		}
 		else shootdirection[i] = 2; //shoot left
 	}
+	n = i;
 	if (i >= 127) {
 		i = 0;
 	}
@@ -315,23 +316,22 @@ void enemydata() {
 	if (bulletbouncetime > g_dElapsedTime)
 		return;
 
-	if (shootdirection[i] == 1) { // shoot up
-		g_sBullets[i].m_cLocation.Y--;
+	for (i = 0; i < 128; i++) {
+		if (shootdirection[i] == 1) { // shoot up
+			g_sBullets[i].m_cLocation.Y--;
+		}
+		if (shootdirection[i] == 2) { // shoot left
+			g_sBullets[i].m_cLocation.X--;
+		}
+		if (shootdirection[i] == 3) { // shoot down
+			g_sBullets[i].m_cLocation.Y++;
+		}
+		if (shootdirection[i] == 4) { // shoot right
+			g_sBullets[i].m_cLocation.X++;
+		}
 	}
-	if (shootdirection[i] == 2) { // shoot left
-		g_sBullets[i].m_cLocation.X--;
-	}
-	if (shootdirection[i] == 3) { // shoot down
-		g_sBullets[i].m_cLocation.Y++;
-	}
-	if (shootdirection[i] == 4) { // shoot right
-		g_sBullets[i].m_cLocation.X++;
-	}
-
-	fooeyhappened3 = true;
-
-	if (fooeyhappened3)
-		bulletbouncetime = g_dElapsedTime + 0.071; // bullets move around 14 tiles per second
+	shootdirection[i] = 0;
+	i = n;
 
 	fooeyhappened2 = true;
 
