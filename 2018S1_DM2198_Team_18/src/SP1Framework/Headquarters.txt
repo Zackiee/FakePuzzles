@@ -16,4 +16,4 @@
    @                                                                      @ u i o p @          @ 
    @                                 @  q  w  e  r  t  @                  @         @          @ 
    #############################################################################################
-                                     CHARACTER SELECTION                  COLLECTIONS          
+                                     CHARACTER SELECTION                  COLLECTION          
