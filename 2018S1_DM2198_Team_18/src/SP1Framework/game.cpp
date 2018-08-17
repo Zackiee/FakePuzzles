@@ -282,16 +282,18 @@ void enemydata() {
 			g_sGunner.m_cLocation.X--;
 		}
 	}
+
 	if (g_sGunner.m_cLocation.X == g_sChar.m_cLocation.X) {
+		i++;
 		g_sBullets[i].m_cLocation.X = g_sGunner.m_cLocation.X;
 		g_sBullets[i].m_cLocation.Y = g_sGunner.m_cLocation.Y;
 		if (g_sGunner.m_cLocation.Y < g_sChar.m_cLocation.Y) {
 			shootdirection[i] = 3; // shoot down
 		}
 		else shootdirection[i] = 1; //shoot up
-
 	}
 	if (g_sGunner.m_cLocation.Y == g_sChar.m_cLocation.Y) {
+		i++;
 		g_sBullets[i].m_cLocation.X = g_sGunner.m_cLocation.X;
 		g_sBullets[i].m_cLocation.Y = g_sGunner.m_cLocation.Y;
 		if (g_sGunner.m_cLocation.X < g_sChar.m_cLocation.X) {
@@ -299,43 +301,37 @@ void enemydata() {
 		}
 		else shootdirection[i] = 2; //shoot left
 	}
-	i++;
-	if (i >= 128) {
+	if (i >= 127) {
 		i = 0;
 	}
-	shootdirection[i] = 0;
-
-	fooeyhappened2 = true;
-
-	if (fooeyhappened2)
-		gunnerbouncetime = g_dElapsedTime + 0.5; // gunners act around twice per second
-
 
 	fooeyhappened3 = false;
 
 	if (bulletbouncetime > g_dElapsedTime)
 		return;
 
-	for (int i = 0; i < 128; i++) {
-		if (i == 0) { continue; }
-		if (shootdirection[i] = 1) { // shoot up
-			g_Console.writeToBuffer(g_sBullets[i].m_cLocation.Y--, (char)7, 0x0C);
-		}
-		if (shootdirection[i] = 2) { // shoot left
-			g_Console.writeToBuffer(g_sBullets[i].m_cLocation.X--, (char)7, 0x0C);
-		}
-		if (shootdirection[i] = 3) { // shoot down
-			g_Console.writeToBuffer(g_sBullets[i].m_cLocation.Y++, (char)7, 0x0C);
-		}
-		if (shootdirection[i] = 4) { // shoot right
-			g_Console.writeToBuffer(g_sBullets[i].m_cLocation.X++, (char)7, 0x0C);
-		}
+	if (shootdirection[i] == 1) { // shoot up
+		g_sBullets[i].m_cLocation.Y--;
+	}
+	if (shootdirection[i] == 2) { // shoot left
+		g_sBullets[i].m_cLocation.X--;
+	}
+	if (shootdirection[i] == 3) { // shoot down
+		g_sBullets[i].m_cLocation.Y++;
+	}
+	if (shootdirection[i] == 4) { // shoot right
+		g_sBullets[i].m_cLocation.X++;
 	}
 
 	fooeyhappened3 = true;
 
 	if (fooeyhappened3)
 		bulletbouncetime = g_dElapsedTime + 0.071; // bullets move around 14 tiles per second
+
+	fooeyhappened2 = true;
+
+	if (fooeyhappened2)
+		gunnerbouncetime = g_dElapsedTime + 0.5; // gunners act around twice per second
 }
 
 void gameplay()            // gameplay logic
