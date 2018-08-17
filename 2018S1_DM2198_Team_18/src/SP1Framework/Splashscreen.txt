@@ -1,0 +1,20 @@
+
+
+
+
+  FFFFFFFFFFFFF   FF       F   FFFFF FFFFFFFFFF                 
+  F              F  F      F  F      F        F                                               
+  FFFFFFFFFFFFF F    F     F F       F                                                         
+  F            FFFFFFFF    FF        FFFFFFFFFFFF
+  F           F        F   F F       F          F
+  F          F          F  F  F      F
+  F          F          F  F   FFFFF FFFFFFFFFFFFFFF
+                                                
+                
+                           FFFFFFFFFFF  F       F FFFFFFFFF   FFFFFFFFF F         FFFFFFF    FFFFFFFFFF 
+                           F          F F       F       F     F         F        F       F  F
+                           FFFFFFFFFFF  F       F       F       F        F         FFFFFFF   F
+                           F            F       F      F         F      F        F           FFFFFFFFF
+                           F            F       F     F           F     F        F                    F
+                           F             F     F     F             F    F        F       F            F
+                           F              FFFFF     FFFFFFFFF FFFFFFF   FFFFFFFFF FFFFFFF    FFFFFFFFF
