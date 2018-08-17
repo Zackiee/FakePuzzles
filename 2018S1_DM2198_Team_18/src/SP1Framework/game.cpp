@@ -15,8 +15,9 @@ int money = 0, x = 0;
 int shootdirection[128] = { 0, };
 
 bool mainMenu = false;
-bool HQ = true;
-bool inven = true;
+bool instructions = true;
+bool hq = false;
+bool inven = false;
 bool shop = false;
 bool levelA = false;
 bool levelB = false;
@@ -26,9 +27,8 @@ bool levelAgem = false;
 bool levelBgem = false;
 bool levelCgem = false;
 bool levelDgem = false;
-bool HQspawn = false;
+bool hqSpawn = false;
 bool playerRespawn = false;
-bool mainMenu = true;
 
 bool firstChar = true;
 bool secondChar = false;
@@ -78,8 +78,8 @@ void init( void )
     // sets the initial state for the game
     g_eGameState = S_SPLASHSCREEN;
 
-	g_sChar.m_cLocation.X = 5;
-	g_sChar.m_cLocation.Y = 8;
+	g_sChar.m_cLocation.X = 46;
+	g_sChar.m_cLocation.Y = 10;
 	g_sHugger.m_cLocation.X = 5;
 	g_sHugger.m_cLocation.Y = 16;
 	g_sGunner.m_cLocation.X = 6;
@@ -190,7 +190,7 @@ void render()
 
 void splashScreenWait()    // waits for time to pass in splash screen
 {
-    if (g_dElapsedTime > 3) // wait for 3 seconds to switch to game mode, else do nothing
+    if (g_dElapsedTime > 2) // wait for 3 seconds to switch to game mode, else do nothing
         g_eGameState = S_GAME;
 }
 melee hugger;
@@ -431,37 +431,37 @@ void moveCharacter()
 		g_bQuitGame = true;
 	}
 
-	if (HQ == true)
+	if (hq == true)
 	{
-		HQspawn = false;
+		hqSpawn = false;
 
 		if (map[g_sChar.m_cLocation.Y - 1][g_sChar.m_cLocation.X] == 'a' || map[g_sChar.m_cLocation.Y][g_sChar.m_cLocation.X - 1] == 'a' || map[g_sChar.m_cLocation.Y + 1][g_sChar.m_cLocation.X] == 'a' || map[g_sChar.m_cLocation.Y][g_sChar.m_cLocation.X + 1] == 'a')
 		{
-			HQ = false;
+			hq = false;
 			levelA = true;
 			playerRespawn = true;
 		}
 		else if (map[g_sChar.m_cLocation.Y - 1][g_sChar.m_cLocation.X] == 'b' || map[g_sChar.m_cLocation.Y][g_sChar.m_cLocation.X - 1] == 'b' || map[g_sChar.m_cLocation.Y + 1][g_sChar.m_cLocation.X] == 'b' || map[g_sChar.m_cLocation.Y][g_sChar.m_cLocation.X + 1] == 'b')
 		{
-			HQ = false;
+			hq = false;
 			levelB = true;
 			playerRespawn = true;
 		}
 		else if (map[g_sChar.m_cLocation.Y - 1][g_sChar.m_cLocation.X] == 'c' || map[g_sChar.m_cLocation.Y][g_sChar.m_cLocation.X - 1] == 'c' || map[g_sChar.m_cLocation.Y + 1][g_sChar.m_cLocation.X] == 'c' || map[g_sChar.m_cLocation.Y][g_sChar.m_cLocation.X + 1] == 'c')
 		{
-			HQ = false;
+			hq = false;
 			levelC = true;
 			playerRespawn = true;
 		}
 		else if (map[g_sChar.m_cLocation.Y - 1][g_sChar.m_cLocation.X] == 'd' || map[g_sChar.m_cLocation.Y][g_sChar.m_cLocation.X - 1] == 'd' || map[g_sChar.m_cLocation.Y + 1][g_sChar.m_cLocation.X] == 'd' || map[g_sChar.m_cLocation.Y][g_sChar.m_cLocation.X + 1] == 'd')
 		{
-			HQ = false;
+			hq = false;
 			levelD = true;
 			playerRespawn = true;
 		}
 		else if (map[g_sChar.m_cLocation.Y - 1][g_sChar.m_cLocation.X] == '%' || map[g_sChar.m_cLocation.Y][g_sChar.m_cLocation.X - 1] == '%' || map[g_sChar.m_cLocation.Y + 1][g_sChar.m_cLocation.X] == '%' || map[g_sChar.m_cLocation.Y][g_sChar.m_cLocation.X + 1] == '%')
 		{
-			HQ = false;
+			hq = false;
 			inven = false;
 		}
 	}
@@ -473,8 +473,8 @@ void moveCharacter()
 		if (map[g_sChar.m_cLocation.Y - 1][g_sChar.m_cLocation.X] == '%' || map[g_sChar.m_cLocation.Y][g_sChar.m_cLocation.X - 1] == '%' || map[g_sChar.m_cLocation.Y + 1][g_sChar.m_cLocation.X] == '%' || map[g_sChar.m_cLocation.Y][g_sChar.m_cLocation.X + 1] == '%')
 		{
 			levelA = false;
-			HQ = true;
-			HQspawn = true;
+			hq = true;
+			hqSpawn = true;
 		}
 		if (map[g_sChar.m_cLocation.Y - 1][g_sChar.m_cLocation.X] == '*' || map[g_sChar.m_cLocation.Y][g_sChar.m_cLocation.X - 1] == '*' || map[g_sChar.m_cLocation.Y + 1][g_sChar.m_cLocation.X] == '*' || map[g_sChar.m_cLocation.Y][g_sChar.m_cLocation.X + 1] == '*')
 		{
@@ -488,8 +488,8 @@ void moveCharacter()
 		if (map[g_sChar.m_cLocation.Y - 1][g_sChar.m_cLocation.X] == '%' || map[g_sChar.m_cLocation.Y][g_sChar.m_cLocation.X - 1] == '%' || map[g_sChar.m_cLocation.Y + 1][g_sChar.m_cLocation.X] == '%' || map[g_sChar.m_cLocation.Y][g_sChar.m_cLocation.X + 1] == '%')
 		{
 			levelB = false;
-			HQ = true;
-			HQspawn = true;
+			hq = true;
+			hqSpawn = true;
 		}
 		if (map[g_sChar.m_cLocation.Y - 1][g_sChar.m_cLocation.X] == '&' || map[g_sChar.m_cLocation.Y][g_sChar.m_cLocation.X - 1] == '&' || map[g_sChar.m_cLocation.Y + 1][g_sChar.m_cLocation.X] == '&' || map[g_sChar.m_cLocation.Y][g_sChar.m_cLocation.X + 1] == '&')
 		{
@@ -508,8 +508,8 @@ void moveCharacter()
 		if (map[g_sChar.m_cLocation.Y - 1][g_sChar.m_cLocation.X] == '%' || map[g_sChar.m_cLocation.Y][g_sChar.m_cLocation.X - 1] == '%' || map[g_sChar.m_cLocation.Y + 1][g_sChar.m_cLocation.X] == '%' || map[g_sChar.m_cLocation.Y][g_sChar.m_cLocation.X + 1] == '%')
 		{
 			levelC = false;
-			HQ = true;
-			HQspawn = true;
+			hq = true;
+			hqSpawn = true;
 		}
 		if (map[g_sChar.m_cLocation.Y - 1][g_sChar.m_cLocation.X] == '&' || map[g_sChar.m_cLocation.Y][g_sChar.m_cLocation.X - 1] == '&' || map[g_sChar.m_cLocation.Y + 1][g_sChar.m_cLocation.X] == '&' || map[g_sChar.m_cLocation.Y][g_sChar.m_cLocation.X + 1] == '&')
 		{
@@ -528,8 +528,8 @@ void moveCharacter()
 		if (map[g_sChar.m_cLocation.Y - 1][g_sChar.m_cLocation.X] == '%' || map[g_sChar.m_cLocation.Y][g_sChar.m_cLocation.X - 1] == '%' || map[g_sChar.m_cLocation.Y + 1][g_sChar.m_cLocation.X] == '%' || map[g_sChar.m_cLocation.Y][g_sChar.m_cLocation.X + 1] == '%')
 		{
 			levelD = false;
-			HQ = true;
-			HQspawn = true;
+			hq = true;
+			hqSpawn = true;
 		}
 		if (map[g_sChar.m_cLocation.Y - 1][g_sChar.m_cLocation.X] == '&' || map[g_sChar.m_cLocation.Y][g_sChar.m_cLocation.X - 1] == '&' || map[g_sChar.m_cLocation.Y + 1][g_sChar.m_cLocation.X] == '&' || map[g_sChar.m_cLocation.Y][g_sChar.m_cLocation.X + 1] == '&')
 		{
@@ -541,9 +541,9 @@ void moveCharacter()
 			levelDgem = true;
 		}
 	}
-	if (HQspawn == true)
+	if (hqSpawn == true)
 	{
-		g_sChar.m_cLocation.X = 49;
+		g_sChar.m_cLocation.X = 46;
 		g_sChar.m_cLocation.Y = 10;
 	}
 
@@ -558,16 +558,6 @@ void processUserInput()
     // quits the game if player hits the escape key
     if (g_abKeyPressed[K_ESCAPE])
         g_bQuitGame = true;
-	if (g_sChar.m_cLocation.X == 3 && g_sChar.m_cLocation.Y == 10 && mainMenu)
-	{
-		mainMenu = false;
-		HQ = true;
-		HQspawn = true;
-	}
-	if (g_sChar.m_cLocation.X == 14 && g_sChar.m_cLocation.Y == 11 && mainMenu)
-	{
-		g_bQuitGame = true;
-	}
 }
 
 void clearScreen()
@@ -578,16 +568,6 @@ void clearScreen()
 
 void renderSplashScreen()  // renders the splash screen
 {
-    /*c.Y /= 3;
-    c.X = c.X / 2 - 9;
-    g_Console.writeToBuffer(c, "A game in 3 seconds", 0x03);
-    c.Y += 1;
-    c.X = g_Console.getConsoleSize().X / 2 - 20;
-    g_Console.writeToBuffer(c, "Press <Space> to change character colour", 0x09);
-    c.Y += 1;
-    c.X = g_Console.getConsoleSize().X / 2 - 9;
-    g_Console.writeToBuffer(c, "Press 'Esc' to quit", 0x09);*/
-
 	int i = 0;
 	int a = 0;
 	COORD c = g_Console.getConsoleSize();
@@ -617,12 +597,12 @@ void renderSplashScreen()  // renders the splash screen
 				c.X++;
 				g_Console.writeToBuffer(c, splashscreen, 0x0C);
 			}
-			if (g_dElapsedTime > 1.5)
+			if (g_dElapsedTime > 1)
 			{
 				c.X++;
 				g_Console.writeToBuffer(c, splashscreen, 0x0A);
 			}
-			if (g_dElapsedTime > 2.5)
+			if (g_dElapsedTime > 1.5)
 			{
 				c.X++;
 				g_Console.writeToBuffer(c, splashscreen, 0x09);
@@ -647,33 +627,47 @@ void renderMap()
 	//Render Main Menu
 	if (mainMenu == true)
 	{
-		string mainMenu;
+		string menu;
 		ifstream menuFile;
 
 		menuFile.open("MainMenu.txt");
 		if (menuFile.is_open())
 		{
-			while (getline(menuFile, mainMenu))
+			while (getline(menuFile, menu))
 			{
-				for (a = 0; a < mainMenu.length(); a++)
+				for (a = 0; a < menu.length(); a++)
 				{
-					if (mainMenu[a] == 'F')
+					if (menu[a] == 'F')
 					{
-						mainMenu[a] = 178;
+						menu[a] = 178;
 					}
-					map[i][a] = mainMenu[a];
+					map[i][a] = menu[a];
 				}
 				c.X = 0;
 				c.Y = i;
 				i++;
-				g_Console.writeToBuffer(c, mainMenu, 0x0B);
+				g_Console.writeToBuffer(c, menu, 0x0B);
 			}
 		}
 		menuFile.close();
+
+		/*if (g_abKeyPressed[K_ONE])
+		{
+
+		}
+
+		if (g_abKeyPressed[K_TWO])
+		{
+
+		}
+		if (g_abKeyPressed[K_THREE])
+		{
+			g_bQuitGame = true;
+		}*/
 	}
 
 	//Render Instructions
-	else if (Instructions == true)
+	else if (instructions == true)
 	{
 		c.Y = 10;
 		c.X = 45;
@@ -696,10 +690,17 @@ void renderMap()
 		c.Y = 17;
 		c.X = 45;
 		g_Console.writeToBuffer(c, "Press start!", 0x0B);
+
+		/*if (g_abKeyPressed[K_SPACE])
+		{
+			instructions = false;
+			hq = true;
+			hqSpawn = true;
+		}*/
 	}
 
 	//Render Headquarters
-	else if (HQ == true)
+	else if (hq == true)
 	{
 		string headquarters;
 		ifstream headquartersFile;
