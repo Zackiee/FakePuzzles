@@ -207,134 +207,135 @@ void enemydata() {
 	melee hugger;
 	ranged gunner;
 
-		fooeyhappened1 = false;
+	fooeyhappened1 = false;
 
-		if (huggerbouncetime > g_dElapsedTime)
-			return;
+	if (huggerbouncetime > g_dElapsedTime)
+		return;
 
-		up = 99.0; left = 99.0; down = 99.0; right = 99.0;
+	up = 99.0; left = 99.0; down = 99.0; right = 99.0;
 
-		if (map[g_sHugger.m_cLocation.Y - 1][g_sHugger.m_cLocation.X] == ' ' && x != 3) {
-			up = sqrt(pow(g_sChar.m_cLocation.X - (g_sHugger.m_cLocation.X), 2) + pow(g_sChar.m_cLocation.Y - (g_sHugger.m_cLocation.Y - 1), 2));
+	if (map[g_sHugger.m_cLocation.Y - 1][g_sHugger.m_cLocation.X] == ' ' && x != 3) {
+		up = sqrt(pow(g_sChar.m_cLocation.X - (g_sHugger.m_cLocation.X), 2) + pow(g_sChar.m_cLocation.Y - (g_sHugger.m_cLocation.Y - 1), 2));
+	}
+	if (map[g_sHugger.m_cLocation.Y][g_sHugger.m_cLocation.X - 1] == ' ' && x != 4) {
+		left = sqrt(pow(g_sChar.m_cLocation.X - (g_sHugger.m_cLocation.X - 1), 2) + pow(g_sChar.m_cLocation.Y - (g_sHugger.m_cLocation.Y), 2));
+	}
+	if (map[g_sHugger.m_cLocation.Y + 1][g_sHugger.m_cLocation.X] == ' ' && x != 1) {
+		down = sqrt(pow(g_sChar.m_cLocation.X - (g_sHugger.m_cLocation.X), 2) + pow(g_sChar.m_cLocation.Y - (g_sHugger.m_cLocation.Y + 1), 2));
+	}
+	if (map[g_sHugger.m_cLocation.Y][g_sHugger.m_cLocation.X + 1] == ' ' && x != 2) {
+		right = sqrt(pow(g_sChar.m_cLocation.X - (g_sHugger.m_cLocation.X + 1), 2) + pow(g_sChar.m_cLocation.Y - (g_sHugger.m_cLocation.Y), 2));
+	}
+	min_double = min(min(up, down), min(left, right)); // note for bug fix in future : if hugger goes into a spot where it has no choice but to reverse direction, since it's not allowed to reverse direction, it moves up through walls and breaks the game
+	if (min_double == up && x != 3) {
+		g_sHugger.m_cLocation.Y--;
+		x = 1;
+	}
+	else if (min_double == left && x != 4) {
+		g_sHugger.m_cLocation.X--;
+		x = 2;
+	}
+	else if (min_double == down && x != 1) {
+		g_sHugger.m_cLocation.Y++;
+		x = 3;
+	}
+	else if (min_double == right && x != 2) {
+		g_sHugger.m_cLocation.X++;
+		x = 4;
+	}
+	fooeyhappened1 = true;
+
+	if (fooeyhappened1)
+		huggerbouncetime = g_dElapsedTime + 0.167; // huggers act around six times per second
+
+
+	fooeyhappened2 = false;
+
+	if (gunnerbouncetime > g_dElapsedTime)
+		return;
+
+	if (sqrt(pow((g_sGunner.m_cLocation.X - g_sChar.m_cLocation.X), 2)) <= 7 && sqrt(pow((g_sGunner.m_cLocation.Y - g_sChar.m_cLocation.Y), 2)) <= 7) {
+		if (g_sGunner.m_cLocation.Y < g_sChar.m_cLocation.Y && map[g_sGunner.m_cLocation.Y - 1][g_sGunner.m_cLocation.X] == ' ') {
+			g_sGunner.m_cLocation.Y--;
 		}
-		if (map[g_sHugger.m_cLocation.Y][g_sHugger.m_cLocation.X - 1] == ' ' && x != 4) {
-			left = sqrt(pow(g_sChar.m_cLocation.X - (g_sHugger.m_cLocation.X - 1), 2) + pow(g_sChar.m_cLocation.Y - (g_sHugger.m_cLocation.Y), 2));
+		if (g_sGunner.m_cLocation.Y > g_sChar.m_cLocation.Y && map[g_sGunner.m_cLocation.Y + 1][g_sGunner.m_cLocation.X] == ' ') {
+			g_sGunner.m_cLocation.Y++;
 		}
-		if (map[g_sHugger.m_cLocation.Y + 1][g_sHugger.m_cLocation.X] == ' ' && x != 1) {
-			down = sqrt(pow(g_sChar.m_cLocation.X - (g_sHugger.m_cLocation.X), 2) + pow(g_sChar.m_cLocation.Y - (g_sHugger.m_cLocation.Y + 1), 2));
+		if (g_sGunner.m_cLocation.X < g_sChar.m_cLocation.X && map[g_sGunner.m_cLocation.Y][g_sGunner.m_cLocation.X - 1] == ' ') {
+			g_sGunner.m_cLocation.X--;
 		}
-		if (map[g_sHugger.m_cLocation.Y][g_sHugger.m_cLocation.X + 1] == ' ' && x != 2) {
-			right = sqrt(pow(g_sChar.m_cLocation.X - (g_sHugger.m_cLocation.X + 1), 2) + pow(g_sChar.m_cLocation.Y - (g_sHugger.m_cLocation.Y), 2));
+		if (g_sGunner.m_cLocation.X > g_sChar.m_cLocation.X && map[g_sGunner.m_cLocation.Y][g_sGunner.m_cLocation.X + 1] == ' ') {
+			g_sGunner.m_cLocation.X++;
 		}
-		min_double = min(min(up, down), min(left, right)); // note for bug fix in future : if hugger goes into a spot where it has no choice but to reverse direction, since it's not allowed to reverse direction, it moves up through walls and breaks the game
-		if (min_double == up && x != 3) {
-			g_sHugger.m_cLocation.Y--;
-			x = 1;
+	}
+	else {
+		if (g_sGunner.m_cLocation.Y < g_sChar.m_cLocation.Y && map[g_sGunner.m_cLocation.Y + 1][g_sGunner.m_cLocation.X] == ' ') {
+			g_sGunner.m_cLocation.Y++;
 		}
-		else if (min_double == left && x != 4) {
-			g_sHugger.m_cLocation.X--;
-			x = 2;
+		if (g_sGunner.m_cLocation.Y > g_sChar.m_cLocation.Y && map[g_sGunner.m_cLocation.Y - 1][g_sGunner.m_cLocation.X] == ' ') {
+			g_sGunner.m_cLocation.Y--;
 		}
-		else if (min_double == down && x != 1) {
-			g_sHugger.m_cLocation.Y++;
-			x = 3;
+		if (g_sGunner.m_cLocation.X < g_sChar.m_cLocation.X && map[g_sGunner.m_cLocation.Y][g_sGunner.m_cLocation.X + 1] == ' ') {
+			g_sGunner.m_cLocation.X++;
 		}
-		else if (min_double == right && x != 2) {
-			g_sHugger.m_cLocation.X++;
-			x = 4;
+		if (g_sGunner.m_cLocation.X > g_sChar.m_cLocation.X && map[g_sGunner.m_cLocation.Y][g_sGunner.m_cLocation.X - 1] == ' ') {
+			g_sGunner.m_cLocation.X--;
 		}
-		fooeyhappened1 = true;
+	}
+	if (g_sGunner.m_cLocation.X == g_sChar.m_cLocation.X) {
+		g_sBullets[i].m_cLocation.X = g_sGunner.m_cLocation.X;
+		g_sBullets[i].m_cLocation.Y = g_sGunner.m_cLocation.Y;
+		if (g_sGunner.m_cLocation.Y < g_sChar.m_cLocation.Y) {
+			shootdirection[i] = 3; // shoot down
+		}
+		else shootdirection[i] = 1; //shoot up
 
-		if (fooeyhappened1)
-			huggerbouncetime = g_dElapsedTime + 0.167; // huggers act around six times per second
-
-
-		fooeyhappened2 = false;
-
-		if (gunnerbouncetime > g_dElapsedTime)
-			return;
-
-		if (sqrt(pow((g_sGunner.m_cLocation.X - g_sChar.m_cLocation.X), 2)) <= 7 && sqrt(pow((g_sGunner.m_cLocation.Y - g_sChar.m_cLocation.Y), 2)) <= 7) {
-			if (g_sGunner.m_cLocation.Y < g_sChar.m_cLocation.Y) {
-				g_sGunner.m_cLocation.Y--;
-			}
-			if (g_sGunner.m_cLocation.Y > g_sChar.m_cLocation.Y) {
-				g_sGunner.m_cLocation.Y++;
-			}
-			if (g_sGunner.m_cLocation.X < g_sChar.m_cLocation.X) {
-				g_sGunner.m_cLocation.X--;
-			}
-			if (g_sGunner.m_cLocation.X > g_sChar.m_cLocation.X) {
-				g_sGunner.m_cLocation.X++;
-			}
+	}
+	if (g_sGunner.m_cLocation.Y == g_sChar.m_cLocation.Y) {
+		g_sBullets[i].m_cLocation.X = g_sGunner.m_cLocation.X;
+		g_sBullets[i].m_cLocation.Y = g_sGunner.m_cLocation.Y;
+		if (g_sGunner.m_cLocation.X < g_sChar.m_cLocation.X) {
+			shootdirection[i] = 4;// shoot right
 		}
-		else {
-			if (g_sGunner.m_cLocation.Y < g_sChar.m_cLocation.Y) {
-				g_sGunner.m_cLocation.Y++;
-			}
-			if (g_sGunner.m_cLocation.Y > g_sChar.m_cLocation.Y) {
-				g_sGunner.m_cLocation.Y--;
-			}
-			if (g_sGunner.m_cLocation.X < g_sChar.m_cLocation.X) {
-				g_sGunner.m_cLocation.X++;
-			}
-			if (g_sGunner.m_cLocation.X > g_sChar.m_cLocation.X) {
-				g_sGunner.m_cLocation.X--;
-			}
-		}
-		if (g_sGunner.m_cLocation.X == g_sChar.m_cLocation.X) {
-			g_sBullets[i].m_cLocation.X = g_sGunner.m_cLocation.X;
-			g_sBullets[i].m_cLocation.Y = g_sGunner.m_cLocation.Y;
-			if (g_sGunner.m_cLocation.Y < g_sChar.m_cLocation.Y) {
-				shootdirection[i] = 3; // shoot down
-			}
-			else shootdirection[i] = 1; //shoot up
+		else shootdirection[i] = 2; //shoot left
+	}
+	i++;
+	if (i >= 128) {
+		i = 0;
+	}
+	shootdirection[i] = 0;
 
-		}
-		if (g_sGunner.m_cLocation.Y == g_sChar.m_cLocation.Y) {
-			g_sBullets[i].m_cLocation.X = g_sGunner.m_cLocation.X;
-			g_sBullets[i].m_cLocation.Y = g_sGunner.m_cLocation.Y;
-			if (g_sGunner.m_cLocation.X < g_sChar.m_cLocation.X) {
-				shootdirection[i] = 4;// shoot right
-			}
-			else shootdirection[i] = 2; //shoot left
-		}
-		i++;
-		if (i >= 128) {
-			i = 0;
-		}
-		shootdirection[i] = 0;
-		
-		fooeyhappened2 = true;
+	fooeyhappened2 = true;
 
-		if (fooeyhappened2)
-			gunnerbouncetime = g_dElapsedTime + 0.5; // gunners act around twice per second
+	if (fooeyhappened2)
+		gunnerbouncetime = g_dElapsedTime + 0.5; // gunners act around twice per second
 
 
-		fooeyhappened3 = false;
+	fooeyhappened3 = false;
 
-		if (bulletbouncetime > g_dElapsedTime)
-			return;
+	if (bulletbouncetime > g_dElapsedTime)
+		return;
 
-		for (int i = 0; i < 128; i++) {
-			if (shootdirection[i] = 1) { // shoot up
-				g_Console.writeToBuffer(g_sBullets[i].m_cLocation.Y--, (char)7, 0x0C);
-			}
-			if (shootdirection[i] = 2) { // shoot left
-				g_Console.writeToBuffer(g_sBullets[i].m_cLocation.X--, (char)7, 0x0C);
-			}
-			if (shootdirection[i] = 3) { // shoot down
-				g_Console.writeToBuffer(g_sBullets[i].m_cLocation.Y++, (char)7, 0x0C);
-			}
-			if (shootdirection[i] = 4) { // shoot right
-				g_Console.writeToBuffer(g_sBullets[i].m_cLocation.X++, (char)7, 0x0C);
-			}
+	for (int i = 0; i < 128; i++) {
+		if (i == 0) { continue; }
+		if (shootdirection[i] = 1) { // shoot up
+			g_Console.writeToBuffer(g_sBullets[i].m_cLocation.Y--, (char)7, 0x0C);
 		}
+		if (shootdirection[i] = 2) { // shoot left
+			g_Console.writeToBuffer(g_sBullets[i].m_cLocation.X--, (char)7, 0x0C);
+		}
+		if (shootdirection[i] = 3) { // shoot down
+			g_Console.writeToBuffer(g_sBullets[i].m_cLocation.Y++, (char)7, 0x0C);
+		}
+		if (shootdirection[i] = 4) { // shoot right
+			g_Console.writeToBuffer(g_sBullets[i].m_cLocation.X++, (char)7, 0x0C);
+		}
+	}
 
-		fooeyhappened3 = true;
+	fooeyhappened3 = true;
 
-		if (fooeyhappened3)
-			bulletbouncetime = g_dElapsedTime + 0.071; // bullets move around 14 tiles per second
+	if (fooeyhappened3)
+		bulletbouncetime = g_dElapsedTime + 0.071; // bullets move around 14 tiles per second
 }
 
 void gameplay()            // gameplay logic
