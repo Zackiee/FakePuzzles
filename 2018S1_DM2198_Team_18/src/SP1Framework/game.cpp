@@ -14,15 +14,20 @@ using namespace std;
 int money = 0, x = 0;
 int shootdirection[128] = { 0, };
 
+bool mainMenu = true;
 bool HQ = false;
+bool inven = true;
 bool shop = false;
 bool levelA = false;
 bool levelB = false;
 bool levelC = false;
 bool levelD = false;
+bool levelAgem = false;
+bool levelBgem = false;
+bool levelCgem = false;
+bool levelDgem = false;
 bool HQspawn = false;
 bool playerRespawn = false;
-bool mainMenu = true;
 
 bool firstChar = true;
 bool secondChar = false;
@@ -450,6 +455,11 @@ void moveCharacter()
 			levelD = true;
 			playerRespawn = true;
 		}
+		else if (map[g_sChar.m_cLocation.Y - 1][g_sChar.m_cLocation.X] == '%' || map[g_sChar.m_cLocation.Y][g_sChar.m_cLocation.X - 1] == '%' || map[g_sChar.m_cLocation.Y + 1][g_sChar.m_cLocation.X] == '%' || map[g_sChar.m_cLocation.Y][g_sChar.m_cLocation.X + 1] == '%')
+		{
+			HQ = false;
+			inven = false;
+		}
 	}
 
 	else if (levelA == true)
@@ -461,6 +471,10 @@ void moveCharacter()
 			levelA = false;
 			HQ = true;
 			HQspawn = true;
+		}
+		if (map[g_sChar.m_cLocation.Y - 1][g_sChar.m_cLocation.X] == '*' || map[g_sChar.m_cLocation.Y][g_sChar.m_cLocation.X - 1] == '*' || map[g_sChar.m_cLocation.Y + 1][g_sChar.m_cLocation.X] == '*' || map[g_sChar.m_cLocation.Y][g_sChar.m_cLocation.X + 1] == '*')
+		{
+			levelAgem = true;
 		}
 	}
 	else if (levelB == true)
@@ -478,6 +492,10 @@ void moveCharacter()
 			g_sChar.m_cLocation.X = 64;
 			g_sChar.m_cLocation.Y = 2;
 		}
+		if (map[g_sChar.m_cLocation.Y - 1][g_sChar.m_cLocation.X] == '*' || map[g_sChar.m_cLocation.Y][g_sChar.m_cLocation.X - 1] == '*' || map[g_sChar.m_cLocation.Y + 1][g_sChar.m_cLocation.X] == '*' || map[g_sChar.m_cLocation.Y][g_sChar.m_cLocation.X + 1] == '*')
+		{
+			levelBgem = true;
+		}
 	}
 	else if (levelC == true)
 	{
@@ -493,6 +511,10 @@ void moveCharacter()
 		{
 			g_sChar.m_cLocation.X = 59;
 			g_sChar.m_cLocation.Y = 2;
+		}
+		if (map[g_sChar.m_cLocation.Y - 1][g_sChar.m_cLocation.X] == '*' || map[g_sChar.m_cLocation.Y][g_sChar.m_cLocation.X - 1] == '*' || map[g_sChar.m_cLocation.Y + 1][g_sChar.m_cLocation.X] == '*' || map[g_sChar.m_cLocation.Y][g_sChar.m_cLocation.X + 1] == '*')
+		{
+			levelCgem = true;
 		}
 	}
 	else if (levelD == true)
@@ -510,7 +532,10 @@ void moveCharacter()
 			g_sChar.m_cLocation.X = 55;
 			g_sChar.m_cLocation.Y = 2;
 		}
-
+		if (map[g_sChar.m_cLocation.Y - 1][g_sChar.m_cLocation.X] == '*' || map[g_sChar.m_cLocation.Y][g_sChar.m_cLocation.X - 1] == '*' || map[g_sChar.m_cLocation.Y + 1][g_sChar.m_cLocation.X] == '*' || map[g_sChar.m_cLocation.Y][g_sChar.m_cLocation.X + 1] == '*')
+		{
+			levelDgem = true;
+		}
 	}
 	if (HQspawn == true)
 	{
@@ -533,6 +558,7 @@ void processUserInput()
 	{
 		mainMenu = false;
 		HQ = true;
+		HQspawn = true;
 	}
 	if (g_sChar.m_cLocation.X == 14 && g_sChar.m_cLocation.Y == 11 && mainMenu)
 	{
@@ -620,9 +646,60 @@ void renderMap()
 					{
 						headquarters[a] = 219;
 					}
-					else if (headquarters[a] == 'u' || headquarters[a] == 'i' || headquarters[a] == 'o' || headquarters[a] == 'p')
+					else if (headquarters[a] == 'u')
 					{
-						headquarters[a] = 255;
+						if (levelAgem == true)
+						{
+							headquarters[a] = '*';
+						}
+						else
+						{
+							headquarters[a] = 255;
+						}
+					}
+					else if (headquarters[a] == 'i')
+					{
+						if (levelBgem == true)
+						{
+							headquarters[a] = '*';
+						}
+						else
+						{
+							headquarters[a] = 255;
+						}
+					}
+					else if (headquarters[a] == 'o')
+					{
+						if (levelCgem == true)
+						{
+							headquarters[a] = '*';
+						}
+						else
+						{
+							headquarters[a] = 255;
+						}
+					}
+					else if (headquarters[a] == 'p')
+					{
+						if (levelDgem == true)
+						{
+							headquarters[a] = '*';
+						}
+						else
+						{
+							headquarters[a] = 255;
+						}
+					}
+					else if (headquarters[a] == '%')
+					{
+						if (levelAgem == true && levelBgem == true && levelCgem == true && levelDgem == true)
+						{
+							headquarters[a] = '%';
+						}
+						else
+						{
+							headquarters[a] = 255;
+						}
 					}
 					map[i][a] = headquarters[a];
 				}
@@ -656,6 +733,13 @@ void renderMap()
 					{
 						level1[a] = 219;
 					}
+					else if (level1[a] == '*')
+					{
+						if (levelAgem == true)
+						{
+							level1[a] = 255;
+						}
+					}
 					map[i][a] = level1[a];
 				}
 				c.X = 0;
@@ -683,9 +767,16 @@ void renderMap()
 					{
 						level2[a] = 223;
 					}
-					if (level2[a] == '@')
+					else if (level2[a] == '@')
 					{
 						level2[a] = 219;
+					}
+					else if (level2[a] == '*')
+					{
+						if (levelBgem == true)
+						{
+							level2[a] = 255;
+						}
 					}
 					map[i][a] = level2[a];
 				}
@@ -714,9 +805,16 @@ void renderMap()
 					{
 						level3[a] = 223;
 					}
-					if (level3[a] == '@')
+					else if (level3[a] == '@')
 					{
 						level3[a] = 219;
+					}
+					else if (level3[a] == '*')
+					{
+						if (levelCgem == true)
+						{
+							level3[a] = 255;
+						}
 					}
 					map[i][a] = level3[a];
 				}
@@ -745,9 +843,16 @@ void renderMap()
 					{
 						level4[a] = 223;
 					}
-					if (level4[a] == '@')
+					else if (level4[a] == '@')
 					{
 						level4[a] = 219;
+					}
+					else if (level4[a] == '*')
+					{
+						if (levelDgem == true)
+						{
+							level4[a] = 255;
+						}
 					}
 					map[i][a] = level4[a];
 				}
@@ -760,9 +865,9 @@ void renderMap()
 		level4File.close();
 	}
 
+	//Render Shop
 	if (shop == true)
 	{
-		//Render Shop
 		string shop;
 		ifstream shopFile;
 		i = 0;
@@ -810,94 +915,95 @@ void renderMap()
 	}
 
 	//Render Inventory
-	string inventory;
-	ifstream inventoryFile;
-	i = 0;
-
-	inventoryFile.open("Inventory.txt");
-	if (inventoryFile.is_open())
+	if (inven == true)
 	{
-		while (getline(inventoryFile, inventory))
-		{
-			for (a = 0; a < inventory.length(); a++)
-			{
-				if (inventory[a] == '#')
-				{
-					inventory[a] = 223;
-				}
-				else if (inventory[a] == '@')
-				{
-					inventory[a] = 219;
-				}
-				else if (inventory[a] == '$')
-				{
-					inventory[a] = ' ';
-				}
-				else if (inventory[a] == '1')
-				{
-					if (equipPistol == true)
-					{
-						inventory[a] = 251;
-					}
-					else
-					{
-						inventory[a] = 'x';
-					}
-				}
-				else if (inventory[a] == '2')
-				{
-					if (equipSmg == true)
-					{
-						inventory[a] = 251;
-					}
-					else
-					{
-						inventory[a] = 'x';
-					}
-				}
-				else if (inventory[a] == '3')
-				{
-					if (equipRifle == true)
-					{
-						inventory[a] = 251;
-					}
-					else
-					{
-						inventory[a] = 'x';
-					}
-				}
-				else if (inventory[a] == '4')
-				{
-					if (equipSniper == true)
-					{
-						inventory[a] = 251;
-					}
-					else
-					{
-						inventory[a] = 'x';
-					}
-				}
-				else if (inventory[a] == '5')
-				{
-					if (equipMinigun == true)
-					{
-						inventory[a] = 251;
-					}
-					else
-					{
-						inventory[a] = 'x';
-					}
-				}
-			}
-			c.X = 0;
-			c.Y = 17 + i;
-			i++;
-			g_Console.writeToBuffer(c, inventory, 0x00 + i);
-		}
-	}
-	inventoryFile.close();
+		string inventory;
+		ifstream inventoryFile;
+		i = 0;
 
-	
+		inventoryFile.open("Inventory.txt");
+		if (inventoryFile.is_open())
+		{
+			while (getline(inventoryFile, inventory))
+			{
+				for (a = 0; a < inventory.length(); a++)
+				{
+					if (inventory[a] == '#')
+					{
+						inventory[a] = 223;
+					}
+					else if (inventory[a] == '@')
+					{
+						inventory[a] = 219;
+					}
+					else if (inventory[a] == '$')
+					{
+						inventory[a] = ' ';
+					}
+					else if (inventory[a] == '1')
+					{
+						if (equipPistol == true)
+						{
+							inventory[a] = 251;
+						}
+						else
+						{
+							inventory[a] = 'x';
+						}
+					}
+					else if (inventory[a] == '2')
+					{
+						if (equipSmg == true)
+						{
+							inventory[a] = 251;
+						}
+						else
+						{
+							inventory[a] = 'x';
+						}
+					}
+					else if (inventory[a] == '3')
+					{
+						if (equipRifle == true)
+						{
+							inventory[a] = 251;
+						}
+						else
+						{
+							inventory[a] = 'x';
+						}
+					}
+					else if (inventory[a] == '4')
+					{
+						if (equipSniper == true)
+						{
+							inventory[a] = 251;
+						}
+						else
+						{
+							inventory[a] = 'x';
+						}
+					}
+					else if (inventory[a] == '5')
+					{
+						if (equipMinigun == true)
+						{
+							inventory[a] = 251;
+						}
+						else
+						{
+							inventory[a] = 'x';
+						}
+					}
+				}
+				c.X = 0;
+				c.Y = 17 + i;
+				i++;
+				g_Console.writeToBuffer(c, inventory, 0x00 + i);
+			}
+		}
+		inventoryFile.close();
+	}
 }
 
 void renderCharacter()
