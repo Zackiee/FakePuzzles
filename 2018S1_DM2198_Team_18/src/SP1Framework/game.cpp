@@ -205,12 +205,44 @@ void renderEnemies()
 		g_Console.writeToBuffer(g_sBullets[i].m_cLocation, (char)7, charE_Color);
 	}
 }
-int i = 0;
+int i = 0, n = 0;
 void enemydata() {
 	bool fooeyhappened1, fooeyhappened2, fooeyhappened3;
 	double up, left, down, right, min_double;
 	melee hugger;
 	ranged gunner;
+
+	fooeyhappened3 = false;
+
+	if (bulletbouncetime > g_dElapsedTime)
+		return;
+
+	n = i;
+	if (i >= 127) {
+		i = 0;
+	}
+
+	for (i = 0; i < 128; i++) {
+		if (shootdirection[i] == 1) { // shoot up
+			g_sBullets[i].m_cLocation.Y--;
+		}
+		if (shootdirection[i] == 2) { // shoot left
+			g_sBullets[i].m_cLocation.X--;
+		}
+		if (shootdirection[i] == 3) { // shoot down
+			g_sBullets[i].m_cLocation.Y++;
+		}
+		if (shootdirection[i] == 4) { // shoot right
+			g_sBullets[i].m_cLocation.X++;
+		}
+	}
+	shootdirection[i] = 0;
+	i = n;
+
+	fooeyhappened3 = true;
+
+	if (fooeyhappened3)
+		bulletbouncetime = g_dElapsedTime + 0.05; // bullets move around 20 tiles per second
 
 	fooeyhappened1 = false;
 
@@ -251,7 +283,7 @@ void enemydata() {
 	fooeyhappened1 = true;
 
 	if (fooeyhappened1)
-		huggerbouncetime = g_dElapsedTime + 0.167; // huggers act around six times per second
+		huggerbouncetime = g_dElapsedTime + 0.2; // huggers act around five times per second
 
 
 	fooeyhappened2 = false;
@@ -259,7 +291,7 @@ void enemydata() {
 	if (gunnerbouncetime > g_dElapsedTime)
 		return;
 
-	if (sqrt(pow((g_sGunner.m_cLocation.X - g_sChar.m_cLocation.X), 2)) <= 7 && sqrt(pow((g_sGunner.m_cLocation.Y - g_sChar.m_cLocation.Y), 2)) <= 7) {
+	if (sqrt(pow((g_sGunner.m_cLocation.X - g_sChar.m_cLocation.X), 2)) <= 8 && sqrt(pow((g_sGunner.m_cLocation.Y - g_sChar.m_cLocation.Y), 2)) <= 8) {
 		if (g_sGunner.m_cLocation.Y < g_sChar.m_cLocation.Y && map[g_sGunner.m_cLocation.Y - 1][g_sGunner.m_cLocation.X] == ' ') {
 			g_sGunner.m_cLocation.Y--;
 		}
@@ -287,16 +319,18 @@ void enemydata() {
 			g_sGunner.m_cLocation.X--;
 		}
 	}
+
 	if (g_sGunner.m_cLocation.X == g_sChar.m_cLocation.X) {
+		i++;
 		g_sBullets[i].m_cLocation.X = g_sGunner.m_cLocation.X;
 		g_sBullets[i].m_cLocation.Y = g_sGunner.m_cLocation.Y;
 		if (g_sGunner.m_cLocation.Y < g_sChar.m_cLocation.Y) {
 			shootdirection[i] = 3; // shoot down
 		}
 		else shootdirection[i] = 1; //shoot up
-
 	}
 	if (g_sGunner.m_cLocation.Y == g_sChar.m_cLocation.Y) {
+		i++;
 		g_sBullets[i].m_cLocation.X = g_sGunner.m_cLocation.X;
 		g_sBullets[i].m_cLocation.Y = g_sGunner.m_cLocation.Y;
 		if (g_sGunner.m_cLocation.X < g_sChar.m_cLocation.X) {
@@ -304,43 +338,11 @@ void enemydata() {
 		}
 		else shootdirection[i] = 2; //shoot left
 	}
-	i++;
-	if (i >= 128) {
-		i = 0;
-	}
-	shootdirection[i] = 0;
 
 	fooeyhappened2 = true;
 
 	if (fooeyhappened2)
-		gunnerbouncetime = g_dElapsedTime + 0.5; // gunners act around twice per second
-
-
-	fooeyhappened3 = false;
-
-	if (bulletbouncetime > g_dElapsedTime)
-		return;
-
-	for (int i = 0; i < 128; i++) {
-		if (i == 0) { continue; }
-		if (shootdirection[i] = 1) { // shoot up
-			g_Console.writeToBuffer(g_sBullets[i].m_cLocation.Y--, (char)7, 0x0C);
-		}
-		if (shootdirection[i] = 2) { // shoot left
-			g_Console.writeToBuffer(g_sBullets[i].m_cLocation.X--, (char)7, 0x0C);
-		}
-		if (shootdirection[i] = 3) { // shoot down
-			g_Console.writeToBuffer(g_sBullets[i].m_cLocation.Y++, (char)7, 0x0C);
-		}
-		if (shootdirection[i] = 4) { // shoot right
-			g_Console.writeToBuffer(g_sBullets[i].m_cLocation.X++, (char)7, 0x0C);
-		}
-	}
-
-	fooeyhappened3 = true;
-
-	if (fooeyhappened3)
-		bulletbouncetime = g_dElapsedTime + 0.071; // bullets move around 14 tiles per second
+		gunnerbouncetime = g_dElapsedTime + 0.6; // gunners act around twice per second
 }
 
 void gameplay()            // gameplay logic
