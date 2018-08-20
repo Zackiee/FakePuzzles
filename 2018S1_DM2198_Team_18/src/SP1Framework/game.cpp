@@ -13,6 +13,7 @@ using namespace std;
 
 int money = 0, x = 0;
 int shootdirection[128] = { 0, };
+int playerdirection[32] = { 0, };
 
 bool hq = true;
 bool inven = false;
@@ -47,6 +48,7 @@ double  g_dElapsedTime;
 double  huggerbouncetime = g_dElapsedTime;
 double  gunnerbouncetime = g_dElapsedTime;
 double  bulletbouncetime = g_dElapsedTime;
+double	playerbulletshot = g_dElapsedTime;
 double  g_dDeltaTime;
 bool    g_abKeyPressed[K_COUNT];
 
@@ -54,7 +56,8 @@ bool    g_abKeyPressed[K_COUNT];
 SGameChar   g_sChar;
 SGameChar   g_sHugger;
 SGameChar	g_sGunner;
-SGameChar	g_sBullets[128]; // consider bullets as characters in the code
+SGameChar	g_sBullets[128]; // consider enemy bullets as characters in the code
+SGameChar	g_sPlayershots[32]; // consider player bullets as characters as well
 EGAMESTATES g_eGameState = S_SPLASHSCREEN;
 double  g_dBounceTime; // this is to prevent key bouncing, so we won't trigger keypresses more than once
 
@@ -92,6 +95,10 @@ void init( void )
 	for (int i = 0; i < 128; i++) {
 		g_sBullets[i].m_cLocation.X = 0;
 		g_sBullets[i].m_cLocation.Y = 0;
+	}
+	for (int ps = 0; ps < 32; ps++) {
+		g_sPlayershots[ps].m_cLocation.X = 0;
+		g_sPlayershots[ps].m_cLocation.Y = 0;
 	}
     g_sChar.m_bActive = true;
     // sets the width, height and the font name to use in the console
@@ -234,7 +241,7 @@ void instructions()
 
 melee hugger;
 ranged gunner;
-void renderEnemies()
+void renderEntities()
 {
 	// Draw the location of the enemies
 	WORD charE_Color = 0x0C;
@@ -244,10 +251,14 @@ void renderEnemies()
 	for (int i = 0; i < 128; i++) {
 		g_Console.writeToBuffer(g_sBullets[i].m_cLocation, (char)7, charE_Color);
 	}
+	// For player bullets
+	for (int ps = 0; ps < 32; ps++) {
+		g_Console.writeToBuffer(g_sPlayershots[ps].m_cLocation, (char)7, 0x06);
+	}
 }
-int i = 0, n = 0;
+int i = 0, n = 0,p = 0, ps = 0;
+bool fooeyhappened1, fooeyhappened2, fooeyhappened3, playershot;
 void enemydata() {
-	bool fooeyhappened1, fooeyhappened2, fooeyhappened3;
 	double up, left, down, right, min_double;
 	melee hugger;
 	ranged gunner;
@@ -276,13 +287,12 @@ void enemydata() {
 			g_sBullets[i].m_cLocation.X++;
 		}
 	}
-	shootdirection[i] = 0;
 	i = n;
 
 	fooeyhappened3 = true;
 
 	if (fooeyhappened3)
-		bulletbouncetime = g_dElapsedTime + 0.05; // bullets move around 20 tiles per second
+		bulletbouncetime = g_dElapsedTime + 0.05; // enemy bullets move around 20 tiles per second
 
 	fooeyhappened1 = false;
 
@@ -303,7 +313,7 @@ void enemydata() {
 	if (map[g_sHugger.m_cLocation.Y][g_sHugger.m_cLocation.X + 1] == ' ' && x != 2) {
 		right = sqrt(pow(g_sChar.m_cLocation.X - (g_sHugger.m_cLocation.X + 1), 2) + pow(g_sChar.m_cLocation.Y - (g_sHugger.m_cLocation.Y), 2));
 	}
-	min_double = min(min(up, down), min(left, right)); // note for bug fix in future : if hugger goes into a spot where it has no choice but to reverse direction, since it's not allowed to reverse direction, it moves up through walls and breaks the game
+	min_double = min(min(up, down), min(left, right));
 	if (min_double == up && x != 3) {
 		g_sHugger.m_cLocation.Y--;
 		x = 1;
@@ -385,12 +395,66 @@ void enemydata() {
 		gunnerbouncetime = g_dElapsedTime + 0.6; // gunners act around twice per second
 }
 
+void playershoot()
+{
+	playershot = false;
+
+	if (playerbulletshot > g_dElapsedTime)
+		return;
+
+	if (g_abKeyPressed[K_UP]) {
+		playerdirection[ps] = 1; // shoot up
+	}
+	else if (g_abKeyPressed[K_DOWN]) {
+		playerdirection[ps] = 2; // shoot down
+	}
+	else if (g_abKeyPressed[K_LEFT]) {
+		playerdirection[ps] = 3; // shoot left
+	}
+	else if (g_abKeyPressed[K_RIGHT]) {
+		playerdirection[ps] = 4; // shoot right
+	}
+	else if (ps - 1 >= 0) {
+		playerdirection[ps] = playerdirection[ps - 1];
+	}
+	else playerdirection[ps] = playerdirection[31];
+
+	if (g_abKeyPressed[K_SPACE]) {
+		g_sPlayershots[ps].m_cLocation.X = g_sChar.m_cLocation.X;
+		g_sPlayershots[ps].m_cLocation.Y = g_sChar.m_cLocation.Y;
+	}
+	p = ps;
+	for (ps = 0; ps < 32; ps++) {
+		if (playerdirection[ps] == 1) { // shoot up
+			g_sPlayershots[ps].m_cLocation.Y--;
+		}
+		if (playerdirection[ps] == 2) { // shoot down
+			g_sPlayershots[ps].m_cLocation.Y++;
+		}
+		if (playerdirection[ps] == 3) { // shoot left
+			g_sPlayershots[ps].m_cLocation.X--;
+		}
+		if (playerdirection[ps] == 4) { // shoot right
+			g_sPlayershots[ps].m_cLocation.X++;
+		}
+	}
+	ps = p + 1;
+	if (ps >= 32)
+		ps = 0;
+
+	playershot = true;
+
+	if (playershot)
+		playerbulletshot = g_dElapsedTime + 0.05; // player bullets fly as fast as enemy bullets for now
+}
+
 void gameplay()            // gameplay logic
 {
     processUserInput(); // checks if you should change states or do something else with the game, e.g. pause, exit
     moveCharacter();    // moves the character, collision detection, physics, etc
                         // sound can be played here too.
 	enemydata();
+	playershoot();
 }
 
 void inventory()		// handles inventory, inventory[0] contains money, inventory[1] && inventory[2] contains the 2 weapons held
@@ -714,7 +778,8 @@ void renderGame()
 {
     renderMap();        // renders the map to the buffer first
     renderCharacter();  // renders the character into the buffer
-	renderEnemies();
+	renderEntities();
+	playershoot();
 }
 
 void renderMap()
