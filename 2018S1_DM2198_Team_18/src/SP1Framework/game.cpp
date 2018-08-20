@@ -226,6 +226,7 @@ void startMenu()
 	{
 		g_eGameState = S_INSTRUCTIONS;
 	}
+
 	if (g_abKeyPressed[K_THREE])
 	{
 		g_bQuitGame = true;
@@ -514,10 +515,7 @@ void moveCharacter()
 		g_dBounceTime = g_dElapsedTime + 0.125; // 125ms should be enough
 	}
 
-	if (map[g_sChar.m_cLocation.Y - 1][g_sChar.m_cLocation.X] == 'S' || map[g_sChar.m_cLocation.Y][g_sChar.m_cLocation.X - 1] == 'S' || map[g_sChar.m_cLocation.Y + 1][g_sChar.m_cLocation.X] == 'S' || map[g_sChar.m_cLocation.Y][g_sChar.m_cLocation.X + 1] == 'S' ||
-		map[g_sChar.m_cLocation.Y - 1][g_sChar.m_cLocation.X] == 'H' || map[g_sChar.m_cLocation.Y][g_sChar.m_cLocation.X - 1] == 'H' || map[g_sChar.m_cLocation.Y + 1][g_sChar.m_cLocation.X] == 'H' || map[g_sChar.m_cLocation.Y][g_sChar.m_cLocation.X + 1] == 'H' ||
-		map[g_sChar.m_cLocation.Y - 1][g_sChar.m_cLocation.X] == 'O' || map[g_sChar.m_cLocation.Y][g_sChar.m_cLocation.X - 1] == 'O' || map[g_sChar.m_cLocation.Y + 1][g_sChar.m_cLocation.X] == 'O' || map[g_sChar.m_cLocation.Y][g_sChar.m_cLocation.X + 1] == 'O' ||
-		map[g_sChar.m_cLocation.Y - 1][g_sChar.m_cLocation.X] == 'P' || map[g_sChar.m_cLocation.Y][g_sChar.m_cLocation.X - 1] == 'P' || map[g_sChar.m_cLocation.Y + 1][g_sChar.m_cLocation.X] == 'P' || map[g_sChar.m_cLocation.Y][g_sChar.m_cLocation.X + 1] == 'P')
+	if (collision('S') || collision('H') || collision('O') || collision('P'))
 	{
 		shop = true;
 	}
@@ -526,10 +524,7 @@ void moveCharacter()
 		shop = false;
 	}
 
-	if (map[g_sChar.m_cLocation.Y - 1][g_sChar.m_cLocation.X] == 'Q' || map[g_sChar.m_cLocation.Y][g_sChar.m_cLocation.X - 1] == 'Q' || map[g_sChar.m_cLocation.Y + 1][g_sChar.m_cLocation.X] == 'Q' || map[g_sChar.m_cLocation.Y][g_sChar.m_cLocation.X + 1] == 'Q' ||
-		map[g_sChar.m_cLocation.Y - 1][g_sChar.m_cLocation.X] == 'U' || map[g_sChar.m_cLocation.Y][g_sChar.m_cLocation.X - 1] == 'U' || map[g_sChar.m_cLocation.Y + 1][g_sChar.m_cLocation.X] == 'U' || map[g_sChar.m_cLocation.Y][g_sChar.m_cLocation.X + 1] == 'U' ||
-		map[g_sChar.m_cLocation.Y - 1][g_sChar.m_cLocation.X] == 'I' || map[g_sChar.m_cLocation.Y][g_sChar.m_cLocation.X - 1] == 'I' || map[g_sChar.m_cLocation.Y + 1][g_sChar.m_cLocation.X] == 'I' || map[g_sChar.m_cLocation.Y][g_sChar.m_cLocation.X + 1] == 'I' ||
-		map[g_sChar.m_cLocation.Y - 1][g_sChar.m_cLocation.X] == 'T' || map[g_sChar.m_cLocation.Y][g_sChar.m_cLocation.X - 1] == 'T' || map[g_sChar.m_cLocation.Y + 1][g_sChar.m_cLocation.X] == 'T' || map[g_sChar.m_cLocation.Y][g_sChar.m_cLocation.X + 1] == 'T')
+	if (collision('Q') || collision('U') || collision('I') || collision('T'))
 	{
 		g_bQuitGame = true;
 	}
@@ -538,31 +533,31 @@ void moveCharacter()
 	{
 		hqSpawn = false;
 
-		if (map[g_sChar.m_cLocation.Y - 1][g_sChar.m_cLocation.X] == 'a' || map[g_sChar.m_cLocation.Y][g_sChar.m_cLocation.X - 1] == 'a' || map[g_sChar.m_cLocation.Y + 1][g_sChar.m_cLocation.X] == 'a' || map[g_sChar.m_cLocation.Y][g_sChar.m_cLocation.X + 1] == 'a')
+		if (collision('a'))
 		{
 			hq = false;
 			levelA = true;
 			playerRespawn = true;
 		}
-		else if (map[g_sChar.m_cLocation.Y - 1][g_sChar.m_cLocation.X] == 'b' || map[g_sChar.m_cLocation.Y][g_sChar.m_cLocation.X - 1] == 'b' || map[g_sChar.m_cLocation.Y + 1][g_sChar.m_cLocation.X] == 'b' || map[g_sChar.m_cLocation.Y][g_sChar.m_cLocation.X + 1] == 'b')
+		else if (collision('b'))
 		{
 			hq = false;
 			levelB = true;
 			playerRespawn = true;
 		}
-		else if (map[g_sChar.m_cLocation.Y - 1][g_sChar.m_cLocation.X] == 'c' || map[g_sChar.m_cLocation.Y][g_sChar.m_cLocation.X - 1] == 'c' || map[g_sChar.m_cLocation.Y + 1][g_sChar.m_cLocation.X] == 'c' || map[g_sChar.m_cLocation.Y][g_sChar.m_cLocation.X + 1] == 'c')
+		else if (collision('c'))
 		{
 			hq = false;
 			levelC = true;
 			playerRespawn = true;
 		}
-		else if (map[g_sChar.m_cLocation.Y - 1][g_sChar.m_cLocation.X] == 'd' || map[g_sChar.m_cLocation.Y][g_sChar.m_cLocation.X - 1] == 'd' || map[g_sChar.m_cLocation.Y + 1][g_sChar.m_cLocation.X] == 'd' || map[g_sChar.m_cLocation.Y][g_sChar.m_cLocation.X + 1] == 'd')
+		else if (collision('d'))
 		{
 			hq = false;
 			levelD = true;
 			playerRespawn = true;
 		}
-		else if (map[g_sChar.m_cLocation.Y - 1][g_sChar.m_cLocation.X] == '%' || map[g_sChar.m_cLocation.Y][g_sChar.m_cLocation.X - 1] == '%' || map[g_sChar.m_cLocation.Y + 1][g_sChar.m_cLocation.X] == '%' || map[g_sChar.m_cLocation.Y][g_sChar.m_cLocation.X + 1] == '%')
+		else if (collision('%'))
 		{
 			hq = false;
 			inven = false;
@@ -573,13 +568,13 @@ void moveCharacter()
 	{
 		playerRespawn = false;
 
-		if (map[g_sChar.m_cLocation.Y - 1][g_sChar.m_cLocation.X] == '%' || map[g_sChar.m_cLocation.Y][g_sChar.m_cLocation.X - 1] == '%' || map[g_sChar.m_cLocation.Y + 1][g_sChar.m_cLocation.X] == '%' || map[g_sChar.m_cLocation.Y][g_sChar.m_cLocation.X + 1] == '%')
+		if (collision('%'))
 		{
 			levelA = false;
 			hq = true;
 			hqSpawn = true;
 		}
-		if (map[g_sChar.m_cLocation.Y - 1][g_sChar.m_cLocation.X] == '*' || map[g_sChar.m_cLocation.Y][g_sChar.m_cLocation.X - 1] == '*' || map[g_sChar.m_cLocation.Y + 1][g_sChar.m_cLocation.X] == '*' || map[g_sChar.m_cLocation.Y][g_sChar.m_cLocation.X + 1] == '*')
+		if (collision('*'))
 		{
 			levelAgem = true;
 		}
@@ -588,18 +583,18 @@ void moveCharacter()
 	{
 		playerRespawn = false;
 
-		if (map[g_sChar.m_cLocation.Y - 1][g_sChar.m_cLocation.X] == '%' || map[g_sChar.m_cLocation.Y][g_sChar.m_cLocation.X - 1] == '%' || map[g_sChar.m_cLocation.Y + 1][g_sChar.m_cLocation.X] == '%' || map[g_sChar.m_cLocation.Y][g_sChar.m_cLocation.X + 1] == '%')
+		if (collision('%'))
 		{
 			levelB = false;
 			hq = true;
 			hqSpawn = true;
 		}
-		if (map[g_sChar.m_cLocation.Y - 1][g_sChar.m_cLocation.X] == '&' || map[g_sChar.m_cLocation.Y][g_sChar.m_cLocation.X - 1] == '&' || map[g_sChar.m_cLocation.Y + 1][g_sChar.m_cLocation.X] == '&' || map[g_sChar.m_cLocation.Y][g_sChar.m_cLocation.X + 1] == '&')
+		if (collision('&'))
 		{
 			g_sChar.m_cLocation.X = 64;
 			g_sChar.m_cLocation.Y = 2;
 		}
-		if (map[g_sChar.m_cLocation.Y - 1][g_sChar.m_cLocation.X] == '*' || map[g_sChar.m_cLocation.Y][g_sChar.m_cLocation.X - 1] == '*' || map[g_sChar.m_cLocation.Y + 1][g_sChar.m_cLocation.X] == '*' || map[g_sChar.m_cLocation.Y][g_sChar.m_cLocation.X + 1] == '*')
+		if (collision('*'))
 		{
 			levelBgem = true;
 		}
@@ -608,18 +603,18 @@ void moveCharacter()
 	{
 		playerRespawn = false;
 
-		if (map[g_sChar.m_cLocation.Y - 1][g_sChar.m_cLocation.X] == '%' || map[g_sChar.m_cLocation.Y][g_sChar.m_cLocation.X - 1] == '%' || map[g_sChar.m_cLocation.Y + 1][g_sChar.m_cLocation.X] == '%' || map[g_sChar.m_cLocation.Y][g_sChar.m_cLocation.X + 1] == '%')
+		if (collision('%'))
 		{
 			levelC = false;
 			hq = true;
 			hqSpawn = true;
 		}
-		if (map[g_sChar.m_cLocation.Y - 1][g_sChar.m_cLocation.X] == '&' || map[g_sChar.m_cLocation.Y][g_sChar.m_cLocation.X - 1] == '&' || map[g_sChar.m_cLocation.Y + 1][g_sChar.m_cLocation.X] == '&' || map[g_sChar.m_cLocation.Y][g_sChar.m_cLocation.X + 1] == '&')
+		if (collision('&'))
 		{
 			g_sChar.m_cLocation.X = 59;
 			g_sChar.m_cLocation.Y = 2;
 		}
-		if (map[g_sChar.m_cLocation.Y - 1][g_sChar.m_cLocation.X] == '*' || map[g_sChar.m_cLocation.Y][g_sChar.m_cLocation.X - 1] == '*' || map[g_sChar.m_cLocation.Y + 1][g_sChar.m_cLocation.X] == '*' || map[g_sChar.m_cLocation.Y][g_sChar.m_cLocation.X + 1] == '*')
+		if (collision('*'))
 		{
 			levelCgem = true;
 		}
@@ -628,18 +623,18 @@ void moveCharacter()
 	{
 		playerRespawn = false;
 
-		if (map[g_sChar.m_cLocation.Y - 1][g_sChar.m_cLocation.X] == '%' || map[g_sChar.m_cLocation.Y][g_sChar.m_cLocation.X - 1] == '%' || map[g_sChar.m_cLocation.Y + 1][g_sChar.m_cLocation.X] == '%' || map[g_sChar.m_cLocation.Y][g_sChar.m_cLocation.X + 1] == '%')
+		if (collision('%'))
 		{
 			levelD = false;
 			hq = true;
 			hqSpawn = true;
 		}
-		if (map[g_sChar.m_cLocation.Y - 1][g_sChar.m_cLocation.X] == '&' || map[g_sChar.m_cLocation.Y][g_sChar.m_cLocation.X - 1] == '&' || map[g_sChar.m_cLocation.Y + 1][g_sChar.m_cLocation.X] == '&' || map[g_sChar.m_cLocation.Y][g_sChar.m_cLocation.X + 1] == '&')
+		if (collision('&'))
 		{
 			g_sChar.m_cLocation.X = 55;
 			g_sChar.m_cLocation.Y = 2;
 		}
-		if (map[g_sChar.m_cLocation.Y - 1][g_sChar.m_cLocation.X] == '*' || map[g_sChar.m_cLocation.Y][g_sChar.m_cLocation.X - 1] == '*' || map[g_sChar.m_cLocation.Y + 1][g_sChar.m_cLocation.X] == '*' || map[g_sChar.m_cLocation.Y][g_sChar.m_cLocation.X + 1] == '*')
+		if (collision('*'))
 		{
 			levelDgem = true;
 		}
@@ -1198,7 +1193,7 @@ void renderCharacter()
         charColor = 0x0E;
     }*/
 
-	if (map[g_sChar.m_cLocation.Y - 1][g_sChar.m_cLocation.X] == 'q' || map[g_sChar.m_cLocation.Y][g_sChar.m_cLocation.X - 1] == 'q' || map[g_sChar.m_cLocation.Y + 1][g_sChar.m_cLocation.X] == 'q' || map[g_sChar.m_cLocation.Y][g_sChar.m_cLocation.X + 1] == 'q')
+	if (collision('q'))
 	{
 		secondChar = true;
 		firstChar = false;
@@ -1207,7 +1202,7 @@ void renderCharacter()
 		fifthChar = false;
 		sixthChar = false;
 	}
-	if (map[g_sChar.m_cLocation.Y - 1][g_sChar.m_cLocation.X] == 'w' || map[g_sChar.m_cLocation.Y][g_sChar.m_cLocation.X - 1] == 'w' || map[g_sChar.m_cLocation.Y + 1][g_sChar.m_cLocation.X] == 'w' || map[g_sChar.m_cLocation.Y][g_sChar.m_cLocation.X + 1] == 'w')
+	if (collision('w'))
 	{
 		thirdChar = true;
 		firstChar = false;
@@ -1216,7 +1211,7 @@ void renderCharacter()
 		fifthChar = false;
 		sixthChar = false;
 	}
-	if (map[g_sChar.m_cLocation.Y - 1][g_sChar.m_cLocation.X] == 'e' || map[g_sChar.m_cLocation.Y][g_sChar.m_cLocation.X - 1] == 'e' || map[g_sChar.m_cLocation.Y + 1][g_sChar.m_cLocation.X] == 'e' || map[g_sChar.m_cLocation.Y][g_sChar.m_cLocation.X + 1] == 'e')
+	if (collision('e'))
 	{
 		fourthChar = true;
 		firstChar = false;
@@ -1225,7 +1220,7 @@ void renderCharacter()
 		fifthChar = false;
 		sixthChar = false;
 	}
-	if (map[g_sChar.m_cLocation.Y - 1][g_sChar.m_cLocation.X] == 'r' || map[g_sChar.m_cLocation.Y][g_sChar.m_cLocation.X - 1] == 'r' || map[g_sChar.m_cLocation.Y + 1][g_sChar.m_cLocation.X] == 'r' || map[g_sChar.m_cLocation.Y][g_sChar.m_cLocation.X + 1] == 'r')
+	if (collision('r'))
 	{
 		fifthChar = true;
 		firstChar = false;
@@ -1234,7 +1229,7 @@ void renderCharacter()
 		fourthChar = false;
 		sixthChar = false;
 	}
-	if (map[g_sChar.m_cLocation.Y - 1][g_sChar.m_cLocation.X] == 't' || map[g_sChar.m_cLocation.Y][g_sChar.m_cLocation.X - 1] == 't' || map[g_sChar.m_cLocation.Y + 1][g_sChar.m_cLocation.X] == 't' || map[g_sChar.m_cLocation.Y][g_sChar.m_cLocation.X + 1] == 't')
+	if (collision('t'))
 	{
 		sixthChar = true;
 		firstChar = false;
@@ -1270,6 +1265,17 @@ void renderCharacter()
 		g_Console.writeToBuffer(g_sChar.m_cLocation, (char)6, 0x0E);
 	}
 }
+bool collision(char collider)
+{
+	bool collided = false;
+
+	if (map[g_sChar.m_cLocation.Y - 1][g_sChar.m_cLocation.X] == collider || map[g_sChar.m_cLocation.Y][g_sChar.m_cLocation.X - 1] == collider || map[g_sChar.m_cLocation.Y + 1][g_sChar.m_cLocation.X] == collider || map[g_sChar.m_cLocation.Y][g_sChar.m_cLocation.X + 1] == collider)
+	{
+		collided = true;
+	}
+	return collided;
+}
+
 
 void renderFramerate()
 {
