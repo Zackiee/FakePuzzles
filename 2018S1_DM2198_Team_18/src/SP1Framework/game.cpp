@@ -146,11 +146,11 @@ void getInput( void )
     g_abKeyPressed[K_RIGHT]  = isKeyPressed(VK_RIGHT);
     g_abKeyPressed[K_SPACE]  = isKeyPressed(VK_SPACE);
     g_abKeyPressed[K_ESCAPE] = isKeyPressed(VK_ESCAPE);
-	g_abKeyPressed[K_ONE]	 = isKeyPressed(0x31);
-	g_abKeyPressed[K_TWO]	 = isKeyPressed(0X32);
-	g_abKeyPressed[K_THREE]	 = isKeyPressed(0x33);
-	g_abKeyPressed[K_FOUR]	 = isKeyPressed(0x34);
-	g_abKeyPressed[K_FIVE]   = isKeyPressed(0x35);
+	g_abKeyPressed[K_1]	 = isKeyPressed(0x31);
+	g_abKeyPressed[K_2]	 = isKeyPressed(0X32);
+	g_abKeyPressed[K_3]	 = isKeyPressed(0x33);
+	g_abKeyPressed[K_4]	 = isKeyPressed(0x34);
+	g_abKeyPressed[K_5]   = isKeyPressed(0x35);
 }
 
 //--------------------------------------------------------------
@@ -226,17 +226,17 @@ void splashScreenWait()    // waits for time to pass in splash screen
 
 void startMenu()
 {
-	if (g_abKeyPressed[K_ONE])
+	if (g_abKeyPressed[K_1])
 	{
 		g_eGameState = S_GAME;
 	}
 
-	if (g_abKeyPressed[K_TWO])
+	if (g_abKeyPressed[K_2])
 	{
 		g_eGameState = S_INSTRUCTIONS;
 	}
 
-	if (g_abKeyPressed[K_THREE])
+	if (g_abKeyPressed[K_3])
 	{
 		g_bQuitGame = true;
 	}
@@ -1407,19 +1407,19 @@ void renderMap()
 		}
 		shopFile.close();
 
-		if (g_abKeyPressed[K_ONE])
+		if (g_abKeyPressed[K_1])
 		{
 			equipSmg = true;
 		}
-		 if (g_abKeyPressed[K_TWO])
+		 if (g_abKeyPressed[K_2])
 		{
 			equipRifle = true;
 		}
-		if (g_abKeyPressed[K_THREE])
+		if (g_abKeyPressed[K_3])
 		{
 			equipSniper = true;
 		}
-		if (g_abKeyPressed[K_FOUR])
+		if (g_abKeyPressed[K_4])
 		{
 			equipMinigun = true;
 		}
