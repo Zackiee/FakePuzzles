@@ -14,8 +14,8 @@ using namespace std;
 int money = 0, x = 0;
 int shootdirection[128] = { 0, };
 
-bool mainMenu = false;
-bool instructions = true;
+bool mainMenu = true;
+bool instructions = false;
 bool hq = false;
 bool inven = false;
 bool shop = false;
@@ -720,6 +720,50 @@ void renderMap()
 					{
 						headquarters[a] = 219;
 					}
+					else if (headquarters[a] == '1')
+					{
+						if (levelAgem == true)
+						{
+							headquarters[a] = 251;
+						}
+						else
+						{
+							headquarters[a] = 'x';
+						}
+					}
+					else if (headquarters[a] == '2')
+					{
+						if (levelBgem == true)
+						{
+							headquarters[a] = 251;
+						}
+						else
+						{
+							headquarters[a] = 'x';
+						}
+					}
+					else if (headquarters[a] == '3')
+					{
+						if (levelCgem == true)
+						{
+							headquarters[a] = 251;
+						}
+						else
+						{
+							headquarters[a] = 'x';
+						}
+					}
+					else if (headquarters[a] == '4')
+					{
+						if (levelDgem == true)
+						{
+							headquarters[a] = 251;
+						}
+						else
+						{
+							headquarters[a] = 'x';
+						}
+					}
 					else if (headquarters[a] == 'u')
 					{
 						if (levelAgem == true)
@@ -819,7 +863,7 @@ void renderMap()
 				c.X = 0;
 				c.Y = i;
 				i++;
-				g_Console.writeToBuffer(c, level1, 0x09);
+				g_Console.writeToBuffer(c, level1, 0x0F);
 			}
 		}
 		level1File.close();
@@ -857,7 +901,7 @@ void renderMap()
 				c.X = 0;
 				c.Y = i;
 				i++;
-				g_Console.writeToBuffer(c, level2, 0x09);
+				g_Console.writeToBuffer(c, level2, 0x0D);
 			}
 		}
 		level2File.close();
@@ -895,7 +939,7 @@ void renderMap()
 				c.X = 0;
 				c.Y = i;
 				i++;
-				g_Console.writeToBuffer(c, level3, 0x09);
+				g_Console.writeToBuffer(c, level3, 0x0B);
 			}
 		}
 		level3File.close();
@@ -933,7 +977,7 @@ void renderMap()
 				c.X = 0;
 				c.Y = i;
 				i++;
-				g_Console.writeToBuffer(c, level4, 0x09);
+				g_Console.writeToBuffer(c, level4, 0x0E);
 			}
 		}
 		level4File.close();
