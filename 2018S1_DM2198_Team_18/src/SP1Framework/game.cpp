@@ -29,6 +29,7 @@ bool levelDgem = false;
 bool hqSpawn = false;
 bool playerRespawn = false;
 
+bool nameSelect = false;
 bool characterSelect = false;
 
 bool nameArray[5] = { false };
@@ -221,14 +222,14 @@ void render()
 void splashScreenWait()    // waits for time to pass in splash screen
 {
     if (g_dElapsedTime > 2) // wait for 3 seconds to switch to game mode, else do nothing
-        g_eGameState = S_CHOOSE;
+        g_eGameState = S_STARTMENU;
 }
 
 void startMenu()
 {
 	if (g_abKeyPressed[K_1])
 	{
-		g_eGameState = S_GAME;
+		g_eGameState = S_CHARACTERCREATION;
 	}
 
 	if (g_abKeyPressed[K_2])
@@ -251,50 +252,55 @@ void instructions()
 
 void characterCreation()
 {
-	if (g_abKeyPressed[K_1])
+	if (g_abKeyPressed[K_1] && characterSelect == false)
 	{
 		nameArray[0] = true;
 		nameArray[1] = false;
 		nameArray[2] = false;
 		nameArray[3] = false;
 		nameArray[4] = false;
+		nameSelect = true;
 	}
 
-	if (g_abKeyPressed[K_2])
+	if (g_abKeyPressed[K_2] && characterSelect == false)
 	{
 		nameArray[1] = true;
 		nameArray[0] = false;
 		nameArray[2] = false;
 		nameArray[3] = false;
 		nameArray[4] = false;
+		nameSelect = true;
 	}
 
-	if (g_abKeyPressed[K_3])
+	if (g_abKeyPressed[K_3] && characterSelect == false)
 	{
 		nameArray[2] = true;
 		nameArray[0] = false;
 		nameArray[1] = false;
 		nameArray[3] = false;
 		nameArray[4] = false;
+		nameSelect = true;
 	}
 
-	if (g_abKeyPressed[K_4])
+	if (g_abKeyPressed[K_4] && characterSelect == false)
 	{
 		nameArray[3] = true;
 		nameArray[0] = false;
 		nameArray[1] = false;
 		nameArray[2] = false;
 		nameArray[4] = false;
+		nameSelect = true;
 	}
-	if (g_abKeyPressed[K_5])
+	if (g_abKeyPressed[K_5] && characterSelect == false)
 	{
 		nameArray[4] = true;
 		nameArray[0] = false;
 		nameArray[1] = false;
 		nameArray[2] = false;
 		nameArray[3] = false;
+		nameSelect = true;
 	}
-	if (g_abKeyPressed[K_SPACE] && characterSelect == false)
+	if (g_abKeyPressed[K_SPACE] && nameSelect == true)
 	{
 		characterSelect = true;
 	}
@@ -348,7 +354,7 @@ void characterCreation()
 	}
 	if (g_abKeyPressed[K_SPACE] && characterSelect == true)
 	{
-
+		g_eGameState = S_GAME;
 	}
 }
 
@@ -1093,6 +1099,43 @@ void renderCharacterCreation()
 		c.X = 54;
 		c.Y = 11;
 		g_Console.writeToBuffer(c, names[4], 0x0B);
+	}
+	
+	if (charArray[0] == true)
+	{
+		g_sChar.m_cLocation.X = 49;
+		g_sChar.m_cLocation.Y = 21;
+		g_Console.writeToBuffer(g_sChar.m_cLocation, (char)1, 0x0F);
+	}
+	if (charArray[1] == true)
+	{
+		g_sChar.m_cLocation.X = 49;
+		g_sChar.m_cLocation.Y = 21;
+		g_Console.writeToBuffer(g_sChar.m_cLocation, (char)2, 0x0F);
+	}
+	if (charArray[2] == true)
+	{
+		g_sChar.m_cLocation.X = 49;
+		g_sChar.m_cLocation.Y = 21;
+		g_Console.writeToBuffer(g_sChar.m_cLocation, (char)3, 0x0F);
+	}
+	if (charArray[3] == true)
+	{
+		g_sChar.m_cLocation.X = 49;
+		g_sChar.m_cLocation.Y = 21;
+		g_Console.writeToBuffer(g_sChar.m_cLocation, (char)4, 0x0F);
+	}
+	if (charArray[4] == true)
+	{
+		g_sChar.m_cLocation.X = 49;
+		g_sChar.m_cLocation.Y = 21;
+		g_Console.writeToBuffer(g_sChar.m_cLocation, (char)5, 0x0F);
+	}
+	if (charArray[5] == true)
+	{
+		g_sChar.m_cLocation.X = 49;
+		g_sChar.m_cLocation.Y = 21;
+		g_Console.writeToBuffer(g_sChar.m_cLocation, (char)6, 0x0F);
 	}
 }
 
