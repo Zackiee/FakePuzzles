@@ -14,9 +14,7 @@ using namespace std;
 int money = 0, x = 0;
 int shootdirection[128] = { 0, };
 
-bool mainMenu = false;
-bool instructions = true;
-bool hq = false;
+bool hq = true;
 bool inven = false;
 bool shop = false;
 bool levelA = false;
@@ -71,6 +69,11 @@ char** map = new char*[30];
 // Input    : void
 // Output   : void
 //--------------------------------------------------------------
+//void playerInput()
+//{
+//	cin >> playerName;
+//}
+
 void init( void )
 {
     // Set precision for floating point output
@@ -402,12 +405,6 @@ void inventory()		// handles inventory, inventory[0] contains money, inventory[1
 	}
 }
 
-void playerInput()
-{
-	cin >> playerName;
-
-}
-
 void moveCharacter()
 {
 	bool bSomethingHappened = false;
@@ -597,7 +594,7 @@ void moveCharacter()
 }
 void processUserInput()
 {
-	playerInput();
+	/*playerInput();*/
     // quits the game if player hits the escape key
     if (g_abKeyPressed[K_ESCAPE])
         g_bQuitGame = true;
