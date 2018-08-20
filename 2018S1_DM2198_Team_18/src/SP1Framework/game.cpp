@@ -42,8 +42,6 @@ bool equipRifle = false;
 bool equipSniper = false;
 bool equipMinigun = false;
 
-string playerName;
-
 double  g_dElapsedTime;
 double  huggerbouncetime = g_dElapsedTime;
 double  gunnerbouncetime = g_dElapsedTime;
@@ -72,10 +70,25 @@ char** map = new char*[30];
 // Input    : void
 // Output   : void
 //--------------------------------------------------------------
-//void playerInput()
-//{
-//	cin >> playerName;
-//}
+void renderchooseInput()
+{
+	COORD c;
+	string chooseInput;
+	ifstream chooseInputFile;
+	int i = 0;
+	chooseInputFile.open("PlayerInput.txt");
+	if (chooseInputFile.is_open())
+	{
+		while (getline(chooseInputFile, chooseInput))
+		{
+			c.X = 0;
+			c.Y = i;
+			i++;
+			g_Console.writeToBuffer(c, chooseInput, 0x0B);
+		}
+	}
+	chooseInputFile.close();
+}
 
 void init( void )
 {
@@ -176,6 +189,8 @@ void update(double dt)
             break;
 		case S_STARTMENU: startMenu();
 			break;
+		case S_RENDERPLAYERINPUT: renderchooseInput();
+			break;
 		case S_INSTRUCTIONS: instructions();
 			break;
         case S_GAME: gameplay(); // gameplay logic when we are in the game
@@ -200,6 +215,8 @@ void render()
             break;
 		case S_STARTMENU: renderStartMenu();
 			break;
+		case S_RENDERPLAYERINPUT: renderplayerInput();
+			break;
 		case S_INSTRUCTIONS: renderInstructions();
 			break;
         case S_GAME: renderGame();
@@ -219,7 +236,7 @@ void startMenu()
 {
 	if (g_abKeyPressed[K_ONE])
 	{
-		g_eGameState = S_GAME;
+		g_eGameState = S_RENDERPLAYERINPUT;
 	}
 
 	if (g_abKeyPressed[K_TWO])
@@ -235,7 +252,7 @@ void instructions()
 {
 	if (g_abKeyPressed[K_SPACE])
 	{
-		g_eGameState = S_GAME;
+		g_eGameState = S_RENDERPLAYERINPUT;
 	}
 }
 
@@ -658,7 +675,6 @@ void moveCharacter()
 }
 void processUserInput()
 {
-	/*playerInput();*/
     // quits the game if player hits the escape key
     if (g_abKeyPressed[K_ESCAPE])
         g_bQuitGame = true;
