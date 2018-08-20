@@ -142,11 +142,11 @@ void getInput( void )
     g_abKeyPressed[K_RIGHT]  = isKeyPressed(VK_RIGHT);
     g_abKeyPressed[K_SPACE]  = isKeyPressed(VK_SPACE);
     g_abKeyPressed[K_ESCAPE] = isKeyPressed(VK_ESCAPE);
-	g_abKeyPressed[K_1]	 = isKeyPressed(0x31);
-	g_abKeyPressed[K_2]	 = isKeyPressed(0X32);
-	g_abKeyPressed[K_3]	 = isKeyPressed(0x33);
-	g_abKeyPressed[K_4]	 = isKeyPressed(0x34);
-	g_abKeyPressed[K_5]   = isKeyPressed(0x35);
+	g_abKeyPressed[K_ONE]	 = isKeyPressed(0x31);
+	g_abKeyPressed[K_TWO]	 = isKeyPressed(0X32);
+	g_abKeyPressed[K_THREE]	 = isKeyPressed(0x33);
+	g_abKeyPressed[K_FOUR]	 = isKeyPressed(0x34);
+	g_abKeyPressed[K_FIVE]   = isKeyPressed(0x35);
 }
 
 //--------------------------------------------------------------
@@ -222,17 +222,17 @@ void splashScreenWait()    // waits for time to pass in splash screen
 
 void startMenu()
 {
-	if (g_abKeyPressed[K_1])
+	if (g_abKeyPressed[K_ONE])
 	{
 		g_eGameState = S_GAME;
 	}
 
-	if (g_abKeyPressed[K_2])
+	if (g_abKeyPressed[K_TWO])
 	{
 		g_eGameState = S_INSTRUCTIONS;
 	}
 
-	if (g_abKeyPressed[K_3])
+	if (g_abKeyPressed[K_THREE])
 	{
 		g_bQuitGame = true;
 	}
@@ -247,7 +247,7 @@ void instructions()
 
 void characterCreation()
 {
-	if (g_abKeyPressed[K_1])
+	if (g_abKeyPressed[K_ONE])
 	{
 		nameArray[0] = true;
 		nameArray[1] = false;
@@ -256,7 +256,7 @@ void characterCreation()
 		nameArray[4] = false;
 	}
 
-	if (g_abKeyPressed[K_2])
+	if (g_abKeyPressed[K_TWO])
 	{
 		nameArray[1] = true;
 		nameArray[0] = false;
@@ -265,7 +265,7 @@ void characterCreation()
 		nameArray[4] = false;
 	}
 
-	if (g_abKeyPressed[K_3])
+	if (g_abKeyPressed[K_THREE])
 	{
 		nameArray[2] = true;
 		nameArray[0] = false;
@@ -274,7 +274,7 @@ void characterCreation()
 		nameArray[4] = false;
 	}
 
-	if (g_abKeyPressed[K_4])
+	if (g_abKeyPressed[K_FOUR])
 	{
 		nameArray[3] = true;
 		nameArray[0] = false;
@@ -282,7 +282,7 @@ void characterCreation()
 		nameArray[2] = false;
 		nameArray[4] = false;
 	}
-	if (g_abKeyPressed[K_5])
+	if (g_abKeyPressed[K_FIVE])
 	{
 		nameArray[4] = true;
 		nameArray[0] = false;
@@ -1333,19 +1333,19 @@ void renderMap()
 		}
 		shopFile.close();
 
-		if (g_abKeyPressed[K_1])
+		if (g_abKeyPressed[K_ONE])
 		{
 			equipSmg = true;
 		}
-		 if (g_abKeyPressed[K_2])
+		 if (g_abKeyPressed[K_TWO])
 		{
 			equipRifle = true;
 		}
-		if (g_abKeyPressed[K_3])
+		if (g_abKeyPressed[K_THREE])
 		{
 			equipSniper = true;
 		}
-		if (g_abKeyPressed[K_4])
+		if (g_abKeyPressed[K_FOUR])
 		{
 			equipMinigun = true;
 		}

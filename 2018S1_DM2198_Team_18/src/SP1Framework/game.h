@@ -21,6 +21,7 @@ enum EKEYS
 	K_TWO,
 	K_THREE,
 	K_FOUR,
+	K_FIVE,
 	K_COUNT
 };
 
@@ -32,8 +33,8 @@ enum EGAMESTATES
 	S_INSTRUCTIONS,
 	S_CHARACTERCREATION,
     S_GAME,
-    S_COUNT
-	
+    S_COUNT,
+	S_CHOOSE
 };
 
 // struct for the game character
