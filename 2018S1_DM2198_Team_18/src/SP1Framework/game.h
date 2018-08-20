@@ -17,11 +17,10 @@ enum EKEYS
 	K_RIGHT,
 	K_ESCAPE,
 	K_SPACE,
-	K_1,
-	K_2,
-	K_3,
-	K_4,
-	K_5,
+	K_ONE,
+	K_TWO,
+	K_THREE,
+	K_FOUR,
 	K_COUNT
 };
 
@@ -33,7 +32,6 @@ enum EGAMESTATES
 	S_INSTRUCTIONS,
 	S_CHARACTERCREATION,
     S_GAME,
-	S_CHOOSE,
     S_COUNT
 	
 };
