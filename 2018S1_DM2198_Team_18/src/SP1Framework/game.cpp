@@ -29,6 +29,9 @@ bool levelDgem = false;
 bool hqSpawn = false;
 bool playerRespawn = false;
 
+bool nameArray[5] = { false };
+string names[5] = { "Enos", "Okin", "Ilya", "Setsuna", "Ilias" };
+
 bool firstChar = true;
 bool secondChar = false;
 bool thirdChar = false;
@@ -70,26 +73,6 @@ char** map = new char*[30];
 // Input    : void
 // Output   : void
 //--------------------------------------------------------------
-void renderchooseInput()
-{
-	COORD c;
-	string chooseInput;
-	ifstream chooseInputFile;
-	int i = 0;
-	chooseInputFile.open("PlayerInput.txt");
-	if (chooseInputFile.is_open())
-	{
-		while (getline(chooseInputFile, chooseInput))
-		{
-			c.X = 0;
-			c.Y = i;
-			i++;
-			g_Console.writeToBuffer(c, chooseInput, 0x0B);
-		}
-	}
-	chooseInputFile.close();
-}
-
 void init( void )
 {
     // Set precision for floating point output
@@ -159,10 +142,11 @@ void getInput( void )
     g_abKeyPressed[K_RIGHT]  = isKeyPressed(VK_RIGHT);
     g_abKeyPressed[K_SPACE]  = isKeyPressed(VK_SPACE);
     g_abKeyPressed[K_ESCAPE] = isKeyPressed(VK_ESCAPE);
-	g_abKeyPressed[K_ONE]	 = isKeyPressed(0x31);
-	g_abKeyPressed[K_TWO]	 = isKeyPressed(0X32);
-	g_abKeyPressed[K_THREE]	 = isKeyPressed(0x33);
-	g_abKeyPressed[K_FOUR]	 = isKeyPressed(0x34);
+	g_abKeyPressed[K_1]	 = isKeyPressed(0x31);
+	g_abKeyPressed[K_2]	 = isKeyPressed(0X32);
+	g_abKeyPressed[K_3]	 = isKeyPressed(0x33);
+	g_abKeyPressed[K_4]	 = isKeyPressed(0x34);
+	g_abKeyPressed[K_5]   = isKeyPressed(0x35);
 }
 
 //--------------------------------------------------------------
@@ -191,9 +175,9 @@ void update(double dt)
             break;
 		case S_STARTMENU: startMenu();
 			break;
-		case S_RENDERCHOOSEINPUT: renderchooseInput();
-			break;
 		case S_INSTRUCTIONS: instructions();
+			break;
+		case S_CHARACTERCREATION: characterCreation();
 			break;
         case S_GAME: gameplay(); // gameplay logic when we are in the game
             break;
@@ -217,12 +201,14 @@ void render()
             break;
 		case S_STARTMENU: renderStartMenu();
 			break;
-		case S_RENDERCHOOSEINPUT: renderchooseInput();
-			break;
 		case S_INSTRUCTIONS: renderInstructions();
+			break;
+		case S_CHARACTERCREATION: renderCharacterCreation();
 			break;
         case S_GAME: renderGame();
             break;
+		case S_CHOOSE: renderChooseCharacter();
+			break;
     }
     renderFramerate();  // renders debug information, frame rate, elapsed time, etc
     renderToScreen();   // dump the contents of the buffer to the screen, one frame worth of game
@@ -231,22 +217,22 @@ void render()
 void splashScreenWait()    // waits for time to pass in splash screen
 {
     if (g_dElapsedTime > 2) // wait for 3 seconds to switch to game mode, else do nothing
-        g_eGameState = S_STARTMENU;
+        g_eGameState = S_CHOOSE;
 }
 
 void startMenu()
 {
-	if (g_abKeyPressed[K_ONE])
+	if (g_abKeyPressed[K_1])
 	{
 		g_eGameState = S_GAME;
 	}
 
-	if (g_abKeyPressed[K_TWO])
+	if (g_abKeyPressed[K_2])
 	{
 		g_eGameState = S_INSTRUCTIONS;
 	}
 
-	if (g_abKeyPressed[K_THREE])
+	if (g_abKeyPressed[K_3])
 	{
 		g_bQuitGame = true;
 	}
@@ -255,8 +241,62 @@ void instructions()
 {
 	if (g_abKeyPressed[K_SPACE])
 	{
-		g_eGameState = S_RENDERCHOOSEINPUT;
+		g_eGameState = S_CHARACTERCREATION;
 	}
+}
+
+void characterCreation()
+{
+	if (g_abKeyPressed[K_1])
+	{
+		nameArray[0] = true;
+		nameArray[1] = false;
+		nameArray[2] = false;
+		nameArray[3] = false;
+		nameArray[4] = false;
+	}
+
+	if (g_abKeyPressed[K_2])
+	{
+		nameArray[1] = true;
+		nameArray[0] = false;
+		nameArray[2] = false;
+		nameArray[3] = false;
+		nameArray[4] = false;
+	}
+
+	if (g_abKeyPressed[K_3])
+	{
+		nameArray[2] = true;
+		nameArray[0] = false;
+		nameArray[1] = false;
+		nameArray[3] = false;
+		nameArray[4] = false;
+	}
+
+	if (g_abKeyPressed[K_4])
+	{
+		nameArray[3] = true;
+		nameArray[0] = false;
+		nameArray[1] = false;
+		nameArray[2] = false;
+		nameArray[4] = false;
+	}
+	if (g_abKeyPressed[K_5])
+	{
+		nameArray[4] = true;
+		nameArray[0] = false;
+		nameArray[1] = false;
+		nameArray[2] = false;
+		nameArray[3] = false;
+	}
+
+	if (g_abKeyPressed[K_SPACE])
+	{
+		g_eGameState = S_CHARACTERCREATION;
+	}
+
+			
 }
 
 melee hugger;
@@ -748,15 +788,137 @@ void renderSplashScreen()  // renders the splash screen
 	}
 	splashscreenFile.close();
 }
-
+void renderChooseCharacter()
+{
+	COORD c;
+	c.Y = 15;
+	c.X = 50;
+	g_Console.writeToBuffer(c, (char)1, 0x0F);
+	c.Y = 17;
+	c.X = 30;
+	g_Console.writeToBuffer(c, "(1)", 0x08);
+	c.Y = 17;
+	c.X = 43;
+	g_Console.writeToBuffer(c, "(2)", 0x08);
+	c.Y = 17;
+	c.X = 55;
+	g_Console.writeToBuffer(c, "(3)", 0x08);
+	c.Y = 17;
+	c.X = 66;
+	g_Console.writeToBuffer(c, "(4)", 0x08);
+	c.Y = 17;
+	c.X = 77;
+	g_Console.writeToBuffer(c, "(ESCAPE)", 0x08);
+	if (g_abKeyPressed[K_ONE])
+	{
+		fourthChar = true;
+		firstChar = false;
+		secondChar = false;
+		thirdChar = false;
+		fifthChar = false;
+		sixthChar = false;
+	}
+	else if (g_abKeyPressed[K_TWO])
+	{
+		secondChar = true;
+		thirdChar = false;
+		sixthChar = false;
+		firstChar = false;
+		fourthChar = false;
+		fifthChar = false;
+	}
+	else if (g_abKeyPressed[K_THREE])
+	{
+		fifthChar = true;
+		firstChar = false;
+		secondChar = false;
+		sixthChar = false;
+		thirdChar = false;
+		fourthChar = false;
+	}
+	else if (g_abKeyPressed[K_FOUR])
+	{
+		thirdChar = true;
+		secondChar = false;
+		sixthChar = false;
+		fifthChar = false;
+		firstChar = false;
+		fourthChar = false;
+	}
+	else if (g_abKeyPressed[K_ESCAPE])
+	{
+		sixthChar = true;
+		fifthChar = false;
+		fourthChar = false;
+		thirdChar = false;
+		secondChar = false;
+		firstChar = false;
+	}
+	c.Y = 13;
+	c.X = 25;
+	g_Console.writeToBuffer(c, "Press any of the numbers to choose a character form!", 0x01);
+	c.Y = 15;
+	c.X = 25;
+	g_Console.writeToBuffer(c, "After choosing, smash the SPACE button to start your journey!", 0x0A);
+	if (firstChar == true)
+	{
+		g_Console.writeToBuffer(g_sChar.m_cLocation, (char)1, 0x0F);
+		if (g_abKeyPressed[K_SPACE])
+		{
+			g_eGameState = S_GAME;
+		}
+	}
+	else if (secondChar == true)
+	{
+		g_Console.writeToBuffer(g_sChar.m_cLocation, (char)2, 0x0F);
+		if (g_abKeyPressed[K_SPACE])
+		{
+			g_eGameState = S_GAME;
+		}
+	}
+	else if (thirdChar == true)
+	{
+		g_Console.writeToBuffer(g_sChar.m_cLocation, (char)3, 0x0C);
+		if (g_abKeyPressed[K_SPACE])
+		{
+			g_eGameState = S_GAME;
+		}
+	}
+	else if (fourthChar == true)
+	{
+		g_Console.writeToBuffer(g_sChar.m_cLocation, (char)4, 0x09);
+		if (g_abKeyPressed[K_SPACE])
+		{
+			g_eGameState = S_GAME;
+		}
+	}
+	else if (fifthChar == true)
+	{
+		g_Console.writeToBuffer(g_sChar.m_cLocation, (char)5, 0x0A);
+		if (g_abKeyPressed[K_SPACE])
+		{
+			g_eGameState = S_GAME;
+		}
+	}
+	else if (sixthChar == true)
+	{
+		g_Console.writeToBuffer(g_sChar.m_cLocation, (char)6, 0x0E);
+		if (g_abKeyPressed[K_SPACE])
+		{
+			g_eGameState = S_GAME;
+		}
+	}
+}
 void renderStartMenu()
 {
+	renderChooseCharacter();
 	COORD c;
 	int i = 0;
 	int a = 0;
 
 	string menu;
 	ifstream menuFile;
+	
 
 	menuFile.open("MainMenu.txt");
 	if (menuFile.is_open())
@@ -805,6 +967,59 @@ void renderInstructions()
 	c.Y = 17;
 	c.X = 45;
 	g_Console.writeToBuffer(c, "Press start!", 0x0B);
+}
+
+void renderCharacterCreation()
+{
+	COORD c;
+	int i = 0;
+
+	string creation;
+	ifstream creationFile;
+	
+	creationFile.open("CharacterCreation.txt");
+	if (creationFile.is_open())
+	{
+		while (getline(creationFile, creation))
+		{
+			c.X = 0;
+			c.Y = i;
+			i++;
+			g_Console.writeToBuffer(c, creation, 0x0B);
+		}
+	}
+	creationFile.close();
+
+	if (nameArray[0] == true)
+	{
+		c.X = 54;
+		c.Y = 11;
+		g_Console.writeToBuffer(c, names[0], 0x0B);
+	}
+	if (nameArray[1] == true)
+	{
+		c.X = 54;
+		c.Y = 11;
+		g_Console.writeToBuffer(c, names[1], 0x0B);
+	}
+	if (nameArray[2] == true)
+	{
+		c.X = 54;
+		c.Y = 11;
+		g_Console.writeToBuffer(c, names[2], 0x0B);
+	}
+	if (nameArray[3] == true)
+	{
+		c.X = 54;
+		c.Y = 11;
+		g_Console.writeToBuffer(c, names[3], 0x0B);
+	}
+	if (nameArray[4] == true)
+	{
+		c.X = 54;
+		c.Y = 11;
+		g_Console.writeToBuffer(c, names[4], 0x0B);
+	}
 }
 
 void renderGame()
@@ -1118,19 +1333,19 @@ void renderMap()
 		}
 		shopFile.close();
 
-		if (g_abKeyPressed[K_ONE])
+		if (g_abKeyPressed[K_1])
 		{
 			equipSmg = true;
 		}
-		 if (g_abKeyPressed[K_TWO])
+		 if (g_abKeyPressed[K_2])
 		{
 			equipRifle = true;
 		}
-		if (g_abKeyPressed[K_THREE])
+		if (g_abKeyPressed[K_3])
 		{
 			equipSniper = true;
 		}
-		if (g_abKeyPressed[K_FOUR])
+		if (g_abKeyPressed[K_4])
 		{
 			equipMinigun = true;
 		}
