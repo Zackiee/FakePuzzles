@@ -16,7 +16,7 @@ int shootdirection[128] = { 0, };
 int playerdirection[32] = { 0, };
 
 bool hq = true;
-bool inven = false;
+bool inven = true;
 bool shop = false;
 bool levelA = false;
 bool levelB = false;
@@ -60,7 +60,7 @@ EGAMESTATES g_eGameState = S_SPLASHSCREEN;
 double  g_dBounceTime; // this is to prevent key bouncing, so we won't trigger keypresses more than once
 
 // Console object
-Console g_Console(110, 30, "SP1 Framework");
+Console g_Console(110, 30, "Fake Puzzles");
 char** map = new char*[30];
 
 //--------------------------------------------------------------
@@ -243,6 +243,7 @@ void startMenu()
 	{
 		g_eGameState = S_INSTRUCTIONS;
 	}
+
 	if (g_abKeyPressed[K_THREE])
 	{
 		g_bQuitGame = true;
@@ -273,7 +274,7 @@ void renderEntities()
 		g_Console.writeToBuffer(g_sPlayershots[ps].m_cLocation, (char)7, 0x06);
 	}
 }
-int i = 0, n = 0,p = 0, ps = 0;
+int i = 0, n = 0,p = 0, ps = 0, shootbuffer = 0;
 bool fooeyhappened1, fooeyhappened2, fooeyhappened3, playershot;
 void enemydata() {
 	double up, left, down, right, min_double;
@@ -431,33 +432,48 @@ void playershoot()
 	else if (g_abKeyPressed[K_RIGHT]) {
 		playerdirection[ps] = 4; // shoot right
 	}
-	else if (ps - 1 >= 0) {
-		playerdirection[ps] = playerdirection[ps - 1];
+	if (playerdirection[ps] == 0) {
+		if (ps - 1 >= 0) {
+			playerdirection[ps] = playerdirection[ps - 1];
+		}
+		else playerdirection[ps] = playerdirection[31];
 	}
-	else playerdirection[ps] = playerdirection[31];
 
-	if (g_abKeyPressed[K_SPACE]) {
-		g_sPlayershots[ps].m_cLocation.X = g_sChar.m_cLocation.X;
-		g_sPlayershots[ps].m_cLocation.Y = g_sChar.m_cLocation.Y;
+	if (g_abKeyPressed[K_SPACE] && playerdirection[ps] != 0) {
+		shootbuffer++;
+		if (shootbuffer == 3) {
+			g_sPlayershots[ps].m_cLocation.X = g_sChar.m_cLocation.X;
+			g_sPlayershots[ps].m_cLocation.Y = g_sChar.m_cLocation.Y;
+			ps++;
+			if (ps >= 32)
+				ps = 0;
+			playerdirection[ps] = 0;
+			shootbuffer = 0;
+		}
 	}
+
 	p = ps;
 	for (ps = 0; ps < 32; ps++) {
-		if (playerdirection[ps] == 1) { // shoot up
-			g_sPlayershots[ps].m_cLocation.Y--;
+		if (g_sPlayershots[ps].m_cLocation.X != 0 || g_sPlayershots[ps].m_cLocation.Y != 0) {
+			if (playerdirection[ps] == 1) { // shoot up
+				g_sPlayershots[ps].m_cLocation.Y--;
+			}
+			if (playerdirection[ps] == 2) { // shoot down
+				g_sPlayershots[ps].m_cLocation.Y++;
+			}
+			if (playerdirection[ps] == 3) { // shoot left
+				g_sPlayershots[ps].m_cLocation.X--;
+			}
+			if (playerdirection[ps] == 4) { // shoot right
+				g_sPlayershots[ps].m_cLocation.X++;
+			}
 		}
-		if (playerdirection[ps] == 2) { // shoot down
-			g_sPlayershots[ps].m_cLocation.Y++;
-		}
-		if (playerdirection[ps] == 3) { // shoot left
-			g_sPlayershots[ps].m_cLocation.X--;
-		}
-		if (playerdirection[ps] == 4) { // shoot right
-			g_sPlayershots[ps].m_cLocation.X++;
+		if (g_sPlayershots[ps].m_cLocation.X >= 110 || g_sPlayershots[ps].m_cLocation.X <= 0 || g_sPlayershots[ps].m_cLocation.Y >= 30 || g_sPlayershots[ps].m_cLocation.Y <= 0) {
+			g_sPlayershots[ps].m_cLocation.X = 0;
+			g_sPlayershots[ps].m_cLocation.Y = 0;
 		}
 	}
-	ps = p + 1;
-	if (ps >= 32)
-		ps = 0;
+	ps = p;
 
 	playershot = true;
 
@@ -519,11 +535,6 @@ void moveCharacter()
 		g_sChar.m_cLocation.X++;
 		bSomethingHappened = true;
 	}
-	if (g_abKeyPressed[K_SPACE])
-	{
-		g_sChar.m_bActive = !g_sChar.m_bActive;
-		bSomethingHappened = true;
-	}
 
 	if (bSomethingHappened)
 	{
@@ -531,10 +542,7 @@ void moveCharacter()
 		g_dBounceTime = g_dElapsedTime + 0.125; // 125ms should be enough
 	}
 
-	if (map[g_sChar.m_cLocation.Y - 1][g_sChar.m_cLocation.X] == 'S' || map[g_sChar.m_cLocation.Y][g_sChar.m_cLocation.X - 1] == 'S' || map[g_sChar.m_cLocation.Y + 1][g_sChar.m_cLocation.X] == 'S' || map[g_sChar.m_cLocation.Y][g_sChar.m_cLocation.X + 1] == 'S' ||
-		map[g_sChar.m_cLocation.Y - 1][g_sChar.m_cLocation.X] == 'H' || map[g_sChar.m_cLocation.Y][g_sChar.m_cLocation.X - 1] == 'H' || map[g_sChar.m_cLocation.Y + 1][g_sChar.m_cLocation.X] == 'H' || map[g_sChar.m_cLocation.Y][g_sChar.m_cLocation.X + 1] == 'H' ||
-		map[g_sChar.m_cLocation.Y - 1][g_sChar.m_cLocation.X] == 'O' || map[g_sChar.m_cLocation.Y][g_sChar.m_cLocation.X - 1] == 'O' || map[g_sChar.m_cLocation.Y + 1][g_sChar.m_cLocation.X] == 'O' || map[g_sChar.m_cLocation.Y][g_sChar.m_cLocation.X + 1] == 'O' ||
-		map[g_sChar.m_cLocation.Y - 1][g_sChar.m_cLocation.X] == 'P' || map[g_sChar.m_cLocation.Y][g_sChar.m_cLocation.X - 1] == 'P' || map[g_sChar.m_cLocation.Y + 1][g_sChar.m_cLocation.X] == 'P' || map[g_sChar.m_cLocation.Y][g_sChar.m_cLocation.X + 1] == 'P')
+	if (collision('S') || collision('H') || collision('O') || collision('P'))
 	{
 		shop = true;
 	}
@@ -543,10 +551,7 @@ void moveCharacter()
 		shop = false;
 	}
 
-	if (map[g_sChar.m_cLocation.Y - 1][g_sChar.m_cLocation.X] == 'Q' || map[g_sChar.m_cLocation.Y][g_sChar.m_cLocation.X - 1] == 'Q' || map[g_sChar.m_cLocation.Y + 1][g_sChar.m_cLocation.X] == 'Q' || map[g_sChar.m_cLocation.Y][g_sChar.m_cLocation.X + 1] == 'Q' ||
-		map[g_sChar.m_cLocation.Y - 1][g_sChar.m_cLocation.X] == 'U' || map[g_sChar.m_cLocation.Y][g_sChar.m_cLocation.X - 1] == 'U' || map[g_sChar.m_cLocation.Y + 1][g_sChar.m_cLocation.X] == 'U' || map[g_sChar.m_cLocation.Y][g_sChar.m_cLocation.X + 1] == 'U' ||
-		map[g_sChar.m_cLocation.Y - 1][g_sChar.m_cLocation.X] == 'I' || map[g_sChar.m_cLocation.Y][g_sChar.m_cLocation.X - 1] == 'I' || map[g_sChar.m_cLocation.Y + 1][g_sChar.m_cLocation.X] == 'I' || map[g_sChar.m_cLocation.Y][g_sChar.m_cLocation.X + 1] == 'I' ||
-		map[g_sChar.m_cLocation.Y - 1][g_sChar.m_cLocation.X] == 'T' || map[g_sChar.m_cLocation.Y][g_sChar.m_cLocation.X - 1] == 'T' || map[g_sChar.m_cLocation.Y + 1][g_sChar.m_cLocation.X] == 'T' || map[g_sChar.m_cLocation.Y][g_sChar.m_cLocation.X + 1] == 'T')
+	if (collision('Q') || collision('U') || collision('I') || collision('T'))
 	{
 		g_bQuitGame = true;
 	}
@@ -555,31 +560,31 @@ void moveCharacter()
 	{
 		hqSpawn = false;
 
-		if (map[g_sChar.m_cLocation.Y - 1][g_sChar.m_cLocation.X] == 'a' || map[g_sChar.m_cLocation.Y][g_sChar.m_cLocation.X - 1] == 'a' || map[g_sChar.m_cLocation.Y + 1][g_sChar.m_cLocation.X] == 'a' || map[g_sChar.m_cLocation.Y][g_sChar.m_cLocation.X + 1] == 'a')
+		if (collision('a'))
 		{
 			hq = false;
 			levelA = true;
 			playerRespawn = true;
 		}
-		else if (map[g_sChar.m_cLocation.Y - 1][g_sChar.m_cLocation.X] == 'b' || map[g_sChar.m_cLocation.Y][g_sChar.m_cLocation.X - 1] == 'b' || map[g_sChar.m_cLocation.Y + 1][g_sChar.m_cLocation.X] == 'b' || map[g_sChar.m_cLocation.Y][g_sChar.m_cLocation.X + 1] == 'b')
+		else if (collision('b'))
 		{
 			hq = false;
 			levelB = true;
 			playerRespawn = true;
 		}
-		else if (map[g_sChar.m_cLocation.Y - 1][g_sChar.m_cLocation.X] == 'c' || map[g_sChar.m_cLocation.Y][g_sChar.m_cLocation.X - 1] == 'c' || map[g_sChar.m_cLocation.Y + 1][g_sChar.m_cLocation.X] == 'c' || map[g_sChar.m_cLocation.Y][g_sChar.m_cLocation.X + 1] == 'c')
+		else if (collision('c'))
 		{
 			hq = false;
 			levelC = true;
 			playerRespawn = true;
 		}
-		else if (map[g_sChar.m_cLocation.Y - 1][g_sChar.m_cLocation.X] == 'd' || map[g_sChar.m_cLocation.Y][g_sChar.m_cLocation.X - 1] == 'd' || map[g_sChar.m_cLocation.Y + 1][g_sChar.m_cLocation.X] == 'd' || map[g_sChar.m_cLocation.Y][g_sChar.m_cLocation.X + 1] == 'd')
+		else if (collision('d'))
 		{
 			hq = false;
 			levelD = true;
 			playerRespawn = true;
 		}
-		else if (map[g_sChar.m_cLocation.Y - 1][g_sChar.m_cLocation.X] == '%' || map[g_sChar.m_cLocation.Y][g_sChar.m_cLocation.X - 1] == '%' || map[g_sChar.m_cLocation.Y + 1][g_sChar.m_cLocation.X] == '%' || map[g_sChar.m_cLocation.Y][g_sChar.m_cLocation.X + 1] == '%')
+		else if (collision('%'))
 		{
 			hq = false;
 			inven = false;
@@ -590,13 +595,13 @@ void moveCharacter()
 	{
 		playerRespawn = false;
 
-		if (map[g_sChar.m_cLocation.Y - 1][g_sChar.m_cLocation.X] == '%' || map[g_sChar.m_cLocation.Y][g_sChar.m_cLocation.X - 1] == '%' || map[g_sChar.m_cLocation.Y + 1][g_sChar.m_cLocation.X] == '%' || map[g_sChar.m_cLocation.Y][g_sChar.m_cLocation.X + 1] == '%')
+		if (collision('%'))
 		{
 			levelA = false;
 			hq = true;
 			hqSpawn = true;
 		}
-		if (map[g_sChar.m_cLocation.Y - 1][g_sChar.m_cLocation.X] == '*' || map[g_sChar.m_cLocation.Y][g_sChar.m_cLocation.X - 1] == '*' || map[g_sChar.m_cLocation.Y + 1][g_sChar.m_cLocation.X] == '*' || map[g_sChar.m_cLocation.Y][g_sChar.m_cLocation.X + 1] == '*')
+		if (collision('*'))
 		{
 			levelAgem = true;
 		}
@@ -605,18 +610,18 @@ void moveCharacter()
 	{
 		playerRespawn = false;
 
-		if (map[g_sChar.m_cLocation.Y - 1][g_sChar.m_cLocation.X] == '%' || map[g_sChar.m_cLocation.Y][g_sChar.m_cLocation.X - 1] == '%' || map[g_sChar.m_cLocation.Y + 1][g_sChar.m_cLocation.X] == '%' || map[g_sChar.m_cLocation.Y][g_sChar.m_cLocation.X + 1] == '%')
+		if (collision('%'))
 		{
 			levelB = false;
 			hq = true;
 			hqSpawn = true;
 		}
-		if (map[g_sChar.m_cLocation.Y - 1][g_sChar.m_cLocation.X] == '&' || map[g_sChar.m_cLocation.Y][g_sChar.m_cLocation.X - 1] == '&' || map[g_sChar.m_cLocation.Y + 1][g_sChar.m_cLocation.X] == '&' || map[g_sChar.m_cLocation.Y][g_sChar.m_cLocation.X + 1] == '&')
+		if (collision('&'))
 		{
 			g_sChar.m_cLocation.X = 64;
 			g_sChar.m_cLocation.Y = 2;
 		}
-		if (map[g_sChar.m_cLocation.Y - 1][g_sChar.m_cLocation.X] == '*' || map[g_sChar.m_cLocation.Y][g_sChar.m_cLocation.X - 1] == '*' || map[g_sChar.m_cLocation.Y + 1][g_sChar.m_cLocation.X] == '*' || map[g_sChar.m_cLocation.Y][g_sChar.m_cLocation.X + 1] == '*')
+		if (collision('*'))
 		{
 			levelBgem = true;
 		}
@@ -625,18 +630,18 @@ void moveCharacter()
 	{
 		playerRespawn = false;
 
-		if (map[g_sChar.m_cLocation.Y - 1][g_sChar.m_cLocation.X] == '%' || map[g_sChar.m_cLocation.Y][g_sChar.m_cLocation.X - 1] == '%' || map[g_sChar.m_cLocation.Y + 1][g_sChar.m_cLocation.X] == '%' || map[g_sChar.m_cLocation.Y][g_sChar.m_cLocation.X + 1] == '%')
+		if (collision('%'))
 		{
 			levelC = false;
 			hq = true;
 			hqSpawn = true;
 		}
-		if (map[g_sChar.m_cLocation.Y - 1][g_sChar.m_cLocation.X] == '&' || map[g_sChar.m_cLocation.Y][g_sChar.m_cLocation.X - 1] == '&' || map[g_sChar.m_cLocation.Y + 1][g_sChar.m_cLocation.X] == '&' || map[g_sChar.m_cLocation.Y][g_sChar.m_cLocation.X + 1] == '&')
+		if (collision('&'))
 		{
 			g_sChar.m_cLocation.X = 59;
 			g_sChar.m_cLocation.Y = 2;
 		}
-		if (map[g_sChar.m_cLocation.Y - 1][g_sChar.m_cLocation.X] == '*' || map[g_sChar.m_cLocation.Y][g_sChar.m_cLocation.X - 1] == '*' || map[g_sChar.m_cLocation.Y + 1][g_sChar.m_cLocation.X] == '*' || map[g_sChar.m_cLocation.Y][g_sChar.m_cLocation.X + 1] == '*')
+		if (collision('*'))
 		{
 			levelCgem = true;
 		}
@@ -645,18 +650,18 @@ void moveCharacter()
 	{
 		playerRespawn = false;
 
-		if (map[g_sChar.m_cLocation.Y - 1][g_sChar.m_cLocation.X] == '%' || map[g_sChar.m_cLocation.Y][g_sChar.m_cLocation.X - 1] == '%' || map[g_sChar.m_cLocation.Y + 1][g_sChar.m_cLocation.X] == '%' || map[g_sChar.m_cLocation.Y][g_sChar.m_cLocation.X + 1] == '%')
+		if (collision('%'))
 		{
 			levelD = false;
 			hq = true;
 			hqSpawn = true;
 		}
-		if (map[g_sChar.m_cLocation.Y - 1][g_sChar.m_cLocation.X] == '&' || map[g_sChar.m_cLocation.Y][g_sChar.m_cLocation.X - 1] == '&' || map[g_sChar.m_cLocation.Y + 1][g_sChar.m_cLocation.X] == '&' || map[g_sChar.m_cLocation.Y][g_sChar.m_cLocation.X + 1] == '&')
+		if (collision('&'))
 		{
 			g_sChar.m_cLocation.X = 55;
 			g_sChar.m_cLocation.Y = 2;
 		}
-		if (map[g_sChar.m_cLocation.Y - 1][g_sChar.m_cLocation.X] == '*' || map[g_sChar.m_cLocation.Y][g_sChar.m_cLocation.X - 1] == '*' || map[g_sChar.m_cLocation.Y + 1][g_sChar.m_cLocation.X] == '*' || map[g_sChar.m_cLocation.Y][g_sChar.m_cLocation.X + 1] == '*')
+		if (collision('*'))
 		{
 			levelDgem = true;
 		}
@@ -767,7 +772,7 @@ void renderInstructions()
 {
 	COORD c;
 
-	c.Y = 10;
+	c.Y = 9;
 	c.X = 45;
 	g_Console.writeToBuffer(c, "Instructions", 0x0B);
 	c.Y = 11;
@@ -817,16 +822,14 @@ void renderMap()
 			{
 				for (a = 0; a < headquarters.length(); a++)
 				{
-					if (headquarters[a] == '#')
-					{
+					switch (headquarters[a]) {
+					case '#':
 						headquarters[a] = 223;
-					}
-					else if (headquarters[a] == '@')
-					{
+						break;
+					case '@':
 						headquarters[a] = 219;
-					}
-					else if (headquarters[a] == '1')
-					{
+						break;
+					case '1':
 						if (levelAgem == true)
 						{
 							headquarters[a] = 251;
@@ -835,9 +838,8 @@ void renderMap()
 						{
 							headquarters[a] = 'x';
 						}
-					}
-					else if (headquarters[a] == '2')
-					{
+						break;
+					case '2':
 						if (levelBgem == true)
 						{
 							headquarters[a] = 251;
@@ -846,9 +848,8 @@ void renderMap()
 						{
 							headquarters[a] = 'x';
 						}
-					}
-					else if (headquarters[a] == '3')
-					{
+						break;
+					case '3':
 						if (levelCgem == true)
 						{
 							headquarters[a] = 251;
@@ -857,9 +858,8 @@ void renderMap()
 						{
 							headquarters[a] = 'x';
 						}
-					}
-					else if (headquarters[a] == '4')
-					{
+						break;
+					case '4':
 						if (levelDgem == true)
 						{
 							headquarters[a] = 251;
@@ -868,9 +868,8 @@ void renderMap()
 						{
 							headquarters[a] = 'x';
 						}
-					}
-					else if (headquarters[a] == 'u')
-					{
+						break;
+					case 'u':
 						if (levelAgem == true)
 						{
 							headquarters[a] = '*';
@@ -879,9 +878,8 @@ void renderMap()
 						{
 							headquarters[a] = 255;
 						}
-					}
-					else if (headquarters[a] == 'i')
-					{
+						break;
+					case 'i':
 						if (levelBgem == true)
 						{
 							headquarters[a] = '*';
@@ -890,9 +888,8 @@ void renderMap()
 						{
 							headquarters[a] = 255;
 						}
-					}
-					else if (headquarters[a] == 'o')
-					{
+						break;
+					case 'o':
 						if (levelCgem == true)
 						{
 							headquarters[a] = '*';
@@ -901,9 +898,8 @@ void renderMap()
 						{
 							headquarters[a] = 255;
 						}
-					}
-					else if (headquarters[a] == 'p')
-					{
+						break;
+					case 'p':
 						if (levelDgem == true)
 						{
 							headquarters[a] = '*';
@@ -912,9 +908,8 @@ void renderMap()
 						{
 							headquarters[a] = 255;
 						}
-					}
-					else if (headquarters[a] == '%')
-					{
+						break;
+					case '%':
 						if (levelAgem == true && levelBgem == true && levelCgem == true && levelDgem == true)
 						{
 							headquarters[a] = '%';
@@ -948,16 +943,14 @@ void renderMap()
 			{
 				for (a = 0; a < level1.length(); a++)
 				{
-					if (level1[a] == '#')
-					{
+					switch (level1[a]) {
+					case '#':
 						level1[a] = 223;
-					}
-					else if (level1[a] == '@')
-					{
+						break;
+					case '@':
 						level1[a] = 219;
-					}
-					else if (level1[a] == '*')
-					{
+						break;
+					case '*':
 						if (levelAgem == true)
 						{
 							level1[a] = 255;
@@ -986,16 +979,14 @@ void renderMap()
 			{
 				for (a = 0; a < level2.length(); a++)
 				{
-					if (level2[a] == '#')
-					{
+					switch (level2[a]) {
+					case '#':
 						level2[a] = 223;
-					}
-					else if (level2[a] == '@')
-					{
+						break;
+					case '@':
 						level2[a] = 219;
-					}
-					else if (level2[a] == '*')
-					{
+						break;
+					case '*':
 						if (levelBgem == true)
 						{
 							level2[a] = 255;
@@ -1024,16 +1015,14 @@ void renderMap()
 			{
 				for (a = 0; a < level3.length(); a++)
 				{
-					if (level3[a] == '#')
-					{
+					switch (level3[a]) {
+					case '#':
 						level3[a] = 223;
-					}
-					else if (level3[a] == '@')
-					{
+						break;
+					case '@':
 						level3[a] = 219;
-					}
-					else if (level3[a] == '*')
-					{
+						break;
+					case '*':
 						if (levelCgem == true)
 						{
 							level3[a] = 255;
@@ -1062,16 +1051,14 @@ void renderMap()
 			{
 				for (a = 0; a < level4.length(); a++)
 				{
-					if (level4[a] == '#')
-					{
+					switch (level4[a]) {
+					case '#':
 						level4[a] = 223;
-					}
-					else if (level4[a] == '@')
-					{
+						break;
+					case '@':
 						level4[a] = 219;
-					}
-					else if (level4[a] == '*')
-					{
+						break;
+					case '*':
 						if (levelDgem == true)
 						{
 							level4[a] = 255;
@@ -1102,13 +1089,13 @@ void renderMap()
 			{
 				for (a = 0; a < shop.length(); a++)
 				{
-					if (shop[a] == '#')
-					{
+					switch (shop[a]) {
+					case '#':
 						shop[a] = 223;
-					}
-					else if (shop[a] == '@')
-					{
+						break;
+					case '@':
 						shop[a] = 219;
+						break;
 					}
 				}
 				c.X = 14;
@@ -1151,20 +1138,17 @@ void renderMap()
 			{
 				for (a = 0; a < inventory.length(); a++)
 				{
-					if (inventory[a] == '#')
-					{
+					switch (inventory[a]) {
+					case '#':
 						inventory[a] = 223;
-					}
-					else if (inventory[a] == '@')
-					{
+						break;
+					case '@':
 						inventory[a] = 219;
-					}
-					else if (inventory[a] == '$')
-					{
+						break;
+					case '$':
 						inventory[a] = ' ';
-					}
-					else if (inventory[a] == '1')
-					{
+						break;
+					case '1':
 						if (equipPistol == true)
 						{
 							inventory[a] = 251;
@@ -1173,9 +1157,8 @@ void renderMap()
 						{
 							inventory[a] = 'x';
 						}
-					}
-					else if (inventory[a] == '2')
-					{
+						break;
+					case '2':
 						if (equipSmg == true)
 						{
 							inventory[a] = 251;
@@ -1184,9 +1167,8 @@ void renderMap()
 						{
 							inventory[a] = 'x';
 						}
-					}
-					else if (inventory[a] == '3')
-					{
+						break;
+					case '3':
 						if (equipRifle == true)
 						{
 							inventory[a] = 251;
@@ -1195,9 +1177,8 @@ void renderMap()
 						{
 							inventory[a] = 'x';
 						}
-					}
-					else if (inventory[a] == '4')
-					{
+						break;
+					case '4':
 						if (equipSniper == true)
 						{
 							inventory[a] = 251;
@@ -1206,9 +1187,8 @@ void renderMap()
 						{
 							inventory[a] = 'x';
 						}
-					}
-					else if (inventory[a] == '5')
-					{
+						break;
+					case '5':
 						if (equipMinigun == true)
 						{
 							inventory[a] = 251;
@@ -1217,6 +1197,7 @@ void renderMap()
 						{
 							inventory[a] = 'x';
 						}
+						break;
 					}
 				}
 				c.X = 0;
@@ -1238,7 +1219,7 @@ void renderCharacter()
         charColor = 0x0E;
     }*/
 
-	if (map[g_sChar.m_cLocation.Y - 1][g_sChar.m_cLocation.X] == 'q' || map[g_sChar.m_cLocation.Y][g_sChar.m_cLocation.X - 1] == 'q' || map[g_sChar.m_cLocation.Y + 1][g_sChar.m_cLocation.X] == 'q' || map[g_sChar.m_cLocation.Y][g_sChar.m_cLocation.X + 1] == 'q')
+	if (collision('q'))
 	{
 		secondChar = true;
 		firstChar = false;
@@ -1247,7 +1228,7 @@ void renderCharacter()
 		fifthChar = false;
 		sixthChar = false;
 	}
-	if (map[g_sChar.m_cLocation.Y - 1][g_sChar.m_cLocation.X] == 'w' || map[g_sChar.m_cLocation.Y][g_sChar.m_cLocation.X - 1] == 'w' || map[g_sChar.m_cLocation.Y + 1][g_sChar.m_cLocation.X] == 'w' || map[g_sChar.m_cLocation.Y][g_sChar.m_cLocation.X + 1] == 'w')
+	if (collision('w'))
 	{
 		thirdChar = true;
 		firstChar = false;
@@ -1256,7 +1237,7 @@ void renderCharacter()
 		fifthChar = false;
 		sixthChar = false;
 	}
-	if (map[g_sChar.m_cLocation.Y - 1][g_sChar.m_cLocation.X] == 'e' || map[g_sChar.m_cLocation.Y][g_sChar.m_cLocation.X - 1] == 'e' || map[g_sChar.m_cLocation.Y + 1][g_sChar.m_cLocation.X] == 'e' || map[g_sChar.m_cLocation.Y][g_sChar.m_cLocation.X + 1] == 'e')
+	if (collision('e'))
 	{
 		fourthChar = true;
 		firstChar = false;
@@ -1265,7 +1246,7 @@ void renderCharacter()
 		fifthChar = false;
 		sixthChar = false;
 	}
-	if (map[g_sChar.m_cLocation.Y - 1][g_sChar.m_cLocation.X] == 'r' || map[g_sChar.m_cLocation.Y][g_sChar.m_cLocation.X - 1] == 'r' || map[g_sChar.m_cLocation.Y + 1][g_sChar.m_cLocation.X] == 'r' || map[g_sChar.m_cLocation.Y][g_sChar.m_cLocation.X + 1] == 'r')
+	if (collision('r'))
 	{
 		fifthChar = true;
 		firstChar = false;
@@ -1274,7 +1255,7 @@ void renderCharacter()
 		fourthChar = false;
 		sixthChar = false;
 	}
-	if (map[g_sChar.m_cLocation.Y - 1][g_sChar.m_cLocation.X] == 't' || map[g_sChar.m_cLocation.Y][g_sChar.m_cLocation.X - 1] == 't' || map[g_sChar.m_cLocation.Y + 1][g_sChar.m_cLocation.X] == 't' || map[g_sChar.m_cLocation.Y][g_sChar.m_cLocation.X + 1] == 't')
+	if (collision('t'))
 	{
 		sixthChar = true;
 		firstChar = false;
@@ -1310,6 +1291,17 @@ void renderCharacter()
 		g_Console.writeToBuffer(g_sChar.m_cLocation, (char)6, 0x0E);
 	}
 }
+bool collision(char collider)
+{
+	bool collided = false;
+
+	if (map[g_sChar.m_cLocation.Y - 1][g_sChar.m_cLocation.X] == collider || map[g_sChar.m_cLocation.Y][g_sChar.m_cLocation.X - 1] == collider || map[g_sChar.m_cLocation.Y + 1][g_sChar.m_cLocation.X] == collider || map[g_sChar.m_cLocation.Y][g_sChar.m_cLocation.X + 1] == collider)
+	{
+		collided = true;
+	}
+	return collided;
+}
+
 
 void renderFramerate()
 {
