@@ -221,6 +221,8 @@ void render()
 			break;
         case S_GAME: renderGame();
             break;
+		case S_CHOOSE: renderChooseCharacter();
+			break;
     }
     renderFramerate();  // renders debug information, frame rate, elapsed time, etc
     renderToScreen();   // dump the contents of the buffer to the screen, one frame worth of game
@@ -229,14 +231,14 @@ void render()
 void splashScreenWait()    // waits for time to pass in splash screen
 {
     if (g_dElapsedTime > 2) // wait for 3 seconds to switch to game mode, else do nothing
-        g_eGameState = S_STARTMENU;
+        g_eGameState = S_CHOOSE;
 }
 
 void startMenu()
 {
 	if (g_abKeyPressed[K_ONE])
 	{
-		g_eGameState = S_RENDERCHOOSEINPUT;
+		g_eGameState = S_GAME;
 	}
 
 	if (g_abKeyPressed[K_TWO])
@@ -736,15 +738,137 @@ void renderSplashScreen()  // renders the splash screen
 	}
 	splashscreenFile.close();
 }
-
+void renderChooseCharacter()
+{
+	COORD c;
+	c.Y = 15;
+	c.X = 50;
+	g_Console.writeToBuffer(c, (char)1, 0x0F);
+	c.Y = 17;
+	c.X = 30;
+	g_Console.writeToBuffer(c, "(1)", 0x08);
+	c.Y = 17;
+	c.X = 43;
+	g_Console.writeToBuffer(c, "(2)", 0x08);
+	c.Y = 17;
+	c.X = 55;
+	g_Console.writeToBuffer(c, "(3)", 0x08);
+	c.Y = 17;
+	c.X = 66;
+	g_Console.writeToBuffer(c, "(4)", 0x08);
+	c.Y = 17;
+	c.X = 77;
+	g_Console.writeToBuffer(c, "(ESCAPE)", 0x08);
+	if (g_abKeyPressed[K_ONE])
+	{
+		fourthChar = true;
+		firstChar = false;
+		secondChar = false;
+		thirdChar = false;
+		fifthChar = false;
+		sixthChar = false;
+	}
+	else if (g_abKeyPressed[K_TWO])
+	{
+		secondChar = true;
+		thirdChar = false;
+		sixthChar = false;
+		firstChar = false;
+		fourthChar = false;
+		fifthChar = false;
+	}
+	else if (g_abKeyPressed[K_THREE])
+	{
+		fifthChar = true;
+		firstChar = false;
+		secondChar = false;
+		sixthChar = false;
+		thirdChar = false;
+		fourthChar = false;
+	}
+	else if (g_abKeyPressed[K_FOUR])
+	{
+		thirdChar = true;
+		secondChar = false;
+		sixthChar = false;
+		fifthChar = false;
+		firstChar = false;
+		fourthChar = false;
+	}
+	else if (g_abKeyPressed[K_ESCAPE])
+	{
+		sixthChar = true;
+		fifthChar = false;
+		fourthChar = false;
+		thirdChar = false;
+		secondChar = false;
+		firstChar = false;
+	}
+	c.Y = 13;
+	c.X = 25;
+	g_Console.writeToBuffer(c, "Press any of the numbers to choose a character form!", 0x01);
+	c.Y = 15;
+	c.X = 25;
+	g_Console.writeToBuffer(c, "After choosing, smash the SPACE button to start your journey!", 0x0A);
+	if (firstChar == true)
+	{
+		g_Console.writeToBuffer(g_sChar.m_cLocation, (char)1, 0x0F);
+		if (g_abKeyPressed[K_SPACE])
+		{
+			g_eGameState = S_GAME;
+		}
+	}
+	else if (secondChar == true)
+	{
+		g_Console.writeToBuffer(g_sChar.m_cLocation, (char)2, 0x0F);
+		if (g_abKeyPressed[K_SPACE])
+		{
+			g_eGameState = S_GAME;
+		}
+	}
+	else if (thirdChar == true)
+	{
+		g_Console.writeToBuffer(g_sChar.m_cLocation, (char)3, 0x0C);
+		if (g_abKeyPressed[K_SPACE])
+		{
+			g_eGameState = S_GAME;
+		}
+	}
+	else if (fourthChar == true)
+	{
+		g_Console.writeToBuffer(g_sChar.m_cLocation, (char)4, 0x09);
+		if (g_abKeyPressed[K_SPACE])
+		{
+			g_eGameState = S_GAME;
+		}
+	}
+	else if (fifthChar == true)
+	{
+		g_Console.writeToBuffer(g_sChar.m_cLocation, (char)5, 0x0A);
+		if (g_abKeyPressed[K_SPACE])
+		{
+			g_eGameState = S_GAME;
+		}
+	}
+	else if (sixthChar == true)
+	{
+		g_Console.writeToBuffer(g_sChar.m_cLocation, (char)6, 0x0E);
+		if (g_abKeyPressed[K_SPACE])
+		{
+			g_eGameState = S_GAME;
+		}
+	}
+}
 void renderStartMenu()
 {
+	renderChooseCharacter();
 	COORD c;
 	int i = 0;
 	int a = 0;
 
 	string menu;
 	ifstream menuFile;
+	
 
 	menuFile.open("MainMenu.txt");
 	if (menuFile.is_open())
