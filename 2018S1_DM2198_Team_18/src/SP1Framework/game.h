@@ -30,6 +30,7 @@ enum EGAMESTATES
     S_SPLASHSCREEN,
 	S_STARTMENU,
 	S_INSTRUCTIONS,
+	S_HEADQUARTERS,
 	S_CHARACTERCREATION,
     S_GAME,
     S_COUNT
@@ -60,6 +61,7 @@ void clearScreen();         // clears the current screen and draw from scratch
 void renderSplashScreen();  // renders the splash screen
 void renderStartMenu();
 void renderInstructions();
+void renderHQ();
 void renderCharacterCreation();
 void renderGame();          // renders the game stuff
 void renderMap();           // renders the map to the buffer first
