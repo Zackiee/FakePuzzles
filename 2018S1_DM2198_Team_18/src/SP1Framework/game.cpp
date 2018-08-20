@@ -15,8 +15,8 @@ int money = 0, x = 0;
 int shootdirection[128] = { 0, };
 
 bool mainMenu = false;
-bool instructions = false;
-bool hq = true;
+bool instructions = true;
+bool hq = false;
 bool inven = false;
 bool shop = false;
 bool levelA = false;
@@ -164,6 +164,10 @@ void update(double dt)
     {
         case S_SPLASHSCREEN : splashScreenWait(); // game logic for the splash screen
             break;
+		case S_STARTMENU: startMenu();
+			break;
+		case S_INSTRUCTIONS: instructions();
+			break;
         case S_GAME: gameplay(); // gameplay logic when we are in the game
             break;
     }
@@ -184,6 +188,10 @@ void render()
     {
         case S_SPLASHSCREEN: renderSplashScreen();
             break;
+		case S_STARTMENU: renderStartMenu();
+			break;
+		case S_INSTRUCTIONS: renderInstructions();
+			break;
         case S_GAME: renderGame();
             break;
     }
@@ -194,8 +202,33 @@ void render()
 void splashScreenWait()    // waits for time to pass in splash screen
 {
     if (g_dElapsedTime > 2) // wait for 3 seconds to switch to game mode, else do nothing
-        g_eGameState = S_GAME;
+        g_eGameState = S_STARTMENU;
 }
+
+void startMenu()
+{
+	if (g_abKeyPressed[K_ONE])
+	{
+		g_eGameState = S_GAME;
+	}
+
+	if (g_abKeyPressed[K_TWO])
+	{
+		g_eGameState = S_INSTRUCTIONS;
+	}
+	if (g_abKeyPressed[K_THREE])
+	{
+		g_bQuitGame = true;
+	}
+}
+void instructions()
+{
+	if (g_abKeyPressed[K_SPACE])
+	{
+		g_eGameState = S_GAME;
+	}
+}
+
 melee hugger;
 ranged gunner;
 void renderEnemies()
@@ -622,6 +655,64 @@ void renderSplashScreen()  // renders the splash screen
 	splashscreenFile.close();
 }
 
+void renderStartMenu()
+{
+	COORD c;
+	int i = 0;
+	int a = 0;
+
+	string menu;
+	ifstream menuFile;
+
+	menuFile.open("MainMenu.txt");
+	if (menuFile.is_open())
+	{
+		while (getline(menuFile, menu))
+		{
+			for (a = 0; a < menu.length(); a++)
+			{
+				if (menu[a] == 'F')
+				{
+					menu[a] = 178;
+				}
+				map[i][a] = menu[a];
+			}
+			c.X = 0;
+			c.Y = i;
+			i++;
+			g_Console.writeToBuffer(c, menu, 0x0B);
+		}
+	}
+	menuFile.close();
+}
+
+void renderInstructions()
+{
+	COORD c;
+
+	c.Y = 10;
+	c.X = 45;
+	g_Console.writeToBuffer(c, "Instructions", 0x0B);
+	c.Y = 11;
+	c.X = 25;
+	g_Console.writeToBuffer(c, "- Use arrow keys to nagivate through the game.", 0x0B);
+	c.Y = 12;
+	c.X = 25;
+	g_Console.writeToBuffer(c, "- Space bar to use weapon.", 0x0B);
+	c.Y = 13;
+	c.X = 25;
+	g_Console.writeToBuffer(c, "- You will spawn at a headquarter, and enter the levels from there.", 0x0B);
+	c.Y = 14;
+	c.X = 25;
+	g_Console.writeToBuffer(c, "- Buy weapons using coin earned in headquarters.", 0x0B);
+	c.Y = 15;
+	c.X = 25;
+	g_Console.writeToBuffer(c, "- Collect the stars in all 4 levels to win the game.", 0x0B);
+	c.Y = 17;
+	c.X = 45;
+	g_Console.writeToBuffer(c, "Press start!", 0x0B);
+}
+
 void renderGame()
 {
     renderMap();        // renders the map to the buffer first
@@ -634,83 +725,9 @@ void renderMap()
 	COORD c;
 	int i = 0;
 	int a = 0;
-	//Render Main Menu
-	if (mainMenu == true)
-	{
-		string menu;
-		ifstream menuFile;
-
-		menuFile.open("MainMenu.txt");
-		if (menuFile.is_open())
-		{
-			while (getline(menuFile, menu))
-			{
-				for (a = 0; a < menu.length(); a++)
-				{
-					if (menu[a] == 'F')
-					{
-						menu[a] = 178;
-					}
-					map[i][a] = menu[a];
-				}
-				c.X = 0;
-				c.Y = i;
-				i++;
-				g_Console.writeToBuffer(c, menu, 0x0B);
-			}
-		}
-		menuFile.close();
-
-		/*if (g_abKeyPressed[K_ONE])
-		{
-
-		}
-
-		if (g_abKeyPressed[K_TWO])
-		{
-
-		}
-		if (g_abKeyPressed[K_THREE])
-		{
-			g_bQuitGame = true;
-		}*/
-	}
-
-	//Render Instructions
-	else if (instructions == true)
-	{
-		c.Y = 10;
-		c.X = 45;
-		g_Console.writeToBuffer(c, "Instructions", 0x0B);
-		c.Y = 11;
-		c.X = 25;
-		g_Console.writeToBuffer(c, "- Use arrow keys to nagivate through the game.", 0x0B);
-		c.Y = 12;
-		c.X = 25;
-		g_Console.writeToBuffer(c, "- Space bar to use weapon.", 0x0B);
-		c.Y = 13;
-		c.X = 25;
-		g_Console.writeToBuffer(c, "- You will spawn at a headquarter, and enter the levels from there.", 0x0B);
-		c.Y = 14;
-		c.X = 25;
-		g_Console.writeToBuffer(c, "- Buy weapons using coin earned in headquarters.", 0x0B);
-		c.Y = 15;
-		c.X = 25;
-		g_Console.writeToBuffer(c, "- Collect the stars in all 4 levels to win the game.", 0x0B);
-		c.Y = 17;
-		c.X = 45;
-		g_Console.writeToBuffer(c, "Press start!", 0x0B);
-
-		/*if (g_abKeyPressed[K_SPACE])
-		{
-			instructions = false;
-			hq = true;
-			hqSpawn = true;
-		}*/
-	}
 
 	//Render Headquarters
-	else if (hq == true)
+	if (hq == true)
 	{
 		string headquarters;
 		ifstream headquartersFile;
@@ -729,6 +746,50 @@ void renderMap()
 					else if (headquarters[a] == '@')
 					{
 						headquarters[a] = 219;
+					}
+					else if (headquarters[a] == '1')
+					{
+						if (levelAgem == true)
+						{
+							headquarters[a] = 251;
+						}
+						else
+						{
+							headquarters[a] = 'x';
+						}
+					}
+					else if (headquarters[a] == '2')
+					{
+						if (levelBgem == true)
+						{
+							headquarters[a] = 251;
+						}
+						else
+						{
+							headquarters[a] = 'x';
+						}
+					}
+					else if (headquarters[a] == '3')
+					{
+						if (levelCgem == true)
+						{
+							headquarters[a] = 251;
+						}
+						else
+						{
+							headquarters[a] = 'x';
+						}
+					}
+					else if (headquarters[a] == '4')
+					{
+						if (levelDgem == true)
+						{
+							headquarters[a] = 251;
+						}
+						else
+						{
+							headquarters[a] = 'x';
+						}
 					}
 					else if (headquarters[a] == 'u')
 					{
@@ -829,7 +890,7 @@ void renderMap()
 				c.X = 0;
 				c.Y = i;
 				i++;
-				g_Console.writeToBuffer(c, level1, 0x09);
+				g_Console.writeToBuffer(c, level1, 0x0F);
 			}
 		}
 		level1File.close();
@@ -867,7 +928,7 @@ void renderMap()
 				c.X = 0;
 				c.Y = i;
 				i++;
-				g_Console.writeToBuffer(c, level2, 0x09);
+				g_Console.writeToBuffer(c, level2, 0x0D);
 			}
 		}
 		level2File.close();
@@ -905,7 +966,7 @@ void renderMap()
 				c.X = 0;
 				c.Y = i;
 				i++;
-				g_Console.writeToBuffer(c, level3, 0x09);
+				g_Console.writeToBuffer(c, level3, 0x0B);
 			}
 		}
 		level3File.close();
@@ -943,7 +1004,7 @@ void renderMap()
 				c.X = 0;
 				c.Y = i;
 				i++;
-				g_Console.writeToBuffer(c, level4, 0x09);
+				g_Console.writeToBuffer(c, level4, 0x0E);
 			}
 		}
 		level4File.close();
