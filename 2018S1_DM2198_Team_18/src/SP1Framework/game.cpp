@@ -54,7 +54,8 @@ bool    g_abKeyPressed[K_COUNT];
 SGameChar   g_sChar;
 SGameChar   g_sHugger;
 SGameChar	g_sGunner;
-SGameChar	g_sBullets[128]; // consider bullets as characters in the code
+SGameChar	g_sBullets[128]; // consider enemy bullets as characters in the code
+SGameChar	g_sPlayershots[32]; // consider player bullets as characters as well
 EGAMESTATES g_eGameState = S_SPLASHSCREEN;
 double  g_dBounceTime; // this is to prevent key bouncing, so we won't trigger keypresses more than once
 
@@ -87,6 +88,10 @@ void init( void )
 	for (int i = 0; i < 128; i++) {
 		g_sBullets[i].m_cLocation.X = 0;
 		g_sBullets[i].m_cLocation.Y = 0;
+	}
+	for (int ps = 0; ps < 32; ps++) {
+		g_sPlayershots[ps].m_cLocation.X = 0;
+		g_sPlayershots[ps].m_cLocation.Y = 0;
 	}
     g_sChar.m_bActive = true;
     // sets the width, height and the font name to use in the console
@@ -204,6 +209,9 @@ void renderEnemies()
 	g_Console.writeToBuffer(g_sGunner.m_cLocation, (char)83, charE_Color);
 	for (int i = 0; i < 128; i++) {
 		g_Console.writeToBuffer(g_sBullets[i].m_cLocation, (char)7, charE_Color);
+	}
+	for (int ps = 0; ps < 32; ps++) {
+		g_Console.writeToBuffer(g_sPlayershots[ps].m_cLocation, (char)7, 0x06);
 	}
 }
 int i = 0, n = 0;
