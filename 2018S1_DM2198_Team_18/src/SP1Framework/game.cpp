@@ -29,6 +29,9 @@ bool levelDgem = false;
 bool hqSpawn = false;
 bool playerRespawn = false;
 
+bool nameArray[5] = { false };
+string names[5] = { "Enos", "Okin", "Ilya", "Setsuna", "Ilias" };
+
 bool firstChar = true;
 bool secondChar = false;
 bool thirdChar = false;
@@ -70,26 +73,6 @@ char** map = new char*[30];
 // Input    : void
 // Output   : void
 //--------------------------------------------------------------
-void renderchooseInput()
-{
-	COORD c;
-	string chooseInput;
-	ifstream chooseInputFile;
-	int i = 0;
-	chooseInputFile.open("PlayerInput.txt");
-	if (chooseInputFile.is_open())
-	{
-		while (getline(chooseInputFile, chooseInput))
-		{
-			c.X = 0;
-			c.Y = i;
-			i++;
-			g_Console.writeToBuffer(c, chooseInput, 0x0B);
-		}
-	}
-	chooseInputFile.close();
-}
-
 void init( void )
 {
     // Set precision for floating point output
@@ -157,10 +140,11 @@ void getInput( void )
     g_abKeyPressed[K_RIGHT]  = isKeyPressed(VK_RIGHT);
     g_abKeyPressed[K_SPACE]  = isKeyPressed(VK_SPACE);
     g_abKeyPressed[K_ESCAPE] = isKeyPressed(VK_ESCAPE);
-	g_abKeyPressed[K_ONE]	 = isKeyPressed(0x31);
-	g_abKeyPressed[K_TWO]	 = isKeyPressed(0X32);
-	g_abKeyPressed[K_THREE]	 = isKeyPressed(0x33);
-	g_abKeyPressed[K_FOUR]	 = isKeyPressed(0x34);
+	g_abKeyPressed[K_1]	 = isKeyPressed(0x31);
+	g_abKeyPressed[K_2]	 = isKeyPressed(0X32);
+	g_abKeyPressed[K_3]	 = isKeyPressed(0x33);
+	g_abKeyPressed[K_4]	 = isKeyPressed(0x34);
+	g_abKeyPressed[K_5]   = isKeyPressed(0x35);
 }
 
 //--------------------------------------------------------------
@@ -189,9 +173,9 @@ void update(double dt)
             break;
 		case S_STARTMENU: startMenu();
 			break;
-		case S_RENDERCHOOSEINPUT: renderchooseInput();
-			break;
 		case S_INSTRUCTIONS: instructions();
+			break;
+		case S_CHARACTERCREATION: characterCreation();
 			break;
         case S_GAME: gameplay(); // gameplay logic when we are in the game
             break;
@@ -215,9 +199,9 @@ void render()
             break;
 		case S_STARTMENU: renderStartMenu();
 			break;
-		case S_RENDERCHOOSEINPUT: renderchooseInput();
-			break;
 		case S_INSTRUCTIONS: renderInstructions();
+			break;
+		case S_CHARACTERCREATION: renderCharacterCreation();
 			break;
         case S_GAME: renderGame();
             break;
@@ -234,17 +218,17 @@ void splashScreenWait()    // waits for time to pass in splash screen
 
 void startMenu()
 {
-	if (g_abKeyPressed[K_ONE])
+	if (g_abKeyPressed[K_1])
 	{
-		g_eGameState = S_RENDERCHOOSEINPUT;
+		g_eGameState = S_CHARACTERCREATION;
 	}
 
-	if (g_abKeyPressed[K_TWO])
+	if (g_abKeyPressed[K_2])
 	{
 		g_eGameState = S_INSTRUCTIONS;
 	}
 
-	if (g_abKeyPressed[K_THREE])
+	if (g_abKeyPressed[K_3])
 	{
 		g_bQuitGame = true;
 	}
@@ -253,8 +237,62 @@ void instructions()
 {
 	if (g_abKeyPressed[K_SPACE])
 	{
-		g_eGameState = S_RENDERCHOOSEINPUT;
+		g_eGameState = S_CHARACTERCREATION;
 	}
+}
+
+void characterCreation()
+{
+	if (g_abKeyPressed[K_1])
+	{
+		nameArray[0] = true;
+		nameArray[1] = false;
+		nameArray[2] = false;
+		nameArray[3] = false;
+		nameArray[4] = false;
+	}
+
+	if (g_abKeyPressed[K_2])
+	{
+		nameArray[1] = true;
+		nameArray[0] = false;
+		nameArray[2] = false;
+		nameArray[3] = false;
+		nameArray[4] = false;
+	}
+
+	if (g_abKeyPressed[K_3])
+	{
+		nameArray[2] = true;
+		nameArray[0] = false;
+		nameArray[1] = false;
+		nameArray[3] = false;
+		nameArray[4] = false;
+	}
+
+	if (g_abKeyPressed[K_4])
+	{
+		nameArray[3] = true;
+		nameArray[0] = false;
+		nameArray[1] = false;
+		nameArray[2] = false;
+		nameArray[4] = false;
+	}
+	if (g_abKeyPressed[K_5])
+	{
+		nameArray[4] = true;
+		nameArray[0] = false;
+		nameArray[1] = false;
+		nameArray[2] = false;
+		nameArray[3] = false;
+	}
+
+	if (g_abKeyPressed[K_SPACE])
+	{
+		g_eGameState = S_CHARACTERCREATION;
+	}
+
+			
 }
 
 melee hugger;
@@ -795,6 +833,59 @@ void renderInstructions()
 	g_Console.writeToBuffer(c, "Press start!", 0x0B);
 }
 
+void renderCharacterCreation()
+{
+	COORD c;
+	int i = 0;
+
+	string creation;
+	ifstream creationFile;
+	
+	creationFile.open("CharacterCreation.txt");
+	if (creationFile.is_open())
+	{
+		while (getline(creationFile, creation))
+		{
+			c.X = 0;
+			c.Y = i;
+			i++;
+			g_Console.writeToBuffer(c, creation, 0x0B);
+		}
+	}
+	creationFile.close();
+
+	if (nameArray[0] == true)
+	{
+		c.X = 54;
+		c.Y = 11;
+		g_Console.writeToBuffer(c, names[0], 0x0B);
+	}
+	if (nameArray[1] == true)
+	{
+		c.X = 54;
+		c.Y = 11;
+		g_Console.writeToBuffer(c, names[1], 0x0B);
+	}
+	if (nameArray[2] == true)
+	{
+		c.X = 54;
+		c.Y = 11;
+		g_Console.writeToBuffer(c, names[2], 0x0B);
+	}
+	if (nameArray[3] == true)
+	{
+		c.X = 54;
+		c.Y = 11;
+		g_Console.writeToBuffer(c, names[3], 0x0B);
+	}
+	if (nameArray[4] == true)
+	{
+		c.X = 54;
+		c.Y = 11;
+		g_Console.writeToBuffer(c, names[4], 0x0B);
+	}
+}
+
 void renderGame()
 {
     renderMap();        // renders the map to the buffer first
@@ -1106,19 +1197,19 @@ void renderMap()
 		}
 		shopFile.close();
 
-		if (g_abKeyPressed[K_ONE])
+		if (g_abKeyPressed[K_1])
 		{
 			equipSmg = true;
 		}
-		 if (g_abKeyPressed[K_TWO])
+		 if (g_abKeyPressed[K_2])
 		{
 			equipRifle = true;
 		}
-		if (g_abKeyPressed[K_THREE])
+		if (g_abKeyPressed[K_3])
 		{
 			equipSniper = true;
 		}
-		if (g_abKeyPressed[K_FOUR])
+		if (g_abKeyPressed[K_4])
 		{
 			equipMinigun = true;
 		}

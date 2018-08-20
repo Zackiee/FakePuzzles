@@ -17,10 +17,11 @@ enum EKEYS
 	K_RIGHT,
 	K_ESCAPE,
 	K_SPACE,
-	K_ONE,
-	K_TWO,
-	K_THREE,
-	K_FOUR,
+	K_1,
+	K_2,
+	K_3,
+	K_4,
+	K_5,
 	K_COUNT
 };
 
@@ -29,11 +30,10 @@ enum EGAMESTATES
 {
     S_SPLASHSCREEN,
 	S_STARTMENU,
-	S_RENDERCHOOSEINPUT,
 	S_INSTRUCTIONS,
+	S_CHARACTERCREATION,
     S_GAME,
     S_COUNT
-	
 };
 
 // struct for the game character
@@ -52,7 +52,7 @@ void shutdown    ( void );      // do clean up, free memory
 void splashScreenWait();    // waits for time to pass in splash screen
 void startMenu();
 void instructions();
-void renderchooseInput();
+void characterCreation();
 void gameplay();            // gameplay logic
 void moveCharacter();       // moves the character, collision detection, physics, etc
 void processUserInput();    // checks if you should change states or do something else with the game, e.g. pause, exit
@@ -60,6 +60,7 @@ void clearScreen();         // clears the current screen and draw from scratch
 void renderSplashScreen();  // renders the splash screen
 void renderStartMenu();
 void renderInstructions();
+void renderCharacterCreation();
 void renderGame();          // renders the game stuff
 void renderMap();           // renders the map to the buffer first
 void renderCharacter();     // renders the character into the buffer
