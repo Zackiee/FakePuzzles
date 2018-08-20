@@ -256,7 +256,7 @@ void renderEntities()
 		g_Console.writeToBuffer(g_sPlayershots[ps].m_cLocation, (char)7, 0x06);
 	}
 }
-int i = 0, n = 0,p = 0, ps = 0;
+int i = 0, n = 0,p = 0, ps = 0, shootbuffer = 0;
 bool fooeyhappened1, fooeyhappened2, fooeyhappened3, playershot;
 void enemydata() {
 	double up, left, down, right, min_double;
@@ -422,17 +422,21 @@ void playershoot()
 	}
 
 	if (g_abKeyPressed[K_SPACE] && playerdirection[ps] != 0) {
-		g_sPlayershots[ps].m_cLocation.X = g_sChar.m_cLocation.X;
-		g_sPlayershots[ps].m_cLocation.Y = g_sChar.m_cLocation.Y;
-		ps++;
-		if (ps >= 32)
-			ps = 0;
-		playerdirection[ps] = 0;
+		shootbuffer++;
+		if (shootbuffer == 3) {
+			g_sPlayershots[ps].m_cLocation.X = g_sChar.m_cLocation.X;
+			g_sPlayershots[ps].m_cLocation.Y = g_sChar.m_cLocation.Y;
+			ps++;
+			if (ps >= 32)
+				ps = 0;
+			playerdirection[ps] = 0;
+			shootbuffer = 0;
+		}
 	}
 
 	p = ps;
 	for (ps = 0; ps < 32; ps++) {
-		if (g_sPlayershots[ps].m_cLocation.X != 0 && g_sPlayershots[ps].m_cLocation.Y != 0) {
+		if (g_sPlayershots[ps].m_cLocation.X != 0 || g_sPlayershots[ps].m_cLocation.Y != 0) {
 			if (playerdirection[ps] == 1) { // shoot up
 				g_sPlayershots[ps].m_cLocation.Y--;
 			}
@@ -445,6 +449,10 @@ void playershoot()
 			if (playerdirection[ps] == 4) { // shoot right
 				g_sPlayershots[ps].m_cLocation.X++;
 			}
+		}
+		if (g_sPlayershots[ps].m_cLocation.X >= 110 || g_sPlayershots[ps].m_cLocation.X <= 0 || g_sPlayershots[ps].m_cLocation.Y >= 30 || g_sPlayershots[ps].m_cLocation.Y <= 0) {
+			g_sPlayershots[ps].m_cLocation.X = 0;
+			g_sPlayershots[ps].m_cLocation.Y = 0;
 		}
 	}
 	ps = p;
