@@ -11,7 +11,7 @@
 
 using namespace std;
 
-int money = 0, x = 0;
+int money = 0;
 int shootdirection[128] = { 0, };
 int playerdirection[32] = { 0, };
 
@@ -59,8 +59,8 @@ bool    g_abKeyPressed[K_COUNT];
 
 // Game specific variables here
 SGameChar   g_sChar;
-SGameChar   g_sHugger;
-SGameChar	g_sGunner;
+SGameChar   g_sHugger[4];
+SGameChar	g_sGunner[4];
 SGameChar	g_sBullets[128]; // consider enemy bullets as characters in the code
 SGameChar	g_sPlayershots[32]; // consider player bullets as characters as well
 EGAMESTATES g_eGameState = S_SPLASHSCREEN;
@@ -88,10 +88,12 @@ void init( void )
 
 	g_sChar.m_cLocation.X = 46;
 	g_sChar.m_cLocation.Y = 10;
-	g_sHugger.m_cLocation.X = 5;
-	g_sHugger.m_cLocation.Y = 16;
-	g_sGunner.m_cLocation.X = 6;
-	g_sGunner.m_cLocation.Y = 16;
+	for (int i = 0, X = 0; i < 4; i++, X += 2) {
+		g_sHugger[i].m_cLocation.X = 5 + X;
+		g_sHugger[i].m_cLocation.Y = 14;
+		g_sGunner[i].m_cLocation.X = 5 + X;
+		g_sGunner[i].m_cLocation.Y = 16;
+	}
 	for (int i = 0; i < 128; i++) {
 		g_sBullets[i].m_cLocation.X = 0;
 		g_sBullets[i].m_cLocation.Y = 0;
@@ -209,6 +211,8 @@ void render()
 			break;
         case S_GAME: renderGame();
             break;
+		case S_CHOOSE: renderChooseCharacter();
+			break;
     }
     renderFramerate();  // renders debug information, frame rate, elapsed time, etc
     renderToScreen();   // dump the contents of the buffer to the screen, one frame worth of game
@@ -217,14 +221,14 @@ void render()
 void splashScreenWait()    // waits for time to pass in splash screen
 {
     if (g_dElapsedTime > 2) // wait for 3 seconds to switch to game mode, else do nothing
-        g_eGameState = S_STARTMENU;
+        g_eGameState = S_CHOOSE;
 }
 
 void startMenu()
 {
 	if (g_abKeyPressed[K_1])
 	{
-		g_eGameState = S_CHARACTERCREATION;
+		g_eGameState = S_GAME;
 	}
 
 	if (g_abKeyPressed[K_2])
@@ -355,8 +359,12 @@ void renderEntities()
 	// Draw the location of the enemies
 	WORD charE_Color = 0x0C;
 	
-	g_Console.writeToBuffer(g_sHugger.m_cLocation, (char)128, charE_Color);
-	g_Console.writeToBuffer(g_sGunner.m_cLocation, (char)83, charE_Color);
+	for (int h = 0; h < 4; h++) {
+		g_Console.writeToBuffer(g_sHugger[h].m_cLocation, (char)128, charE_Color);
+	}
+	for (int g = 0; g < 4; g++) {
+		g_Console.writeToBuffer(g_sGunner[g].m_cLocation, (char)83, charE_Color);
+	}
 	for (int i = 0; i < 128; i++) {
 		g_Console.writeToBuffer(g_sBullets[i].m_cLocation, (char)7, charE_Color);
 	}
@@ -365,7 +373,8 @@ void renderEntities()
 		g_Console.writeToBuffer(g_sPlayershots[ps].m_cLocation, (char)7, 0x06);
 	}
 }
-int i = 0, n = 0,p = 0, ps = 0, shootbuffer = 0;
+int i = 0, n = 0, g = 0, h = 0, p = 0, ps = 0, shootbuffer = 0;
+int x[4] = { 0, };
 bool fooeyhappened1, fooeyhappened2, fooeyhappened3, playershot;
 void enemydata() {
 	double up, left, down, right, min_double;
@@ -377,11 +386,11 @@ void enemydata() {
 	if (bulletbouncetime > g_dElapsedTime)
 		return;
 
-	n = i;
 	if (i >= 127) {
 		i = 0;
 	}
 
+	n = i;
 	for (i = 0; i < 128; i++) {
 		if (shootdirection[i] == 1) { // shoot up
 			g_sBullets[i].m_cLocation.Y--;
@@ -410,35 +419,38 @@ void enemydata() {
 
 	up = 99.0; left = 99.0; down = 99.0; right = 99.0;
 
-	if (map[g_sHugger.m_cLocation.Y - 1][g_sHugger.m_cLocation.X] == ' ' && x != 3) {
-		up = sqrt(pow(g_sChar.m_cLocation.X - (g_sHugger.m_cLocation.X), 2) + pow(g_sChar.m_cLocation.Y - (g_sHugger.m_cLocation.Y - 1), 2));
+	for (h = 0; h < 4; h++) {
+		if (map[g_sHugger[h].m_cLocation.Y - 1][g_sHugger[h].m_cLocation.X] == ' ' && x[h] != 3) {
+			up = sqrt(pow(g_sChar.m_cLocation.X - (g_sHugger[h].m_cLocation.X), 2) + pow(g_sChar.m_cLocation.Y - (g_sHugger[h].m_cLocation.Y - 1), 2));
+		}
+		if (map[g_sHugger[h].m_cLocation.Y][g_sHugger[h].m_cLocation.X - 1] == ' ' && x[h] != 4) {
+			left = sqrt(pow(g_sChar.m_cLocation.X - (g_sHugger[h].m_cLocation.X - 1), 2) + pow(g_sChar.m_cLocation.Y - (g_sHugger[h].m_cLocation.Y), 2));
+		}
+		if (map[g_sHugger[h].m_cLocation.Y + 1][g_sHugger[h].m_cLocation.X] == ' ' && x[h] != 1) {
+			down = sqrt(pow(g_sChar.m_cLocation.X - (g_sHugger[h].m_cLocation.X), 2) + pow(g_sChar.m_cLocation.Y - (g_sHugger[h].m_cLocation.Y + 1), 2));
+		}
+		if (map[g_sHugger[h].m_cLocation.Y][g_sHugger[h].m_cLocation.X + 1] == ' ' && x[h] != 2) {
+			right = sqrt(pow(g_sChar.m_cLocation.X - (g_sHugger[h].m_cLocation.X + 1), 2) + pow(g_sChar.m_cLocation.Y - (g_sHugger[h].m_cLocation.Y), 2));
+		}
+		min_double = min(min(up, down), min(left, right));
+		if (min_double == up && x[h] != 3) {
+			g_sHugger[h].m_cLocation.Y--;
+			x[h] = 1;
+		}
+		else if (min_double == left && x[h] != 4) {
+			g_sHugger[h].m_cLocation.X--;
+			x[h] = 2;
+		}
+		else if (min_double == down && x[h] != 1) {
+			g_sHugger[h].m_cLocation.Y++;
+			x[h] = 3;
+		}
+		else if (min_double == right && x[h] != 2) {
+			g_sHugger[h].m_cLocation.X++;
+			x[h] = 4;
+		}
 	}
-	if (map[g_sHugger.m_cLocation.Y][g_sHugger.m_cLocation.X - 1] == ' ' && x != 4) {
-		left = sqrt(pow(g_sChar.m_cLocation.X - (g_sHugger.m_cLocation.X - 1), 2) + pow(g_sChar.m_cLocation.Y - (g_sHugger.m_cLocation.Y), 2));
-	}
-	if (map[g_sHugger.m_cLocation.Y + 1][g_sHugger.m_cLocation.X] == ' ' && x != 1) {
-		down = sqrt(pow(g_sChar.m_cLocation.X - (g_sHugger.m_cLocation.X), 2) + pow(g_sChar.m_cLocation.Y - (g_sHugger.m_cLocation.Y + 1), 2));
-	}
-	if (map[g_sHugger.m_cLocation.Y][g_sHugger.m_cLocation.X + 1] == ' ' && x != 2) {
-		right = sqrt(pow(g_sChar.m_cLocation.X - (g_sHugger.m_cLocation.X + 1), 2) + pow(g_sChar.m_cLocation.Y - (g_sHugger.m_cLocation.Y), 2));
-	}
-	min_double = min(min(up, down), min(left, right));
-	if (min_double == up && x != 3) {
-		g_sHugger.m_cLocation.Y--;
-		x = 1;
-	}
-	else if (min_double == left && x != 4) {
-		g_sHugger.m_cLocation.X--;
-		x = 2;
-	}
-	else if (min_double == down && x != 1) {
-		g_sHugger.m_cLocation.Y++;
-		x = 3;
-	}
-	else if (min_double == right && x != 2) {
-		g_sHugger.m_cLocation.X++;
-		x = 4;
-	}
+
 	fooeyhappened1 = true;
 
 	if (fooeyhappened1)
@@ -450,52 +462,54 @@ void enemydata() {
 	if (gunnerbouncetime > g_dElapsedTime)
 		return;
 
-	if (sqrt(pow((g_sGunner.m_cLocation.X - g_sChar.m_cLocation.X), 2)) <= 8 && sqrt(pow((g_sGunner.m_cLocation.Y - g_sChar.m_cLocation.Y), 2)) <= 8) {
-		if (g_sGunner.m_cLocation.Y < g_sChar.m_cLocation.Y && map[g_sGunner.m_cLocation.Y - 1][g_sGunner.m_cLocation.X] == ' ') {
-			g_sGunner.m_cLocation.Y--;
+	for (g = 0; g < 4; g++) {
+		if (sqrt(pow((g_sGunner[g].m_cLocation.X - g_sChar.m_cLocation.X), 2)) <= 8 && sqrt(pow((g_sGunner[g].m_cLocation.Y - g_sChar.m_cLocation.Y), 2)) <= 8) {
+			if (g_sGunner[g].m_cLocation.Y < g_sChar.m_cLocation.Y && map[g_sGunner[g].m_cLocation.Y - 1][g_sGunner[g].m_cLocation.X] == ' ') {
+				g_sGunner[g].m_cLocation.Y--;
+			}
+			if (g_sGunner[g].m_cLocation.Y > g_sChar.m_cLocation.Y && map[g_sGunner[g].m_cLocation.Y + 1][g_sGunner[g].m_cLocation.X] == ' ') {
+				g_sGunner[g].m_cLocation.Y++;
+			}
+			if (g_sGunner[g].m_cLocation.X < g_sChar.m_cLocation.X && map[g_sGunner[g].m_cLocation.Y][g_sGunner[g].m_cLocation.X - 1] == ' ') {
+				g_sGunner[g].m_cLocation.X--;
+			}
+			if (g_sGunner[g].m_cLocation.X > g_sChar.m_cLocation.X && map[g_sGunner[g].m_cLocation.Y][g_sGunner[g].m_cLocation.X + 1] == ' ') {
+				g_sGunner[g].m_cLocation.X++;
+			}
 		}
-		if (g_sGunner.m_cLocation.Y > g_sChar.m_cLocation.Y && map[g_sGunner.m_cLocation.Y + 1][g_sGunner.m_cLocation.X] == ' ') {
-			g_sGunner.m_cLocation.Y++;
+		else {
+			if (g_sGunner[g].m_cLocation.Y < g_sChar.m_cLocation.Y && map[g_sGunner[g].m_cLocation.Y + 1][g_sGunner[g].m_cLocation.X] == ' ') {
+				g_sGunner[g].m_cLocation.Y++;
+			}
+			if (g_sGunner[g].m_cLocation.Y > g_sChar.m_cLocation.Y && map[g_sGunner[g].m_cLocation.Y - 1][g_sGunner[g].m_cLocation.X] == ' ') {
+				g_sGunner[g].m_cLocation.Y--;
+			}
+			if (g_sGunner[g].m_cLocation.X < g_sChar.m_cLocation.X && map[g_sGunner[g].m_cLocation.Y][g_sGunner[g].m_cLocation.X + 1] == ' ') {
+				g_sGunner[g].m_cLocation.X++;
+			}
+			if (g_sGunner[g].m_cLocation.X > g_sChar.m_cLocation.X && map[g_sGunner[g].m_cLocation.Y][g_sGunner[g].m_cLocation.X - 1] == ' ') {
+				g_sGunner[g].m_cLocation.X--;
+			}
 		}
-		if (g_sGunner.m_cLocation.X < g_sChar.m_cLocation.X && map[g_sGunner.m_cLocation.Y][g_sGunner.m_cLocation.X - 1] == ' ') {
-			g_sGunner.m_cLocation.X--;
-		}
-		if (g_sGunner.m_cLocation.X > g_sChar.m_cLocation.X && map[g_sGunner.m_cLocation.Y][g_sGunner.m_cLocation.X + 1] == ' ') {
-			g_sGunner.m_cLocation.X++;
-		}
-	}
-	else {
-		if (g_sGunner.m_cLocation.Y < g_sChar.m_cLocation.Y && map[g_sGunner.m_cLocation.Y + 1][g_sGunner.m_cLocation.X] == ' ') {
-			g_sGunner.m_cLocation.Y++;
-		}
-		if (g_sGunner.m_cLocation.Y > g_sChar.m_cLocation.Y && map[g_sGunner.m_cLocation.Y - 1][g_sGunner.m_cLocation.X] == ' ') {
-			g_sGunner.m_cLocation.Y--;
-		}
-		if (g_sGunner.m_cLocation.X < g_sChar.m_cLocation.X && map[g_sGunner.m_cLocation.Y][g_sGunner.m_cLocation.X + 1] == ' ') {
-			g_sGunner.m_cLocation.X++;
-		}
-		if (g_sGunner.m_cLocation.X > g_sChar.m_cLocation.X && map[g_sGunner.m_cLocation.Y][g_sGunner.m_cLocation.X - 1] == ' ') {
-			g_sGunner.m_cLocation.X--;
-		}
-	}
 
-	if (g_sGunner.m_cLocation.X == g_sChar.m_cLocation.X) {
-		i++;
-		g_sBullets[i].m_cLocation.X = g_sGunner.m_cLocation.X;
-		g_sBullets[i].m_cLocation.Y = g_sGunner.m_cLocation.Y;
-		if (g_sGunner.m_cLocation.Y < g_sChar.m_cLocation.Y) {
-			shootdirection[i] = 3; // shoot down
+		if (g_sGunner[g].m_cLocation.X == g_sChar.m_cLocation.X) {
+			i++;
+			g_sBullets[i].m_cLocation.X = g_sGunner[g].m_cLocation.X;
+			g_sBullets[i].m_cLocation.Y = g_sGunner[g].m_cLocation.Y;
+			if (g_sGunner[g].m_cLocation.Y < g_sChar.m_cLocation.Y) {
+				shootdirection[i] = 3; // shoot down
+			}
+			else shootdirection[i] = 1; //shoot up
 		}
-		else shootdirection[i] = 1; //shoot up
-	}
-	if (g_sGunner.m_cLocation.Y == g_sChar.m_cLocation.Y) {
-		i++;
-		g_sBullets[i].m_cLocation.X = g_sGunner.m_cLocation.X;
-		g_sBullets[i].m_cLocation.Y = g_sGunner.m_cLocation.Y;
-		if (g_sGunner.m_cLocation.X < g_sChar.m_cLocation.X) {
-			shootdirection[i] = 4;// shoot right
+		if (g_sGunner[g].m_cLocation.Y == g_sChar.m_cLocation.Y) {
+			i++;
+			g_sBullets[i].m_cLocation.X = g_sGunner[g].m_cLocation.X;
+			g_sBullets[i].m_cLocation.Y = g_sGunner[g].m_cLocation.Y;
+			if (g_sGunner[g].m_cLocation.X < g_sChar.m_cLocation.X) {
+				shootdirection[i] = 4;// shoot right
+			}
+			else shootdirection[i] = 2; //shoot left
 		}
-		else shootdirection[i] = 2; //shoot left
 	}
 
 	fooeyhappened2 = true;
@@ -827,15 +841,137 @@ void renderSplashScreen()  // renders the splash screen
 	}
 	splashscreenFile.close();
 }
-
+void renderChooseCharacter()
+{
+	COORD c;
+	c.Y = 15;
+	c.X = 50;
+	g_Console.writeToBuffer(c, (char)1, 0x0F);
+	c.Y = 17;
+	c.X = 30;
+	g_Console.writeToBuffer(c, "(1)", 0x08);
+	c.Y = 17;
+	c.X = 43;
+	g_Console.writeToBuffer(c, "(2)", 0x08);
+	c.Y = 17;
+	c.X = 55;
+	g_Console.writeToBuffer(c, "(3)", 0x08);
+	c.Y = 17;
+	c.X = 66;
+	g_Console.writeToBuffer(c, "(4)", 0x08);
+	c.Y = 17;
+	c.X = 77;
+	g_Console.writeToBuffer(c, "(ESCAPE)", 0x08);
+	if (g_abKeyPressed[K_ONE])
+	{
+		fourthChar = true;
+		firstChar = false;
+		secondChar = false;
+		thirdChar = false;
+		fifthChar = false;
+		sixthChar = false;
+	}
+	else if (g_abKeyPressed[K_TWO])
+	{
+		secondChar = true;
+		thirdChar = false;
+		sixthChar = false;
+		firstChar = false;
+		fourthChar = false;
+		fifthChar = false;
+	}
+	else if (g_abKeyPressed[K_THREE])
+	{
+		fifthChar = true;
+		firstChar = false;
+		secondChar = false;
+		sixthChar = false;
+		thirdChar = false;
+		fourthChar = false;
+	}
+	else if (g_abKeyPressed[K_FOUR])
+	{
+		thirdChar = true;
+		secondChar = false;
+		sixthChar = false;
+		fifthChar = false;
+		firstChar = false;
+		fourthChar = false;
+	}
+	else if (g_abKeyPressed[K_ESCAPE])
+	{
+		sixthChar = true;
+		fifthChar = false;
+		fourthChar = false;
+		thirdChar = false;
+		secondChar = false;
+		firstChar = false;
+	}
+	c.Y = 13;
+	c.X = 25;
+	g_Console.writeToBuffer(c, "Press any of the numbers to choose a character form!", 0x01);
+	c.Y = 15;
+	c.X = 25;
+	g_Console.writeToBuffer(c, "After choosing, smash the SPACE button to start your journey!", 0x0A);
+	if (firstChar == true)
+	{
+		g_Console.writeToBuffer(g_sChar.m_cLocation, (char)1, 0x0F);
+		if (g_abKeyPressed[K_SPACE])
+		{
+			g_eGameState = S_GAME;
+		}
+	}
+	else if (secondChar == true)
+	{
+		g_Console.writeToBuffer(g_sChar.m_cLocation, (char)2, 0x0F);
+		if (g_abKeyPressed[K_SPACE])
+		{
+			g_eGameState = S_GAME;
+		}
+	}
+	else if (thirdChar == true)
+	{
+		g_Console.writeToBuffer(g_sChar.m_cLocation, (char)3, 0x0C);
+		if (g_abKeyPressed[K_SPACE])
+		{
+			g_eGameState = S_GAME;
+		}
+	}
+	else if (fourthChar == true)
+	{
+		g_Console.writeToBuffer(g_sChar.m_cLocation, (char)4, 0x09);
+		if (g_abKeyPressed[K_SPACE])
+		{
+			g_eGameState = S_GAME;
+		}
+	}
+	else if (fifthChar == true)
+	{
+		g_Console.writeToBuffer(g_sChar.m_cLocation, (char)5, 0x0A);
+		if (g_abKeyPressed[K_SPACE])
+		{
+			g_eGameState = S_GAME;
+		}
+	}
+	else if (sixthChar == true)
+	{
+		g_Console.writeToBuffer(g_sChar.m_cLocation, (char)6, 0x0E);
+		if (g_abKeyPressed[K_SPACE])
+		{
+			g_eGameState = S_GAME;
+		}
+	}
+}
 void renderStartMenu()
 {
+	renderChooseCharacter();
 	COORD c;
 	int i = 0;
 	int a = 0;
 
 	string menu;
 	ifstream menuFile;
+	
 
 	menuFile.open("MainMenu.txt");
 	if (menuFile.is_open())
