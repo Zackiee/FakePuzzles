@@ -189,7 +189,7 @@ void update(double dt)
             break;
 		case S_STARTMENU: startMenu();
 			break;
-		case S_RENDERPLAYERINPUT: renderchooseInput();
+		case S_RENDERCHOOSEINPUT: renderchooseInput();
 			break;
 		case S_INSTRUCTIONS: instructions();
 			break;
@@ -215,7 +215,7 @@ void render()
             break;
 		case S_STARTMENU: renderStartMenu();
 			break;
-		case S_RENDERPLAYERINPUT: renderplayerInput();
+		case S_RENDERCHOOSEINPUT: renderchooseInput();
 			break;
 		case S_INSTRUCTIONS: renderInstructions();
 			break;
@@ -236,7 +236,7 @@ void startMenu()
 {
 	if (g_abKeyPressed[K_ONE])
 	{
-		g_eGameState = S_RENDERPLAYERINPUT;
+		g_eGameState = S_RENDERCHOOSEINPUT;
 	}
 
 	if (g_abKeyPressed[K_TWO])
@@ -253,7 +253,7 @@ void instructions()
 {
 	if (g_abKeyPressed[K_SPACE])
 	{
-		g_eGameState = S_RENDERPLAYERINPUT;
+		g_eGameState = S_RENDERCHOOSEINPUT;
 	}
 }
 

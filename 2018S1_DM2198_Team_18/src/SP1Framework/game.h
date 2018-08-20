@@ -29,7 +29,7 @@ enum EGAMESTATES
 {
     S_SPLASHSCREEN,
 	S_STARTMENU,
-	S_RENDERPLAYERINPUT,
+	S_RENDERCHOOSEINPUT,
 	S_INSTRUCTIONS,
     S_GAME,
     S_COUNT
@@ -52,7 +52,7 @@ void shutdown    ( void );      // do clean up, free memory
 void splashScreenWait();    // waits for time to pass in splash screen
 void startMenu();
 void instructions();
-void renderplayerInput();
+void renderchooseInput();
 void gameplay();            // gameplay logic
 void moveCharacter();       // moves the character, collision detection, physics, etc
 void processUserInput();    // checks if you should change states or do something else with the game, e.g. pause, exit
