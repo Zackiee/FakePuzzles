@@ -251,7 +251,7 @@ void instructions()
 
 void characterCreation()
 {
-	if (g_abKeyPressed[K_1] && characterSelect == false)
+	if (g_abKeyPressed[K_1])
 	{
 		nameArray[0] = true;
 		nameArray[1] = false;
@@ -260,7 +260,7 @@ void characterCreation()
 		nameArray[4] = false;
 	}
 
-	if (g_abKeyPressed[K_2] && characterSelect == false)
+	if (g_abKeyPressed[K_2])
 	{
 		nameArray[1] = true;
 		nameArray[0] = false;
@@ -269,7 +269,7 @@ void characterCreation()
 		nameArray[4] = false;
 	}
 
-	if (g_abKeyPressed[K_3] && characterSelect == false)
+	if (g_abKeyPressed[K_3])
 	{
 		nameArray[2] = true;
 		nameArray[0] = false;
@@ -278,7 +278,7 @@ void characterCreation()
 		nameArray[4] = false;
 	}
 
-	if (g_abKeyPressed[K_4] && characterSelect == false)
+	if (g_abKeyPressed[K_4])
 	{
 		nameArray[3] = true;
 		nameArray[0] = false;
@@ -286,7 +286,7 @@ void characterCreation()
 		nameArray[2] = false;
 		nameArray[4] = false;
 	}
-	if (g_abKeyPressed[K_5] && characterSelect == false)
+	if (g_abKeyPressed[K_5])
 	{
 		nameArray[4] = true;
 		nameArray[0] = false;
@@ -862,7 +862,7 @@ void renderChooseCharacter()
 	c.Y = 17;
 	c.X = 77;
 	g_Console.writeToBuffer(c, "(ESCAPE)", 0x08);
-	if (g_abKeyPressed[K_ONE])
+	if (g_abKeyPressed[K_1])
 	{
 		fourthChar = true;
 		firstChar = false;
@@ -871,7 +871,7 @@ void renderChooseCharacter()
 		fifthChar = false;
 		sixthChar = false;
 	}
-	else if (g_abKeyPressed[K_TWO])
+	else if (g_abKeyPressed[K_2])
 	{
 		secondChar = true;
 		thirdChar = false;
@@ -880,7 +880,7 @@ void renderChooseCharacter()
 		fourthChar = false;
 		fifthChar = false;
 	}
-	else if (g_abKeyPressed[K_THREE])
+	else if (g_abKeyPressed[K_3])
 	{
 		fifthChar = true;
 		firstChar = false;
@@ -889,7 +889,7 @@ void renderChooseCharacter()
 		thirdChar = false;
 		fourthChar = false;
 	}
-	else if (g_abKeyPressed[K_FOUR])
+	else if (g_abKeyPressed[K_4])
 	{
 		thirdChar = true;
 		secondChar = false;
