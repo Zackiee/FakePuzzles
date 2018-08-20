@@ -1104,12 +1104,11 @@ void renderGame()
 	playershoot();
 }
 
-void renderMap()
+void renderHQ()
 {
 	COORD c;
 	int i = 0;
 	int a = 0;
-
 	//Render Headquarters
 	if (hq == true)
 	{
@@ -1230,8 +1229,15 @@ void renderMap()
 		}
 		headquartersFile.close();
 	}
+}
+
+void renderMap()
+{
+	COORD c;
+	int i = 0;
+	int a = 0;
 	//Render Level A
-	else if (levelA == true)
+     if (levelA == true)
 	{
 		string level1;
 		ifstream level1File;
