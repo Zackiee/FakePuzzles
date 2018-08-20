@@ -16,7 +16,7 @@ int shootdirection[128] = { 0, };
 int playerdirection[32] = { 0, };
 
 bool hq = true;
-bool inven = false;
+bool inven = true;
 bool shop = false;
 bool levelA = false;
 bool levelB = false;
@@ -62,7 +62,7 @@ EGAMESTATES g_eGameState = S_SPLASHSCREEN;
 double  g_dBounceTime; // this is to prevent key bouncing, so we won't trigger keypresses more than once
 
 // Console object
-Console g_Console(110, 30, "SP1 Framework");
+Console g_Console(110, 30, "Fake Puzzles");
 char** map = new char*[30];
 
 //--------------------------------------------------------------
@@ -753,7 +753,7 @@ void renderInstructions()
 {
 	COORD c;
 
-	c.Y = 10;
+	c.Y = 9;
 	c.X = 45;
 	g_Console.writeToBuffer(c, "Instructions", 0x0B);
 	c.Y = 11;
@@ -803,16 +803,14 @@ void renderMap()
 			{
 				for (a = 0; a < headquarters.length(); a++)
 				{
-					if (headquarters[a] == '#')
-					{
+					switch (headquarters[a]) {
+					case '#':
 						headquarters[a] = 223;
-					}
-					else if (headquarters[a] == '@')
-					{
+						break;
+					case '@':
 						headquarters[a] = 219;
-					}
-					else if (headquarters[a] == '1')
-					{
+						break;
+					case '1':
 						if (levelAgem == true)
 						{
 							headquarters[a] = 251;
@@ -821,9 +819,8 @@ void renderMap()
 						{
 							headquarters[a] = 'x';
 						}
-					}
-					else if (headquarters[a] == '2')
-					{
+						break;
+					case '2':
 						if (levelBgem == true)
 						{
 							headquarters[a] = 251;
@@ -832,9 +829,8 @@ void renderMap()
 						{
 							headquarters[a] = 'x';
 						}
-					}
-					else if (headquarters[a] == '3')
-					{
+						break;
+					case '3':
 						if (levelCgem == true)
 						{
 							headquarters[a] = 251;
@@ -843,9 +839,8 @@ void renderMap()
 						{
 							headquarters[a] = 'x';
 						}
-					}
-					else if (headquarters[a] == '4')
-					{
+						break;
+					case '4':
 						if (levelDgem == true)
 						{
 							headquarters[a] = 251;
@@ -854,9 +849,8 @@ void renderMap()
 						{
 							headquarters[a] = 'x';
 						}
-					}
-					else if (headquarters[a] == 'u')
-					{
+						break;
+					case 'u':
 						if (levelAgem == true)
 						{
 							headquarters[a] = '*';
@@ -865,9 +859,8 @@ void renderMap()
 						{
 							headquarters[a] = 255;
 						}
-					}
-					else if (headquarters[a] == 'i')
-					{
+						break;
+					case 'i':
 						if (levelBgem == true)
 						{
 							headquarters[a] = '*';
@@ -876,9 +869,8 @@ void renderMap()
 						{
 							headquarters[a] = 255;
 						}
-					}
-					else if (headquarters[a] == 'o')
-					{
+						break;
+					case 'o':
 						if (levelCgem == true)
 						{
 							headquarters[a] = '*';
@@ -887,9 +879,8 @@ void renderMap()
 						{
 							headquarters[a] = 255;
 						}
-					}
-					else if (headquarters[a] == 'p')
-					{
+						break;
+					case 'p':
 						if (levelDgem == true)
 						{
 							headquarters[a] = '*';
@@ -898,9 +889,8 @@ void renderMap()
 						{
 							headquarters[a] = 255;
 						}
-					}
-					else if (headquarters[a] == '%')
-					{
+						break;
+					case '%':
 						if (levelAgem == true && levelBgem == true && levelCgem == true && levelDgem == true)
 						{
 							headquarters[a] = '%';
@@ -934,16 +924,14 @@ void renderMap()
 			{
 				for (a = 0; a < level1.length(); a++)
 				{
-					if (level1[a] == '#')
-					{
+					switch (level1[a]) {
+					case '#':
 						level1[a] = 223;
-					}
-					else if (level1[a] == '@')
-					{
+						break;
+					case '@':
 						level1[a] = 219;
-					}
-					else if (level1[a] == '*')
-					{
+						break;
+					case '*':
 						if (levelAgem == true)
 						{
 							level1[a] = 255;
@@ -972,16 +960,14 @@ void renderMap()
 			{
 				for (a = 0; a < level2.length(); a++)
 				{
-					if (level2[a] == '#')
-					{
+					switch (level2[a]) {
+					case '#':
 						level2[a] = 223;
-					}
-					else if (level2[a] == '@')
-					{
+						break;
+					case '@':
 						level2[a] = 219;
-					}
-					else if (level2[a] == '*')
-					{
+						break;
+					case '*':
 						if (levelBgem == true)
 						{
 							level2[a] = 255;
@@ -1010,16 +996,14 @@ void renderMap()
 			{
 				for (a = 0; a < level3.length(); a++)
 				{
-					if (level3[a] == '#')
-					{
+					switch (level3[a]) {
+					case '#':
 						level3[a] = 223;
-					}
-					else if (level3[a] == '@')
-					{
+						break;
+					case '@':
 						level3[a] = 219;
-					}
-					else if (level3[a] == '*')
-					{
+						break;
+					case '*':
 						if (levelCgem == true)
 						{
 							level3[a] = 255;
@@ -1048,16 +1032,14 @@ void renderMap()
 			{
 				for (a = 0; a < level4.length(); a++)
 				{
-					if (level4[a] == '#')
-					{
+					switch (level4[a]) {
+					case '#':
 						level4[a] = 223;
-					}
-					else if (level4[a] == '@')
-					{
+						break;
+					case '@':
 						level4[a] = 219;
-					}
-					else if (level4[a] == '*')
-					{
+						break;
+					case '*':
 						if (levelDgem == true)
 						{
 							level4[a] = 255;
@@ -1088,13 +1070,13 @@ void renderMap()
 			{
 				for (a = 0; a < shop.length(); a++)
 				{
-					if (shop[a] == '#')
-					{
+					switch (shop[a]) {
+					case '#':
 						shop[a] = 223;
-					}
-					else if (shop[a] == '@')
-					{
+						break;
+					case '@':
 						shop[a] = 219;
+						break;
 					}
 				}
 				c.X = 14;
@@ -1137,20 +1119,17 @@ void renderMap()
 			{
 				for (a = 0; a < inventory.length(); a++)
 				{
-					if (inventory[a] == '#')
-					{
+					switch (inventory[a]) {
+					case '#':
 						inventory[a] = 223;
-					}
-					else if (inventory[a] == '@')
-					{
+						break;
+					case '@':
 						inventory[a] = 219;
-					}
-					else if (inventory[a] == '$')
-					{
+						break;
+					case '$':
 						inventory[a] = ' ';
-					}
-					else if (inventory[a] == '1')
-					{
+						break;
+					case '1':
 						if (equipPistol == true)
 						{
 							inventory[a] = 251;
@@ -1159,9 +1138,8 @@ void renderMap()
 						{
 							inventory[a] = 'x';
 						}
-					}
-					else if (inventory[a] == '2')
-					{
+						break;
+					case '2':
 						if (equipSmg == true)
 						{
 							inventory[a] = 251;
@@ -1170,9 +1148,8 @@ void renderMap()
 						{
 							inventory[a] = 'x';
 						}
-					}
-					else if (inventory[a] == '3')
-					{
+						break;
+					case '3':
 						if (equipRifle == true)
 						{
 							inventory[a] = 251;
@@ -1181,9 +1158,8 @@ void renderMap()
 						{
 							inventory[a] = 'x';
 						}
-					}
-					else if (inventory[a] == '4')
-					{
+						break;
+					case '4':
 						if (equipSniper == true)
 						{
 							inventory[a] = 251;
@@ -1192,9 +1168,8 @@ void renderMap()
 						{
 							inventory[a] = 'x';
 						}
-					}
-					else if (inventory[a] == '5')
-					{
+						break;
+					case '5':
 						if (equipMinigun == true)
 						{
 							inventory[a] = 251;
@@ -1203,6 +1178,7 @@ void renderMap()
 						{
 							inventory[a] = 'x';
 						}
+						break;
 					}
 				}
 				c.X = 0;
