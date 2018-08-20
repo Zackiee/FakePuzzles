@@ -29,8 +29,12 @@ bool levelDgem = false;
 bool hqSpawn = false;
 bool playerRespawn = false;
 
+bool characterSelect = false;
+
 bool nameArray[5] = { false };
 string names[5] = { "Enos", "Okin", "Ilya", "Setsuna", "Ilias" };
+
+bool charArray[6] = { false };
 
 bool firstChar = true;
 bool secondChar = false;
@@ -247,7 +251,7 @@ void instructions()
 
 void characterCreation()
 {
-	if (g_abKeyPressed[K_ONE])
+	if (g_abKeyPressed[K_1])
 	{
 		nameArray[0] = true;
 		nameArray[1] = false;
@@ -256,7 +260,7 @@ void characterCreation()
 		nameArray[4] = false;
 	}
 
-	if (g_abKeyPressed[K_TWO])
+	if (g_abKeyPressed[K_2])
 	{
 		nameArray[1] = true;
 		nameArray[0] = false;
@@ -265,7 +269,7 @@ void characterCreation()
 		nameArray[4] = false;
 	}
 
-	if (g_abKeyPressed[K_THREE])
+	if (g_abKeyPressed[K_3])
 	{
 		nameArray[2] = true;
 		nameArray[0] = false;
@@ -274,7 +278,7 @@ void characterCreation()
 		nameArray[4] = false;
 	}
 
-	if (g_abKeyPressed[K_FOUR])
+	if (g_abKeyPressed[K_4])
 	{
 		nameArray[3] = true;
 		nameArray[0] = false;
@@ -282,7 +286,7 @@ void characterCreation()
 		nameArray[2] = false;
 		nameArray[4] = false;
 	}
-	if (g_abKeyPressed[K_FIVE])
+	if (g_abKeyPressed[K_5])
 	{
 		nameArray[4] = true;
 		nameArray[0] = false;
@@ -290,13 +294,62 @@ void characterCreation()
 		nameArray[2] = false;
 		nameArray[3] = false;
 	}
-
-	if (g_abKeyPressed[K_SPACE])
+	if (g_abKeyPressed[K_SPACE] && characterSelect == false)
 	{
-		g_eGameState = S_CHARACTERCREATION;
+		characterSelect = true;
+	}
+	if (g_abKeyPressed[K_1] && characterSelect == true)
+	{
+		charArray[1] = true;
+		charArray[0] = false;
+		charArray[2] = false;
+		charArray[3] = false;
+		charArray[4] = false;
+		charArray[5] = false;
 	}
 
-			
+	if (g_abKeyPressed[K_2] && characterSelect == true)
+	{
+		charArray[2] = true;
+		charArray[0] = false;
+		charArray[1] = false;
+		charArray[3] = false;
+		charArray[4] = false;
+		charArray[5] = false;
+	}
+
+	if (g_abKeyPressed[K_3] && characterSelect == true)
+	{
+		charArray[3] = true;
+		charArray[0] = false;
+		charArray[1] = false;
+		charArray[2] = false;
+		charArray[4] = false;
+		charArray[5] = false;
+	}
+
+	if (g_abKeyPressed[K_4] && characterSelect == true)
+	{
+		charArray[4] = true;
+		charArray[0] = false;
+		charArray[1] = false;
+		charArray[2] = false;
+		charArray[3] = false;
+		charArray[5] = false;
+	}
+	if (g_abKeyPressed[K_5] && characterSelect == true)
+	{
+		charArray[5] = true;
+		charArray[0] = false;
+		charArray[1] = false;
+		charArray[2] = false;
+		charArray[3] = false;
+		charArray[4] = false;
+	}
+	if (g_abKeyPressed[K_SPACE] && characterSelect == true)
+	{
+
+	}
 }
 
 melee hugger;
@@ -973,6 +1026,7 @@ void renderCharacterCreation()
 {
 	COORD c;
 	int i = 0;
+	int a = 0;
 
 	string creation;
 	ifstream creationFile;
@@ -982,6 +1036,26 @@ void renderCharacterCreation()
 	{
 		while (getline(creationFile, creation))
 		{
+			for (a = 0; a < creation.length(); a++)
+			{
+				switch (creation[a]) {
+				case '6':
+					creation[a] = (char)2;
+					break;
+				case '7':
+					creation[a] = (char)3;
+					break;
+				case '8':
+					creation[a] = (char)4;
+					break;
+				case '9':
+					creation[a] = (char)5;
+					break;
+				case '0':
+					creation[a] = (char)6;
+					break;
+				}
+			}
 			c.X = 0;
 			c.Y = i;
 			i++;
