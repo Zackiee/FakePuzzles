@@ -15,8 +15,8 @@ int money = 0, x = 0;
 int shootdirection[128] = { 0, };
 
 bool mainMenu = false;
-bool instructions = true;
-bool hq = false;
+bool instructions = false;
+bool hq = true;
 bool inven = false;
 bool shop = false;
 bool levelA = false;
@@ -42,6 +42,8 @@ bool equipSmg = false;
 bool equipRifle = false;
 bool equipSniper = false;
 bool equipMinigun = false;
+
+string playerName;
 
 double  g_dElapsedTime;
 double  huggerbouncetime = g_dElapsedTime;
@@ -174,6 +176,7 @@ void update(double dt)
 // Input    : void
 // Output   : void
 //--------------------------------------------------------------
+
 void render()
 {
     clearScreen();      // clears the current screen and draw from scratch 
@@ -366,6 +369,12 @@ void inventory()		// handles inventory, inventory[0] contains money, inventory[1
 	}
 }
 
+void playerInput()
+{
+	cin >> playerName;
+
+}
+
 void moveCharacter()
 {
 	bool bSomethingHappened = false;
@@ -555,6 +564,7 @@ void moveCharacter()
 }
 void processUserInput()
 {
+	playerInput();
     // quits the game if player hits the escape key
     if (g_abKeyPressed[K_ESCAPE])
         g_bQuitGame = true;
