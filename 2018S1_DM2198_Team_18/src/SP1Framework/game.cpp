@@ -11,7 +11,7 @@
 
 using namespace std;
 
-int money = 0, x = 0;
+int money = 0;
 int shootdirection[128] = { 0, };
 int playerdirection[32] = { 0, };
 
@@ -52,8 +52,8 @@ bool    g_abKeyPressed[K_COUNT];
 
 // Game specific variables here
 SGameChar   g_sChar;
-SGameChar   g_sHugger;
-SGameChar	g_sGunner;
+SGameChar   g_sHugger[4];
+SGameChar	g_sGunner[4];
 SGameChar	g_sBullets[128]; // consider enemy bullets as characters in the code
 SGameChar	g_sPlayershots[32]; // consider player bullets as characters as well
 EGAMESTATES g_eGameState = S_SPLASHSCREEN;
@@ -101,10 +101,12 @@ void init( void )
 
 	g_sChar.m_cLocation.X = 46;
 	g_sChar.m_cLocation.Y = 10;
-	g_sHugger.m_cLocation.X = 5;
-	g_sHugger.m_cLocation.Y = 16;
-	g_sGunner.m_cLocation.X = 6;
-	g_sGunner.m_cLocation.Y = 16;
+	for (int i = 0, X = 0; i < 4; i++, X += 2) {
+		g_sHugger[i].m_cLocation.X = 5 + X;
+		g_sHugger[i].m_cLocation.Y = 14;
+		g_sGunner[i].m_cLocation.X = 5 + X;
+		g_sGunner[i].m_cLocation.Y = 16;
+	}
 	for (int i = 0; i < 128; i++) {
 		g_sBullets[i].m_cLocation.X = 0;
 		g_sBullets[i].m_cLocation.Y = 0;
@@ -236,7 +238,7 @@ void startMenu()
 {
 	if (g_abKeyPressed[K_ONE])
 	{
-		g_eGameState = S_RENDERCHOOSEINPUT;
+		g_eGameState = S_GAME;
 	}
 
 	if (g_abKeyPressed[K_TWO])
@@ -264,8 +266,12 @@ void renderEntities()
 	// Draw the location of the enemies
 	WORD charE_Color = 0x0C;
 	
-	g_Console.writeToBuffer(g_sHugger.m_cLocation, (char)128, charE_Color);
-	g_Console.writeToBuffer(g_sGunner.m_cLocation, (char)83, charE_Color);
+	for (int h = 0; h < 4; h++) {
+		g_Console.writeToBuffer(g_sHugger[h].m_cLocation, (char)128, charE_Color);
+	}
+	for (int g = 0; g < 4; g++) {
+		g_Console.writeToBuffer(g_sGunner[g].m_cLocation, (char)83, charE_Color);
+	}
 	for (int i = 0; i < 128; i++) {
 		g_Console.writeToBuffer(g_sBullets[i].m_cLocation, (char)7, charE_Color);
 	}
@@ -274,7 +280,8 @@ void renderEntities()
 		g_Console.writeToBuffer(g_sPlayershots[ps].m_cLocation, (char)7, 0x06);
 	}
 }
-int i = 0, n = 0,p = 0, ps = 0, shootbuffer = 0;
+int i = 0, n = 0, g = 0, h = 0, p = 0, ps = 0, shootbuffer = 0;
+int x[4] = { 0, };
 bool fooeyhappened1, fooeyhappened2, fooeyhappened3, playershot;
 void enemydata() {
 	double up, left, down, right, min_double;
@@ -286,11 +293,11 @@ void enemydata() {
 	if (bulletbouncetime > g_dElapsedTime)
 		return;
 
-	n = i;
 	if (i >= 127) {
 		i = 0;
 	}
 
+	n = i;
 	for (i = 0; i < 128; i++) {
 		if (shootdirection[i] == 1) { // shoot up
 			g_sBullets[i].m_cLocation.Y--;
@@ -319,35 +326,38 @@ void enemydata() {
 
 	up = 99.0; left = 99.0; down = 99.0; right = 99.0;
 
-	if (map[g_sHugger.m_cLocation.Y - 1][g_sHugger.m_cLocation.X] == ' ' && x != 3) {
-		up = sqrt(pow(g_sChar.m_cLocation.X - (g_sHugger.m_cLocation.X), 2) + pow(g_sChar.m_cLocation.Y - (g_sHugger.m_cLocation.Y - 1), 2));
+	for (h = 0; h < 4; h++) {
+		if (map[g_sHugger[h].m_cLocation.Y - 1][g_sHugger[h].m_cLocation.X] == ' ' && x[h] != 3) {
+			up = sqrt(pow(g_sChar.m_cLocation.X - (g_sHugger[h].m_cLocation.X), 2) + pow(g_sChar.m_cLocation.Y - (g_sHugger[h].m_cLocation.Y - 1), 2));
+		}
+		if (map[g_sHugger[h].m_cLocation.Y][g_sHugger[h].m_cLocation.X - 1] == ' ' && x[h] != 4) {
+			left = sqrt(pow(g_sChar.m_cLocation.X - (g_sHugger[h].m_cLocation.X - 1), 2) + pow(g_sChar.m_cLocation.Y - (g_sHugger[h].m_cLocation.Y), 2));
+		}
+		if (map[g_sHugger[h].m_cLocation.Y + 1][g_sHugger[h].m_cLocation.X] == ' ' && x[h] != 1) {
+			down = sqrt(pow(g_sChar.m_cLocation.X - (g_sHugger[h].m_cLocation.X), 2) + pow(g_sChar.m_cLocation.Y - (g_sHugger[h].m_cLocation.Y + 1), 2));
+		}
+		if (map[g_sHugger[h].m_cLocation.Y][g_sHugger[h].m_cLocation.X + 1] == ' ' && x[h] != 2) {
+			right = sqrt(pow(g_sChar.m_cLocation.X - (g_sHugger[h].m_cLocation.X + 1), 2) + pow(g_sChar.m_cLocation.Y - (g_sHugger[h].m_cLocation.Y), 2));
+		}
+		min_double = min(min(up, down), min(left, right));
+		if (min_double == up && x[h] != 3) {
+			g_sHugger[h].m_cLocation.Y--;
+			x[h] = 1;
+		}
+		else if (min_double == left && x[h] != 4) {
+			g_sHugger[h].m_cLocation.X--;
+			x[h] = 2;
+		}
+		else if (min_double == down && x[h] != 1) {
+			g_sHugger[h].m_cLocation.Y++;
+			x[h] = 3;
+		}
+		else if (min_double == right && x[h] != 2) {
+			g_sHugger[h].m_cLocation.X++;
+			x[h] = 4;
+		}
 	}
-	if (map[g_sHugger.m_cLocation.Y][g_sHugger.m_cLocation.X - 1] == ' ' && x != 4) {
-		left = sqrt(pow(g_sChar.m_cLocation.X - (g_sHugger.m_cLocation.X - 1), 2) + pow(g_sChar.m_cLocation.Y - (g_sHugger.m_cLocation.Y), 2));
-	}
-	if (map[g_sHugger.m_cLocation.Y + 1][g_sHugger.m_cLocation.X] == ' ' && x != 1) {
-		down = sqrt(pow(g_sChar.m_cLocation.X - (g_sHugger.m_cLocation.X), 2) + pow(g_sChar.m_cLocation.Y - (g_sHugger.m_cLocation.Y + 1), 2));
-	}
-	if (map[g_sHugger.m_cLocation.Y][g_sHugger.m_cLocation.X + 1] == ' ' && x != 2) {
-		right = sqrt(pow(g_sChar.m_cLocation.X - (g_sHugger.m_cLocation.X + 1), 2) + pow(g_sChar.m_cLocation.Y - (g_sHugger.m_cLocation.Y), 2));
-	}
-	min_double = min(min(up, down), min(left, right));
-	if (min_double == up && x != 3) {
-		g_sHugger.m_cLocation.Y--;
-		x = 1;
-	}
-	else if (min_double == left && x != 4) {
-		g_sHugger.m_cLocation.X--;
-		x = 2;
-	}
-	else if (min_double == down && x != 1) {
-		g_sHugger.m_cLocation.Y++;
-		x = 3;
-	}
-	else if (min_double == right && x != 2) {
-		g_sHugger.m_cLocation.X++;
-		x = 4;
-	}
+
 	fooeyhappened1 = true;
 
 	if (fooeyhappened1)
@@ -359,52 +369,54 @@ void enemydata() {
 	if (gunnerbouncetime > g_dElapsedTime)
 		return;
 
-	if (sqrt(pow((g_sGunner.m_cLocation.X - g_sChar.m_cLocation.X), 2)) <= 8 && sqrt(pow((g_sGunner.m_cLocation.Y - g_sChar.m_cLocation.Y), 2)) <= 8) {
-		if (g_sGunner.m_cLocation.Y < g_sChar.m_cLocation.Y && map[g_sGunner.m_cLocation.Y - 1][g_sGunner.m_cLocation.X] == ' ') {
-			g_sGunner.m_cLocation.Y--;
+	for (g = 0; g < 4; g++) {
+		if (sqrt(pow((g_sGunner[g].m_cLocation.X - g_sChar.m_cLocation.X), 2)) <= 8 && sqrt(pow((g_sGunner[g].m_cLocation.Y - g_sChar.m_cLocation.Y), 2)) <= 8) {
+			if (g_sGunner[g].m_cLocation.Y < g_sChar.m_cLocation.Y && map[g_sGunner[g].m_cLocation.Y - 1][g_sGunner[g].m_cLocation.X] == ' ') {
+				g_sGunner[g].m_cLocation.Y--;
+			}
+			if (g_sGunner[g].m_cLocation.Y > g_sChar.m_cLocation.Y && map[g_sGunner[g].m_cLocation.Y + 1][g_sGunner[g].m_cLocation.X] == ' ') {
+				g_sGunner[g].m_cLocation.Y++;
+			}
+			if (g_sGunner[g].m_cLocation.X < g_sChar.m_cLocation.X && map[g_sGunner[g].m_cLocation.Y][g_sGunner[g].m_cLocation.X - 1] == ' ') {
+				g_sGunner[g].m_cLocation.X--;
+			}
+			if (g_sGunner[g].m_cLocation.X > g_sChar.m_cLocation.X && map[g_sGunner[g].m_cLocation.Y][g_sGunner[g].m_cLocation.X + 1] == ' ') {
+				g_sGunner[g].m_cLocation.X++;
+			}
 		}
-		if (g_sGunner.m_cLocation.Y > g_sChar.m_cLocation.Y && map[g_sGunner.m_cLocation.Y + 1][g_sGunner.m_cLocation.X] == ' ') {
-			g_sGunner.m_cLocation.Y++;
+		else {
+			if (g_sGunner[g].m_cLocation.Y < g_sChar.m_cLocation.Y && map[g_sGunner[g].m_cLocation.Y + 1][g_sGunner[g].m_cLocation.X] == ' ') {
+				g_sGunner[g].m_cLocation.Y++;
+			}
+			if (g_sGunner[g].m_cLocation.Y > g_sChar.m_cLocation.Y && map[g_sGunner[g].m_cLocation.Y - 1][g_sGunner[g].m_cLocation.X] == ' ') {
+				g_sGunner[g].m_cLocation.Y--;
+			}
+			if (g_sGunner[g].m_cLocation.X < g_sChar.m_cLocation.X && map[g_sGunner[g].m_cLocation.Y][g_sGunner[g].m_cLocation.X + 1] == ' ') {
+				g_sGunner[g].m_cLocation.X++;
+			}
+			if (g_sGunner[g].m_cLocation.X > g_sChar.m_cLocation.X && map[g_sGunner[g].m_cLocation.Y][g_sGunner[g].m_cLocation.X - 1] == ' ') {
+				g_sGunner[g].m_cLocation.X--;
+			}
 		}
-		if (g_sGunner.m_cLocation.X < g_sChar.m_cLocation.X && map[g_sGunner.m_cLocation.Y][g_sGunner.m_cLocation.X - 1] == ' ') {
-			g_sGunner.m_cLocation.X--;
-		}
-		if (g_sGunner.m_cLocation.X > g_sChar.m_cLocation.X && map[g_sGunner.m_cLocation.Y][g_sGunner.m_cLocation.X + 1] == ' ') {
-			g_sGunner.m_cLocation.X++;
-		}
-	}
-	else {
-		if (g_sGunner.m_cLocation.Y < g_sChar.m_cLocation.Y && map[g_sGunner.m_cLocation.Y + 1][g_sGunner.m_cLocation.X] == ' ') {
-			g_sGunner.m_cLocation.Y++;
-		}
-		if (g_sGunner.m_cLocation.Y > g_sChar.m_cLocation.Y && map[g_sGunner.m_cLocation.Y - 1][g_sGunner.m_cLocation.X] == ' ') {
-			g_sGunner.m_cLocation.Y--;
-		}
-		if (g_sGunner.m_cLocation.X < g_sChar.m_cLocation.X && map[g_sGunner.m_cLocation.Y][g_sGunner.m_cLocation.X + 1] == ' ') {
-			g_sGunner.m_cLocation.X++;
-		}
-		if (g_sGunner.m_cLocation.X > g_sChar.m_cLocation.X && map[g_sGunner.m_cLocation.Y][g_sGunner.m_cLocation.X - 1] == ' ') {
-			g_sGunner.m_cLocation.X--;
-		}
-	}
 
-	if (g_sGunner.m_cLocation.X == g_sChar.m_cLocation.X) {
-		i++;
-		g_sBullets[i].m_cLocation.X = g_sGunner.m_cLocation.X;
-		g_sBullets[i].m_cLocation.Y = g_sGunner.m_cLocation.Y;
-		if (g_sGunner.m_cLocation.Y < g_sChar.m_cLocation.Y) {
-			shootdirection[i] = 3; // shoot down
+		if (g_sGunner[g].m_cLocation.X == g_sChar.m_cLocation.X) {
+			i++;
+			g_sBullets[i].m_cLocation.X = g_sGunner[g].m_cLocation.X;
+			g_sBullets[i].m_cLocation.Y = g_sGunner[g].m_cLocation.Y;
+			if (g_sGunner[g].m_cLocation.Y < g_sChar.m_cLocation.Y) {
+				shootdirection[i] = 3; // shoot down
+			}
+			else shootdirection[i] = 1; //shoot up
 		}
-		else shootdirection[i] = 1; //shoot up
-	}
-	if (g_sGunner.m_cLocation.Y == g_sChar.m_cLocation.Y) {
-		i++;
-		g_sBullets[i].m_cLocation.X = g_sGunner.m_cLocation.X;
-		g_sBullets[i].m_cLocation.Y = g_sGunner.m_cLocation.Y;
-		if (g_sGunner.m_cLocation.X < g_sChar.m_cLocation.X) {
-			shootdirection[i] = 4;// shoot right
+		if (g_sGunner[g].m_cLocation.Y == g_sChar.m_cLocation.Y) {
+			i++;
+			g_sBullets[i].m_cLocation.X = g_sGunner[g].m_cLocation.X;
+			g_sBullets[i].m_cLocation.Y = g_sGunner[g].m_cLocation.Y;
+			if (g_sGunner[g].m_cLocation.X < g_sChar.m_cLocation.X) {
+				shootdirection[i] = 4;// shoot right
+			}
+			else shootdirection[i] = 2; //shoot left
 		}
-		else shootdirection[i] = 2; //shoot left
 	}
 
 	fooeyhappened2 = true;
