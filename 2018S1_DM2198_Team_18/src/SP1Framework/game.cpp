@@ -209,6 +209,8 @@ void render()
 			break;
 		case S_CHARACTERCREATION: renderCharacterCreation();
 			break;
+		case S_HEADQUARTERS: renderHQ();
+			break;
         case S_GAME: renderGame();
             break;
 		case S_CHOOSE: renderChooseCharacter();
