@@ -15,6 +15,7 @@ int money = 0;
 int shootdirection[128] = { 0, };
 int playerdirection[32] = { 0, };
 
+bool instruction = false;
 bool hq = true;
 bool inven = true;
 bool shop = false;
@@ -881,28 +882,26 @@ void renderStartMenu()
 void renderInstructions()
 {
 	COORD c;
+	int i = 0;
+	int a = 0;
 
-	c.Y = 9;
-	c.X = 45;
-	g_Console.writeToBuffer(c, "Instructions", 0x0B);
-	c.Y = 11;
-	c.X = 25;
-	g_Console.writeToBuffer(c, "- Use arrow keys to nagivate through the game.", 0x0B);
-	c.Y = 12;
-	c.X = 25;
-	g_Console.writeToBuffer(c, "- Space bar to use weapon.", 0x0B);
-	c.Y = 13;
-	c.X = 25;
-	g_Console.writeToBuffer(c, "- You will spawn at a headquarter, and enter the levels from there.", 0x0B);
-	c.Y = 14;
-	c.X = 25;
-	g_Console.writeToBuffer(c, "- Buy weapons using coin earned in headquarters.", 0x0B);
-	c.Y = 15;
-	c.X = 25;
-	g_Console.writeToBuffer(c, "- Collect the stars in all 4 levels to win the game.", 0x0B);
-	c.Y = 17;
-	c.X = 45;
-	g_Console.writeToBuffer(c, "Press return to start!", 0x0B);
+	if (instruction == true)
+	{
+		string Instructions;
+		ifstream instructionFile;
+
+		instructionFile.open("Instructions.txt");
+		if (instructionFile.is_open())
+		{
+			while (getline(instructionFile, Instructions))
+			{
+				c.X = 0;
+				c.Y = i;
+				i++;
+				g_Console.writeToBuffer(c, Instructions, 0x0B);
+			}
+		}
+	}
 }
 
 void renderCharacterCreation()
