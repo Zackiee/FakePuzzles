@@ -107,7 +107,6 @@ void init( void )
 
 	levels[0] = true;
 	weapons[0] = true;
-
 }
 
 //--------------------------------------------------------------
@@ -926,21 +925,18 @@ void renderInstructions()
 	int i = 0;
 	int a = 0;
 
-	if (instruction == true)
-	{
-		string Instructions;
-		ifstream instructionFile;
+	string instructions;
+	ifstream instructionFile;
 
-		instructionFile.open("Instructions.txt");
-		if (instructionFile.is_open())
+	instructionFile.open("Instructions.txt");
+	if (instructionFile.is_open())
+	{
+		while (getline(instructionFile, instructions))
 		{
-			while (getline(instructionFile, Instructions))
-			{
-				c.X = 0;
-				c.Y = i;
-				i++;
-				g_Console.writeToBuffer(c, Instructions, 0x0B);
-			}
+			c.X = 0;
+			c.Y = i;
+			i++;
+			g_Console.writeToBuffer(c, instructions, 0x0B);
 		}
 	}
 }
