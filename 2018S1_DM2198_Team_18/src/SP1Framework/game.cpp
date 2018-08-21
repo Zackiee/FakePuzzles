@@ -1,16 +1,17 @@
 // This is the main file for the game logic and function
 //
 //
+#pragma comment(lib,"irrKlang.lib")
 #include "game.h"
 #include "Framework\console.h"
 #include <iostream>
+#include <irrKlang.h>
 #include <iomanip>
 #include <sstream>
 #include <fstream>
 #include <string>
-
+using namespace irrklang;
 using namespace std;
-
 int money = 0;
 int shootdirection[128] = { 0, };
 int playerdirection[64] = { 0, };
@@ -19,7 +20,6 @@ bool inven = true;
 bool shop = false;
 bool hqSpawn = false;
 bool playerRespawn = false;
-
 bool nameSelect = false;
 bool characterSelect = false;
 
@@ -29,19 +29,8 @@ bool charArray[5] = { false };
 
 bool levels[5] = { false };
 bool gems[4] = { false };
-bool weapons[5] = { false };
-
-bool boughtPistol = true;
-bool boughtSmg = false;
-bool boughtRifle = false;
-bool boughtSniper = false;
-bool boughtMinigun = false;
-
-bool equipPistol = true;
-bool equipSmg = false;
-bool equipRifle = false;
-bool equipSniper = false;
-bool equipMinigun = false;
+bool equipWeapons[5] = { false };
+bool boughtWeapons[5] = { false };
 
 double  g_dElapsedTime;
 double  huggerbouncetime = g_dElapsedTime;
@@ -88,13 +77,13 @@ void init( void )
 		g_sGunner[i].m_cLocation.X = 5 + X;
 		g_sGunner[i].m_cLocation.Y = 16;
 	}
-	for (int i = 0; i < 128; i++) {
-		g_sBullets[i].m_cLocation.X = 0;
-		g_sBullets[i].m_cLocation.Y = 0;
-	}
 	for (int ps = 0; ps < 64; ps++) {
 		g_sPlayershots[ps].m_cLocation.X = 0;
 		g_sPlayershots[ps].m_cLocation.Y = 0;
+	}
+	for (int i = 0; i < 128; i++) {
+		g_sBullets[i].m_cLocation.X = 0;
+		g_sBullets[i].m_cLocation.Y = 0;
 	}
     g_sChar.m_bActive = true;
     // sets the width, height and the font name to use in the console
@@ -106,7 +95,8 @@ void init( void )
 	}
 
 	levels[0] = true;
-	weapons[0] = true;
+	equipWeapons[0] = true;
+	boughtWeapons[0] = true;
 }
 
 //--------------------------------------------------------------
@@ -244,6 +234,12 @@ void instructions()
 		g_eGameState = S_CHARACTERCREATION;
 	}
 }
+int audioPlay(int argc, const char** argv)
+{
+	ISoundEngine* sound = createIrrKlangDevice();
+	if (!sound)
+		return 0;
+}
 
 void characterCreation()
 {
@@ -361,12 +357,13 @@ void renderEntities()
 	for (int g = 0; g < 4; g++) {
 		g_Console.writeToBuffer(g_sGunner[g].m_cLocation, (char)83, charE_Color);
 	}
-	for (int i = 0; i < 128; i++) {
-		g_Console.writeToBuffer(g_sBullets[i].m_cLocation, (char)7, charE_Color);
-	}
 	// For player bullets
 	for (int ps = 0; ps < 64; ps++) {
 		g_Console.writeToBuffer(g_sPlayershots[ps].m_cLocation, (char)7, 0x06);
+	}
+	// For enemy bullets
+	for (int i = 0; i < 128; i++) {
+		g_Console.writeToBuffer(g_sBullets[i].m_cLocation, (char)7, charE_Color);
 	}
 }
 int b = 0, i = 0, n = 0, g = 0, h = 0, p = 0, ps = 0, shootbuffer = 0;
@@ -547,7 +544,7 @@ void playershoot()
 	}
 
 	if (g_abKeyPressed[K_SPACE] && playerdirection[ps] != 0) {
-		if (equipPistol && b >= 8 || equipSmg && b >= 4 || equipRifle && b >= 6 || equipMinigun && b >= 1 || equipSniper && b >= 101) { // Pistol fires around 3 times per second, Smg fires around 7 times per second, Assault rifle fires around 5 times per second, Minigun fires around 20 times per second
+		if (equipWeapons[0] && b >= 8 || equipWeapons[1] && b >= 4 || equipWeapons[2] && b >= 6 || equipWeapons[4] && b >= 1 || equipWeapons[3] && b >= 101) { // Pistol fires around 3 times per second, Smg fires around 7 times per second, Assault rifle fires around 5 times per second, Minigun fires around 20 times per second
 			g_sPlayershots[ps].m_cLocation.X = g_sChar.m_cLocation.X;
 			g_sPlayershots[ps].m_cLocation.Y = g_sChar.m_cLocation.Y;
 			ps++;
@@ -558,40 +555,40 @@ void playershoot()
 		ps = 0;
 
 	// Equipping weapons
-	if (g_abKeyPressed[K_1] && boughtPistol == true) {
-		equipPistol = true;
-		equipSmg = false;
-		equipRifle = false;
-		equipSniper = false;
-		equipMinigun = false;
+	if (g_abKeyPressed[K_1] && boughtWeapons[0] == true) {
+		equipWeapons[0] = true;
+		equipWeapons[1] = false;
+		equipWeapons[2] = false;
+		equipWeapons[3] = false;
+		equipWeapons[4] = false;
 	}
-	if (g_abKeyPressed[K_2] && boughtSmg == true) {
-		equipPistol = false;
-		equipSmg = true;
-		equipRifle = false;
-		equipSniper = false;
-		equipMinigun = false;
+	if (g_abKeyPressed[K_2] && boughtWeapons[1] == true) {
+		equipWeapons[0] = false;
+		equipWeapons[1] = true;
+		equipWeapons[2] = false;
+		equipWeapons[3] = false;
+		equipWeapons[4] = false;
 	}
-	if (g_abKeyPressed[K_3] && boughtRifle == true) {
-		equipPistol = false;
-		equipSmg = false;
-		equipRifle = true;
-		equipSniper = false;
-		equipMinigun = false;
+	if (g_abKeyPressed[K_3] && boughtWeapons[2] == true) {
+		equipWeapons[0] = false;
+		equipWeapons[1] = false;
+		equipWeapons[2] = true;
+		equipWeapons[3] = false;
+		equipWeapons[4] = false;
 	}
-	if (g_abKeyPressed[K_4] && boughtSniper == true) {
-		equipPistol = false;
-		equipSmg = false;
-		equipRifle = false;
-		equipSniper = true;
-		equipMinigun = false;
+	if (g_abKeyPressed[K_4] && boughtWeapons[3] == true) {
+		equipWeapons[0] = false;
+		equipWeapons[1] = false;
+		equipWeapons[2] = false;
+		equipWeapons[3] = true;
+		equipWeapons[4] = false;
 	}
-	if (g_abKeyPressed[K_5] && boughtMinigun == true) {
-		equipPistol = false;
-		equipSmg = false;
-		equipRifle = false;
-		equipSniper = false;
-		equipMinigun = true;
+	if (g_abKeyPressed[K_5] && boughtWeapons[4] == true) {
+		equipWeapons[0] = false;
+		equipWeapons[1] = false;
+		equipWeapons[2] = false;
+		equipWeapons[3] = false;
+		equipWeapons[4] = true;
 	}
 
 	playershot = false;
@@ -622,12 +619,12 @@ void playershoot()
 
 	playershot = true;
 
-	if (equipSniper) {
+	if (equipWeapons[3]) {
 		b++; // b stands for gun buffers, used for gun firing speeds
 		playerbulletshot = g_dElapsedTime + 0.02; // Sniper bullets fly around 50 tiles per second
 	}
 	else if (playershot) {
-		b++; // b stands for gun buffers, used for gun firing speeds
+		b++;
 		playerbulletshot = g_dElapsedTime + 0.05; // player bullets fly as fast as enemy bullets for now
 	}
 }
@@ -1319,19 +1316,19 @@ void renderMap()
 
 		if (g_abKeyPressed[K_2])
 		{
-			boughtSmg = true;
+			boughtWeapons[1] = true;
 		}
 		 if (g_abKeyPressed[K_3])
 		{
-			boughtRifle = true;
+			 boughtWeapons[2] = true;
 		}
 		if (g_abKeyPressed[K_4])
 		{
-			boughtSniper = true;
+			boughtWeapons[3] = true;
 		}
 		if (g_abKeyPressed[K_5])
 		{
-			boughtMinigun = true;
+			boughtWeapons[4] = true;
 		}
 	}
 
@@ -1360,7 +1357,7 @@ void renderMap()
 						inventory[a] = ' ';
 						break;
 					case '1':
-						if (boughtPistol == true)
+						if (boughtWeapons[0] == true)
 						{
 							inventory[a] = '1';
 						}
@@ -1370,7 +1367,7 @@ void renderMap()
 						}
 						break;
 					case '2':
-						if (boughtSmg == true)
+						if (boughtWeapons[1] == true)
 						{
 							inventory[a] = '2';
 						}
@@ -1380,7 +1377,7 @@ void renderMap()
 						}
 						break;
 					case '3':
-						if (boughtRifle == true)
+						if (boughtWeapons[2] == true)
 						{
 							inventory[a] = '3';
 						}
@@ -1390,7 +1387,7 @@ void renderMap()
 						}
 						break;
 					case '4':
-						if (boughtSniper == true)
+						if (boughtWeapons[3] == true)
 						{
 							inventory[a] = '4';
 						}
@@ -1400,7 +1397,7 @@ void renderMap()
 						}
 						break;
 					case '5':
-						if (boughtMinigun == true)
+						if (boughtWeapons[4] == true)
 						{
 							inventory[a] = '5';
 						}
@@ -1490,31 +1487,31 @@ void renderMap()
 			g_Console.writeToBuffer(c, names[4], 0x0F);
 		}
 
-		if (equipPistol == true)
+		if (equipWeapons[0] == true)
 		{
 			c.X = 4;
 			c.Y = 23;
 			g_Console.writeToBuffer(c, "Pistol", 0x0F);
 		}
-		if (equipSmg == true)
+		if (equipWeapons[1] == true)
 		{
 			c.X = 4;
 			c.Y = 23;
 			g_Console.writeToBuffer(c, "Smg", 0x0F);
 		}
-		if (equipRifle == true)
+		if (equipWeapons[2] == true)
 		{
 			c.X = 4;
 			c.Y = 23;
 			g_Console.writeToBuffer(c, "Rifle", 0x0F);
 		}
-		if (equipSniper == true)
+		if (equipWeapons[3] == true)
 		{
 			c.X = 4;
 			c.Y = 23;
 			g_Console.writeToBuffer(c, "Sniper", 0x0F);
 		}
-		if (equipMinigun == true)
+		if (equipWeapons[4] == true)
 		{
 			c.X = 4;
 			c.Y = 23;
