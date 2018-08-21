@@ -867,24 +867,21 @@ void renderInstructions()
 	COORD c;
 	int i = 0;
 	int a = 0;
+	string Instructions;
+	ifstream instructionFile;
 
-	if (instruction == true)
+	instructionFile.open("Instructions.txt");
+	if (instructionFile.is_open())
 	{
-		string Instructions;
-		ifstream instructionFile;
-
-		instructionFile.open("Instructions.txt");
-		if (instructionFile.is_open())
+		while (getline(instructionFile, Instructions))
 		{
-			while (getline(instructionFile, Instructions))
-			{
-				c.X = 0;
-				c.Y = i;
-				i++;
-				g_Console.writeToBuffer(c, Instructions, 0x0B);
-			}
+			c.X = 0;
+			c.Y = i;
+			i++;
+			g_Console.writeToBuffer(c, Instructions, 0x0B);
 		}
 	}
+	instructionFile.close();
 }
 
 void renderCharacterCreation()
