@@ -29,6 +29,7 @@ bool levelDgem = false;
 bool hqSpawn = false;
 bool playerRespawn = false;
 
+bool nameSelect = false;
 bool characterSelect = false;
 
 bool nameArray[5] = { false };
@@ -223,14 +224,14 @@ void render()
 void splashScreenWait()    // waits for time to pass in splash screen
 {
     if (g_dElapsedTime > 2) // wait for 3 seconds to switch to game mode, else do nothing
-        g_eGameState = S_CHOOSE;
+        g_eGameState = S_STARTMENU;
 }
 
 void startMenu()
 {
 	if (g_abKeyPressed[K_1])
 	{
-		g_eGameState = S_GAME;
+		g_eGameState = S_CHARACTERCREATION;
 	}
 
 	if (g_abKeyPressed[K_2])
@@ -253,50 +254,55 @@ void instructions()
 
 void characterCreation()
 {
-	if (g_abKeyPressed[K_1])
+	if (g_abKeyPressed[K_1] && characterSelect == false)
 	{
 		nameArray[0] = true;
 		nameArray[1] = false;
 		nameArray[2] = false;
 		nameArray[3] = false;
 		nameArray[4] = false;
+		nameSelect = true;
 	}
 
-	if (g_abKeyPressed[K_2])
+	if (g_abKeyPressed[K_2] && characterSelect == false)
 	{
 		nameArray[1] = true;
 		nameArray[0] = false;
 		nameArray[2] = false;
 		nameArray[3] = false;
 		nameArray[4] = false;
+		nameSelect = true;
 	}
 
-	if (g_abKeyPressed[K_3])
+	if (g_abKeyPressed[K_3] && characterSelect == false)
 	{
 		nameArray[2] = true;
 		nameArray[0] = false;
 		nameArray[1] = false;
 		nameArray[3] = false;
 		nameArray[4] = false;
+		nameSelect = true;
 	}
 
-	if (g_abKeyPressed[K_4])
+	if (g_abKeyPressed[K_4] && characterSelect == false)
 	{
 		nameArray[3] = true;
 		nameArray[0] = false;
 		nameArray[1] = false;
 		nameArray[2] = false;
 		nameArray[4] = false;
+		nameSelect = true;
 	}
-	if (g_abKeyPressed[K_5])
+	if (g_abKeyPressed[K_5] && characterSelect == false)
 	{
 		nameArray[4] = true;
 		nameArray[0] = false;
 		nameArray[1] = false;
 		nameArray[2] = false;
 		nameArray[3] = false;
+		nameSelect = true;
 	}
-	if (g_abKeyPressed[K_SPACE] && characterSelect == false)
+	if (g_abKeyPressed[K_SPACE] && nameSelect == true)
 	{
 		characterSelect = true;
 	}
@@ -350,7 +356,7 @@ void characterCreation()
 	}
 	if (g_abKeyPressed[K_SPACE] && characterSelect == true)
 	{
-
+		g_eGameState = S_GAME;
 	}
 }
 
@@ -388,9 +394,6 @@ void enemydata() {
 	if (bulletbouncetime > g_dElapsedTime)
 		return;
 
-	if (i >= 127) {
-		i = 0;
-	}
 
 	n = i;
 	for (i = 0; i < 128; i++) {
@@ -419,9 +422,8 @@ void enemydata() {
 	if (huggerbouncetime > g_dElapsedTime)
 		return;
 
-	up = 99.0; left = 99.0; down = 99.0; right = 99.0;
-
 	for (h = 0; h < 4; h++) {
+		up = 99.0; left = 99.0; down = 99.0; right = 99.0;
 		if (map[g_sHugger[h].m_cLocation.Y - 1][g_sHugger[h].m_cLocation.X] == ' ' && x[h] != 3) {
 			up = sqrt(pow(g_sChar.m_cLocation.X - (g_sHugger[h].m_cLocation.X), 2) + pow(g_sChar.m_cLocation.Y - (g_sHugger[h].m_cLocation.Y - 1), 2));
 		}
@@ -456,7 +458,7 @@ void enemydata() {
 	fooeyhappened1 = true;
 
 	if (fooeyhappened1)
-		huggerbouncetime = g_dElapsedTime + 0.2; // huggers act around five times per second
+		huggerbouncetime = g_dElapsedTime + 0.15; // huggers act around seven times per second
 
 
 	fooeyhappened2 = false;
@@ -512,6 +514,10 @@ void enemydata() {
 			}
 			else shootdirection[i] = 2; //shoot left
 		}
+	}
+
+	if (i >= 127) {
+		i = 0;
 	}
 
 	fooeyhappened2 = true;
@@ -1095,6 +1101,43 @@ void renderCharacterCreation()
 		c.X = 54;
 		c.Y = 11;
 		g_Console.writeToBuffer(c, names[4], 0x0B);
+	}
+	
+	if (charArray[0] == true)
+	{
+		g_sChar.m_cLocation.X = 49;
+		g_sChar.m_cLocation.Y = 21;
+		g_Console.writeToBuffer(g_sChar.m_cLocation, (char)1, 0x0F);
+	}
+	if (charArray[1] == true)
+	{
+		g_sChar.m_cLocation.X = 49;
+		g_sChar.m_cLocation.Y = 21;
+		g_Console.writeToBuffer(g_sChar.m_cLocation, (char)2, 0x0F);
+	}
+	if (charArray[2] == true)
+	{
+		g_sChar.m_cLocation.X = 49;
+		g_sChar.m_cLocation.Y = 21;
+		g_Console.writeToBuffer(g_sChar.m_cLocation, (char)3, 0x0F);
+	}
+	if (charArray[3] == true)
+	{
+		g_sChar.m_cLocation.X = 49;
+		g_sChar.m_cLocation.Y = 21;
+		g_Console.writeToBuffer(g_sChar.m_cLocation, (char)4, 0x0F);
+	}
+	if (charArray[4] == true)
+	{
+		g_sChar.m_cLocation.X = 49;
+		g_sChar.m_cLocation.Y = 21;
+		g_Console.writeToBuffer(g_sChar.m_cLocation, (char)5, 0x0F);
+	}
+	if (charArray[5] == true)
+	{
+		g_sChar.m_cLocation.X = 49;
+		g_sChar.m_cLocation.Y = 21;
+		g_Console.writeToBuffer(g_sChar.m_cLocation, (char)6, 0x0F);
 	}
 }
 
