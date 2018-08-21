@@ -1155,125 +1155,7 @@ void renderHQ()
 	int i = 0;
 	int a = 0;
 	//Render Headquarters
-	if (hq == true)
-	{
-		string headquarters;
-		ifstream headquartersFile;
-
-		headquartersFile.open("Headquarters.txt");
-		if (headquartersFile.is_open())
-		{
-			while (getline(headquartersFile, headquarters))
-			{
-				for (a = 0; a < headquarters.length(); a++)
-				{
-					switch (headquarters[a]) {
-					case '#':
-						headquarters[a] = 223;
-						break;
-					case '@':
-						headquarters[a] = 219;
-						break;
-					case '1':
-						if (levelAgem == true)
-						{
-							headquarters[a] = 251;
-						}
-						else
-						{
-							headquarters[a] = 'x';
-						}
-						break;
-					case '2':
-						if (levelBgem == true)
-						{
-							headquarters[a] = 251;
-						}
-						else
-						{
-							headquarters[a] = 'x';
-						}
-						break;
-					case '3':
-						if (levelCgem == true)
-						{
-							headquarters[a] = 251;
-						}
-						else
-						{
-							headquarters[a] = 'x';
-						}
-						break;
-					case '4':
-						if (levelDgem == true)
-						{
-							headquarters[a] = 251;
-						}
-						else
-						{
-							headquarters[a] = 'x';
-						}
-						break;
-					case 'u':
-						if (levelAgem == true)
-						{
-							headquarters[a] = '*';
-						}
-						else
-						{
-							headquarters[a] = 255;
-						}
-						break;
-					case 'i':
-						if (levelBgem == true)
-						{
-							headquarters[a] = '*';
-						}
-						else
-						{
-							headquarters[a] = 255;
-						}
-						break;
-					case 'o':
-						if (levelCgem == true)
-						{
-							headquarters[a] = '*';
-						}
-						else
-						{
-							headquarters[a] = 255;
-						}
-						break;
-					case 'p':
-						if (levelDgem == true)
-						{
-							headquarters[a] = '*';
-						}
-						else
-						{
-							headquarters[a] = 255;
-						}
-						break;
-					case '%':
-						if (levelAgem == true && levelBgem == true && levelCgem == true && levelDgem == true)
-						{
-							headquarters[a] = '%';
-						}
-						else
-						{
-							headquarters[a] = 255;
-						}
-					}
-					map[i][a] = headquarters[a];
-				}
-				c.X = 0;
-				c.Y = i;
-				i++;
-				g_Console.writeToBuffer(c, headquarters, 0x09);
-			}
-		}
-		headquartersFile.close();
-	}
+	
 }
 
 void renderMap()
@@ -1281,6 +1163,125 @@ void renderMap()
 	COORD c;
 	int i = 0;
 	int a = 0;
+	if (hq == true)
+		{
+			string headquarters;
+			ifstream headquartersFile;
+
+			headquartersFile.open("Headquarters.txt");
+			if (headquartersFile.is_open())
+			{
+				while (getline(headquartersFile, headquarters))
+				{
+					for (a = 0; a < headquarters.length(); a++)
+					{
+						switch (headquarters[a]) {
+						case '#':
+							headquarters[a] = 223;
+							break;
+						case '@':
+							headquarters[a] = 219;
+							break;
+						case '1':
+							if (levelAgem == true)
+							{
+								headquarters[a] = 251;
+							}
+							else
+							{
+								headquarters[a] = 'x';
+							}
+							break;
+						case '2':
+							if (levelBgem == true)
+							{
+								headquarters[a] = 251;
+							}
+							else
+							{
+								headquarters[a] = 'x';
+							}
+							break;
+						case '3':
+							if (levelCgem == true)
+							{
+								headquarters[a] = 251;
+							}
+							else
+							{
+								headquarters[a] = 'x';
+							}
+							break;
+						case '4':
+							if (levelDgem == true)
+							{
+								headquarters[a] = 251;
+							}
+							else
+							{
+								headquarters[a] = 'x';
+							}
+							break;
+						case 'u':
+							if (levelAgem == true)
+							{
+								headquarters[a] = '*';
+							}
+							else
+							{
+								headquarters[a] = 255;
+							}
+							break;
+						case 'i':
+							if (levelBgem == true)
+							{
+								headquarters[a] = '*';
+							}
+							else
+							{
+								headquarters[a] = 255;
+							}
+							break;
+						case 'o':
+							if (levelCgem == true)
+							{
+								headquarters[a] = '*';
+							}
+							else
+							{
+								headquarters[a] = 255;
+							}
+							break;
+						case 'p':
+							if (levelDgem == true)
+							{
+								headquarters[a] = '*';
+							}
+							else
+							{
+								headquarters[a] = 255;
+							}
+							break;
+						case '%':
+							if (levelAgem == true && levelBgem == true && levelCgem == true && levelDgem == true)
+							{
+								headquarters[a] = '%';
+							}
+							else
+							{
+								headquarters[a] = 255;
+							}
+						}
+						map[i][a] = headquarters[a];
+					}
+					c.X = 0;
+					c.Y = i;
+					i++;
+					g_Console.writeToBuffer(c, headquarters, 0x09);
+				}
+			}
+			headquartersFile.close();
+		}
 	//Render Level A
      if (levelA == true)
 	{
