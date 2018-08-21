@@ -17,6 +17,7 @@ enum EKEYS
 	K_RIGHT,
 	K_ESCAPE,
 	K_SPACE,
+	K_RETURN,
 	K_1,
 	K_2,
 	K_3,
@@ -31,12 +32,9 @@ enum EGAMESTATES
     S_SPLASHSCREEN,
 	S_STARTMENU,
 	S_INSTRUCTIONS,
-	S_HEADQUARTERS,
 	S_CHARACTERCREATION,
     S_GAME,
-	S_CHOOSE,
     S_COUNT
-	
 };
 
 // struct for the game character
@@ -63,7 +61,6 @@ void clearScreen();         // clears the current screen and draw from scratch
 void renderSplashScreen();  // renders the splash screen
 void renderStartMenu();
 void renderInstructions();
-void renderHQ();
 void renderCharacterCreation();
 void renderGame();          // renders the game stuff
 void renderMap();           // renders the map to the buffer first
@@ -73,7 +70,7 @@ void renderToScreen();      // dump the contents of the buffer to the screen, on
 void inventory();
 void enemydata();
 bool collision(char collider);
-void renderChooseCharacter();
+
 // define variables
 struct pistol
 {
