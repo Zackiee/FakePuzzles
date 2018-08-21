@@ -72,7 +72,7 @@ void init( void )
     g_eGameState = S_SPLASHSCREEN;
 
 	g_sChar.m_cLocation.X = 46;
-	g_sChar.m_cLocation.Y = 10;
+	g_sChar.m_cLocation.Y = 9;
 	for (int i = 0, X = 0; i < 4; i++, X += 2) {
 		g_sHugger[i].m_cLocation.X = 5 + X;
 		g_sHugger[i].m_cLocation.Y = 14;
