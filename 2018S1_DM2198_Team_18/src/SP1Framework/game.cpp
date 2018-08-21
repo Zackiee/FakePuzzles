@@ -13,7 +13,7 @@ using namespace std;
 
 int money = 0;
 int shootdirection[128] = { 0, };
-int playerdirection[32] = { 0, };
+int playerdirection[64] = { 0, };
 
 bool hq = true;
 bool inven = true;
@@ -36,6 +36,12 @@ bool charArray[5] = { false };
 bool nameSelect = false;
 bool characterSelect = false;
 
+bool boughtPistol = true;
+bool boughtSmg = false;
+bool boughtRifle = false;
+bool boughtSniper = false;
+bool boughtMinigun = false;
+
 bool equipPistol = true;
 bool equipSmg = false;
 bool equipRifle = false;
@@ -55,7 +61,7 @@ SGameChar   g_sChar;
 SGameChar   g_sHugger[4];
 SGameChar	g_sGunner[4];
 SGameChar	g_sBullets[128]; // consider enemy bullets as characters in the code
-SGameChar	g_sPlayershots[32]; // consider player bullets as characters as well
+SGameChar	g_sPlayershots[64]; // consider player bullets as characters as well
 EGAMESTATES g_eGameState = S_SPLASHSCREEN;
 double  g_dBounceTime; // this is to prevent key bouncing, so we won't trigger keypresses more than once
 
@@ -91,7 +97,7 @@ void init( void )
 		g_sBullets[i].m_cLocation.X = 0;
 		g_sBullets[i].m_cLocation.Y = 0;
 	}
-	for (int ps = 0; ps < 32; ps++) {
+	for (int ps = 0; ps < 64; ps++) {
 		g_sPlayershots[ps].m_cLocation.X = 0;
 		g_sPlayershots[ps].m_cLocation.Y = 0;
 	}
@@ -361,11 +367,11 @@ void renderEntities()
 		g_Console.writeToBuffer(g_sBullets[i].m_cLocation, (char)7, charE_Color);
 	}
 	// For player bullets
-	for (int ps = 0; ps < 32; ps++) {
+	for (int ps = 0; ps < 64; ps++) {
 		g_Console.writeToBuffer(g_sPlayershots[ps].m_cLocation, (char)7, 0x06);
 	}
 }
-int i = 0, n = 0, g = 0, h = 0, p = 0, ps = 0, shootbuffer = 0;
+int b = 0, i = 0, n = 0, g = 0, h = 0, p = 0, ps = 0, shootbuffer = 0;
 int x[4] = { 0, };
 bool fooeyhappened1, fooeyhappened2, fooeyhappened3, playershot;
 void enemydata() {
@@ -521,6 +527,8 @@ void enemydata() {
 
 void playershoot()
 {
+	playerdirection[ps] = 0;
+
 	if (g_abKeyPressed[K_UP]) {
 		playerdirection[ps] = 1; // shoot up
 	}
@@ -537,7 +545,55 @@ void playershoot()
 		if (ps - 1 >= 0) {
 			playerdirection[ps] = playerdirection[ps - 1];
 		}
-		else playerdirection[ps] = playerdirection[31];
+		else playerdirection[ps] = playerdirection[63];
+	}
+
+	if (g_abKeyPressed[K_SPACE] && playerdirection[ps] != 0) {
+		if (equipPistol && b >= 8 || equipSmg && b >= 4 || equipRifle && b >= 6 || equipMinigun && b >= 1 || equipSniper && b >= 101) { // Pistol fires around 3 times per second, Smg fires around 7 times per second, Assault rifle fires around 5 times per second, Minigun fires around 20 times per second
+			g_sPlayershots[ps].m_cLocation.X = g_sChar.m_cLocation.X;
+			g_sPlayershots[ps].m_cLocation.Y = g_sChar.m_cLocation.Y;
+			ps++;
+			b = 0;
+		}
+	}
+	if (ps >= 64)
+		ps = 0;
+
+	// Equipping weapons
+	if (g_abKeyPressed[K_1] && boughtSmg == true) {
+		equipPistol = false;
+		equipSmg = true;
+		equipRifle = false;
+		equipSniper = false;
+		equipMinigun = false;
+	}
+	if (g_abKeyPressed[K_2] && boughtRifle == true) {
+		equipPistol = false;
+		equipSmg = false;
+		equipRifle = true;
+		equipSniper = false;
+		equipMinigun = false;
+	}
+	if (g_abKeyPressed[K_3] && boughtSniper == true) {
+		equipPistol = false;
+		equipSmg = false;
+		equipRifle = false;
+		equipSniper = true;
+		equipMinigun = false;
+	}
+	if (g_abKeyPressed[K_4] && boughtMinigun == true) {
+		equipPistol = false;
+		equipSmg = false;
+		equipRifle = false;
+		equipSniper = false;
+		equipMinigun = true;
+	}
+	if (g_abKeyPressed[K_5] && boughtPistol == true) {
+		equipPistol = true;
+		equipSmg = false;
+		equipRifle = false;
+		equipSniper = false;
+		equipMinigun = false;
 	}
 
 	playershot = false;
@@ -545,17 +601,8 @@ void playershoot()
 	if (playerbulletshot > g_dElapsedTime)
 		return;
 
-	if (g_abKeyPressed[K_SPACE] && playerdirection[ps] != 0) {
-		g_sPlayershots[ps].m_cLocation.X = g_sChar.m_cLocation.X;
-		g_sPlayershots[ps].m_cLocation.Y = g_sChar.m_cLocation.Y;
-		ps++;
-		playerdirection[ps] = 0;
-	}
-	if (ps >= 32)
-		ps = 0;
-
 	p = ps;
-	for (ps = 0; ps < 32; ps++) {
+	for (ps = 0; ps < 64; ps++) {
 		if (playerdirection[ps] == 1) { // shoot up
 			g_sPlayershots[ps].m_cLocation.Y--;
 		}
@@ -577,8 +624,14 @@ void playershoot()
 
 	playershot = true;
 
-	if (playershot)
+	if (equipSniper) {
+		b++; // b stands for gun buffers, used for gun firing speeds
+		playerbulletshot = g_dElapsedTime + 0.02; // Sniper bullets fly around 50 tiles per second
+	}
+	else if (playershot) {
+		b++; // b stands for gun buffers, used for gun firing speeds
 		playerbulletshot = g_dElapsedTime + 0.05; // player bullets fly as fast as enemy bullets for now
+	}
 }
 
 void gameplay()            // gameplay logic
@@ -1311,19 +1364,19 @@ void renderMap()
 
 		if (g_abKeyPressed[K_1])
 		{
-			equipSmg = true;
+			boughtSmg = true;
 		}
 		 if (g_abKeyPressed[K_2])
 		{
-			equipRifle = true;
+			boughtRifle = true;
 		}
 		if (g_abKeyPressed[K_3])
 		{
-			equipSniper = true;
+			boughtSniper = true;
 		}
 		if (g_abKeyPressed[K_4])
 		{
-			equipMinigun = true;
+			boughtMinigun = true;
 		}
 	}
 
@@ -1352,7 +1405,7 @@ void renderMap()
 						inventory[a] = ' ';
 						break;
 					case '1':
-						if (equipPistol == true)
+						if (boughtPistol == true)
 						{
 							inventory[a] = 251;
 						}
@@ -1362,7 +1415,7 @@ void renderMap()
 						}
 						break;
 					case '2':
-						if (equipSmg == true)
+						if (boughtSmg == true)
 						{
 							inventory[a] = 251;
 						}
@@ -1372,7 +1425,7 @@ void renderMap()
 						}
 						break;
 					case '3':
-						if (equipRifle == true)
+						if (boughtRifle == true)
 						{
 							inventory[a] = 251;
 						}
@@ -1382,7 +1435,7 @@ void renderMap()
 						}
 						break;
 					case '4':
-						if (equipSniper == true)
+						if (boughtSniper == true)
 						{
 							inventory[a] = 251;
 						}
@@ -1392,7 +1445,7 @@ void renderMap()
 						}
 						break;
 					case '5':
-						if (equipMinigun == true)
+						if (boughtMinigun == true)
 						{
 							inventory[a] = 251;
 						}
