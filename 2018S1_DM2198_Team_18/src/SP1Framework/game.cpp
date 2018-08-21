@@ -35,7 +35,7 @@ bool characterSelect = false;
 bool nameArray[5] = { false };
 string names[5] = { "Enos", "Okin", "Ilya", "Setsuna", "Ilias" };
 
-bool charArray[6] = { false };
+bool charArray[5] = { false };
 
 bool firstChar = true;
 bool secondChar = false;
@@ -147,6 +147,7 @@ void getInput( void )
     g_abKeyPressed[K_RIGHT]  = isKeyPressed(VK_RIGHT);
     g_abKeyPressed[K_SPACE]  = isKeyPressed(VK_SPACE);
     g_abKeyPressed[K_ESCAPE] = isKeyPressed(VK_ESCAPE);
+	g_abKeyPressed[K_RETURN] = isKeyPressed(VK_RETURN);
 	g_abKeyPressed[K_1]	 = isKeyPressed(0x31);
 	g_abKeyPressed[K_2]	 = isKeyPressed(0X32);
 	g_abKeyPressed[K_3]	 = isKeyPressed(0x33);
@@ -212,8 +213,6 @@ void render()
 			break;
         case S_GAME: renderGame();
             break;
-		case S_CHOOSE: renderChooseCharacter();
-			break;
     }
     renderFramerate();  // renders debug information, frame rate, elapsed time, etc
     renderToScreen();   // dump the contents of the buffer to the screen, one frame worth of game
@@ -244,7 +243,7 @@ void startMenu()
 }
 void instructions()
 {
-	if (g_abKeyPressed[K_SPACE])
+	if (g_abKeyPressed[K_RETURN])
 	{
 		g_eGameState = S_CHARACTERCREATION;
 	}
@@ -252,107 +251,102 @@ void instructions()
 
 void characterCreation()
 {
-	if (g_abKeyPressed[K_1] && characterSelect == false)
+	if (g_abKeyPressed[K_1] && nameSelect == false)
 	{
 		nameArray[0] = true;
 		nameArray[1] = false;
 		nameArray[2] = false;
 		nameArray[3] = false;
 		nameArray[4] = false;
-		nameSelect = true;
 	}
 
-	if (g_abKeyPressed[K_2] && characterSelect == false)
+	if (g_abKeyPressed[K_2] && nameSelect == false)
 	{
 		nameArray[1] = true;
 		nameArray[0] = false;
 		nameArray[2] = false;
 		nameArray[3] = false;
 		nameArray[4] = false;
-		nameSelect = true;
 	}
 
-	if (g_abKeyPressed[K_3] && characterSelect == false)
+	if (g_abKeyPressed[K_3] && nameSelect == false)
 	{
 		nameArray[2] = true;
 		nameArray[0] = false;
 		nameArray[1] = false;
 		nameArray[3] = false;
 		nameArray[4] = false;
-		nameSelect = true;
 	}
 
-	if (g_abKeyPressed[K_4] && characterSelect == false)
+	if (g_abKeyPressed[K_4] && nameSelect == false)
 	{
 		nameArray[3] = true;
 		nameArray[0] = false;
 		nameArray[1] = false;
 		nameArray[2] = false;
 		nameArray[4] = false;
-		nameSelect = true;
 	}
-	if (g_abKeyPressed[K_5] && characterSelect == false)
+	if (g_abKeyPressed[K_5] && nameSelect == false)
 	{
 		nameArray[4] = true;
 		nameArray[0] = false;
 		nameArray[1] = false;
 		nameArray[2] = false;
 		nameArray[3] = false;
+	}
+	if (g_abKeyPressed[K_SPACE] && characterSelect == false)
+	{
 		nameSelect = true;
 	}
-	if (g_abKeyPressed[K_SPACE] && nameSelect == true)
+	if (g_abKeyPressed[K_1] && nameSelect == true)
 	{
+		charArray[0] = true;
+		charArray[1] = false;
+		charArray[2] = false;
+		charArray[3] = false;
+		charArray[4] = false;
 		characterSelect = true;
 	}
-	if (g_abKeyPressed[K_1] && characterSelect == true)
+
+	if (g_abKeyPressed[K_2] && nameSelect == true)
 	{
 		charArray[1] = true;
 		charArray[0] = false;
 		charArray[2] = false;
 		charArray[3] = false;
 		charArray[4] = false;
-		charArray[5] = false;
+		characterSelect = true;
 	}
 
-	if (g_abKeyPressed[K_2] && characterSelect == true)
+	if (g_abKeyPressed[K_3] && nameSelect == true)
 	{
 		charArray[2] = true;
 		charArray[0] = false;
 		charArray[1] = false;
 		charArray[3] = false;
 		charArray[4] = false;
-		charArray[5] = false;
+		characterSelect = true;
 	}
 
-	if (g_abKeyPressed[K_3] && characterSelect == true)
+	if (g_abKeyPressed[K_4] && nameSelect == true)
 	{
 		charArray[3] = true;
 		charArray[0] = false;
 		charArray[1] = false;
 		charArray[2] = false;
 		charArray[4] = false;
-		charArray[5] = false;
+		characterSelect = true;
 	}
-
-	if (g_abKeyPressed[K_4] && characterSelect == true)
+	if (g_abKeyPressed[K_5] && nameSelect == true)
 	{
 		charArray[4] = true;
 		charArray[0] = false;
 		charArray[1] = false;
 		charArray[2] = false;
 		charArray[3] = false;
-		charArray[5] = false;
+		characterSelect = true;
 	}
-	if (g_abKeyPressed[K_5] && characterSelect == true)
-	{
-		charArray[5] = true;
-		charArray[0] = false;
-		charArray[1] = false;
-		charArray[2] = false;
-		charArray[3] = false;
-		charArray[4] = false;
-	}
-	if (g_abKeyPressed[K_SPACE] && characterSelect == true)
+	if (g_abKeyPressed[K_SPACE] && nameSelect == true && characterSelect == true)
 	{
 		g_eGameState = S_GAME;
 	}
@@ -847,130 +841,9 @@ void renderSplashScreen()  // renders the splash screen
 	}
 	splashscreenFile.close();
 }
-void renderChooseCharacter()
-{
-	COORD c;
-	c.Y = 15;
-	c.X = 50;
-	g_Console.writeToBuffer(c, (char)1, 0x0F);
-	c.Y = 17;
-	c.X = 30;
-	g_Console.writeToBuffer(c, "(1)", 0x08);
-	c.Y = 17;
-	c.X = 43;
-	g_Console.writeToBuffer(c, "(2)", 0x08);
-	c.Y = 17;
-	c.X = 55;
-	g_Console.writeToBuffer(c, "(3)", 0x08);
-	c.Y = 17;
-	c.X = 66;
-	g_Console.writeToBuffer(c, "(4)", 0x08);
-	c.Y = 17;
-	c.X = 77;
-	g_Console.writeToBuffer(c, "(ESCAPE)", 0x08);
-	if (g_abKeyPressed[K_1])
-	{
-		fourthChar = true;
-		firstChar = false;
-		secondChar = false;
-		thirdChar = false;
-		fifthChar = false;
-		sixthChar = false;
-	}
-	else if (g_abKeyPressed[K_2])
-	{
-		secondChar = true;
-		thirdChar = false;
-		sixthChar = false;
-		firstChar = false;
-		fourthChar = false;
-		fifthChar = false;
-	}
-	else if (g_abKeyPressed[K_3])
-	{
-		fifthChar = true;
-		firstChar = false;
-		secondChar = false;
-		sixthChar = false;
-		thirdChar = false;
-		fourthChar = false;
-	}
-	else if (g_abKeyPressed[K_4])
-	{
-		thirdChar = true;
-		secondChar = false;
-		sixthChar = false;
-		fifthChar = false;
-		firstChar = false;
-		fourthChar = false;
-	}
-	else if (g_abKeyPressed[K_ESCAPE])
-	{
-		sixthChar = true;
-		fifthChar = false;
-		fourthChar = false;
-		thirdChar = false;
-		secondChar = false;
-		firstChar = false;
-	}
-	c.Y = 13;
-	c.X = 25;
-	g_Console.writeToBuffer(c, "Press any of the numbers to choose a character form!", 0x01);
-	c.Y = 15;
-	c.X = 25;
-	g_Console.writeToBuffer(c, "After choosing, smash the SPACE button to start your journey!", 0x0A);
-	if (firstChar == true)
-	{
-		g_Console.writeToBuffer(g_sChar.m_cLocation, (char)1, 0x0F);
-		if (g_abKeyPressed[K_SPACE])
-		{
-			g_eGameState = S_GAME;
-		}
-	}
-	else if (secondChar == true)
-	{
-		g_Console.writeToBuffer(g_sChar.m_cLocation, (char)2, 0x0F);
-		if (g_abKeyPressed[K_SPACE])
-		{
-			g_eGameState = S_GAME;
-		}
-	}
-	else if (thirdChar == true)
-	{
-		g_Console.writeToBuffer(g_sChar.m_cLocation, (char)3, 0x0C);
-		if (g_abKeyPressed[K_SPACE])
-		{
-			g_eGameState = S_GAME;
-		}
-	}
-	else if (fourthChar == true)
-	{
-		g_Console.writeToBuffer(g_sChar.m_cLocation, (char)4, 0x09);
-		if (g_abKeyPressed[K_SPACE])
-		{
-			g_eGameState = S_GAME;
-		}
-	}
-	else if (fifthChar == true)
-	{
-		g_Console.writeToBuffer(g_sChar.m_cLocation, (char)5, 0x0A);
-		if (g_abKeyPressed[K_SPACE])
-		{
-			g_eGameState = S_GAME;
-		}
-	}
-	else if (sixthChar == true)
-	{
-		g_Console.writeToBuffer(g_sChar.m_cLocation, (char)6, 0x0E);
-		if (g_abKeyPressed[K_SPACE])
-		{
-			g_eGameState = S_GAME;
-		}
-	}
-}
+
 void renderStartMenu()
 {
-	renderChooseCharacter();
 	COORD c;
 	int i = 0;
 	int a = 0;
@@ -978,7 +851,6 @@ void renderStartMenu()
 	string menu;
 	ifstream menuFile;
 	
-
 	menuFile.open("MainMenu.txt");
 	if (menuFile.is_open())
 	{
@@ -1025,7 +897,7 @@ void renderInstructions()
 	g_Console.writeToBuffer(c, "- Collect the stars in all 4 levels to win the game.", 0x0B);
 	c.Y = 17;
 	c.X = 45;
-	g_Console.writeToBuffer(c, "Press start!", 0x0B);
+	g_Console.writeToBuffer(c, "Press return to start!", 0x0B);
 }
 
 void renderCharacterCreation()
@@ -1105,37 +977,31 @@ void renderCharacterCreation()
 	{
 		g_sChar.m_cLocation.X = 49;
 		g_sChar.m_cLocation.Y = 21;
-		g_Console.writeToBuffer(g_sChar.m_cLocation, (char)1, 0x0F);
+		g_Console.writeToBuffer(g_sChar.m_cLocation, (char)2, 0x0F);
 	}
 	if (charArray[1] == true)
 	{
 		g_sChar.m_cLocation.X = 49;
 		g_sChar.m_cLocation.Y = 21;
-		g_Console.writeToBuffer(g_sChar.m_cLocation, (char)2, 0x0F);
+		g_Console.writeToBuffer(g_sChar.m_cLocation, (char)3, 0x0C);
 	}
 	if (charArray[2] == true)
 	{
 		g_sChar.m_cLocation.X = 49;
 		g_sChar.m_cLocation.Y = 21;
-		g_Console.writeToBuffer(g_sChar.m_cLocation, (char)3, 0x0F);
+		g_Console.writeToBuffer(g_sChar.m_cLocation, (char)4, 0x09);
 	}
 	if (charArray[3] == true)
 	{
 		g_sChar.m_cLocation.X = 49;
 		g_sChar.m_cLocation.Y = 21;
-		g_Console.writeToBuffer(g_sChar.m_cLocation, (char)4, 0x0F);
+		g_Console.writeToBuffer(g_sChar.m_cLocation, (char)5, 0x0A);
 	}
 	if (charArray[4] == true)
 	{
 		g_sChar.m_cLocation.X = 49;
 		g_sChar.m_cLocation.Y = 21;
-		g_Console.writeToBuffer(g_sChar.m_cLocation, (char)5, 0x0F);
-	}
-	if (charArray[5] == true)
-	{
-		g_sChar.m_cLocation.X = 49;
-		g_sChar.m_cLocation.Y = 21;
-		g_Console.writeToBuffer(g_sChar.m_cLocation, (char)6, 0x0F);
+		g_Console.writeToBuffer(g_sChar.m_cLocation, (char)6, 0x0E);
 	}
 }
 
@@ -1571,72 +1437,63 @@ void renderCharacter()
 
 	if (collision('q'))
 	{
-		secondChar = true;
-		firstChar = false;
-		thirdChar = false;
-		fourthChar = false;
-		fifthChar = false;
-		sixthChar = false;
+		charArray[0] = true;
+		charArray[1] = false;
+		charArray[2] = false;
+		charArray[3] = false;
+		charArray[4] = false;
 	}
 	if (collision('w'))
 	{
-		thirdChar = true;
-		firstChar = false;
-		secondChar = false;
-		fourthChar = false;
-		fifthChar = false;
-		sixthChar = false;
+		charArray[1] = true;
+		charArray[0] = false;
+		charArray[2] = false;
+		charArray[3] = false;
+		charArray[4] = false;
 	}
 	if (collision('e'))
 	{
-		fourthChar = true;
-		firstChar = false;
-		secondChar = false;
-		thirdChar = false;
-		fifthChar = false;
-		sixthChar = false;
+		charArray[2] = true;
+		charArray[0] = false;
+		charArray[1] = false;
+		charArray[3] = false;
+		charArray[4] = false;
 	}
 	if (collision('r'))
 	{
-		fifthChar = true;
-		firstChar = false;
-		secondChar = false;
-		thirdChar = false;
-		fourthChar = false;
-		sixthChar = false;
+		charArray[3] = true;
+		charArray[0] = false;
+		charArray[1] = false;
+		charArray[2] = false;
+		charArray[4] = false;
 	}
 	if (collision('t'))
 	{
-		sixthChar = true;
-		firstChar = false;
-		secondChar = false;
-		thirdChar = false;
-		fourthChar = false;
-		fifthChar = false;
+		charArray[4] = true;
+		charArray[0] = false;
+		charArray[1] = false;
+		charArray[2] = false;
+		charArray[3] = false;
 	}
 
 	//Characters' rendering
-	if (firstChar == true)
-	{
-		g_Console.writeToBuffer(g_sChar.m_cLocation, (char)1, 0x0F);
-	}
-	else if (secondChar == true)
+	if (charArray[0] == true)
 	{
 		g_Console.writeToBuffer(g_sChar.m_cLocation, (char)2, 0x0F);
 	}
-	else if (thirdChar == true)
+	if (charArray[1] == true)
 	{
 		g_Console.writeToBuffer(g_sChar.m_cLocation, (char)3, 0x0C);
 	}
-	else if (fourthChar == true)
+	if (charArray[2] == true)
 	{
 		g_Console.writeToBuffer(g_sChar.m_cLocation, (char)4, 0x09);
 	}
-	else if (fifthChar == true)
+	if (charArray[3] == true)
 	{
 		g_Console.writeToBuffer(g_sChar.m_cLocation, (char)5, 0x0A);
 	}
-	else if (sixthChar == true)
+	if (charArray[4] == true)
 	{
 		g_Console.writeToBuffer(g_sChar.m_cLocation, (char)6, 0x0E);
 	}

@@ -17,6 +17,7 @@ enum EKEYS
 	K_RIGHT,
 	K_ESCAPE,
 	K_SPACE,
+	K_RETURN,
 	K_1,
 	K_2,
 	K_3,
@@ -34,7 +35,6 @@ enum EGAMESTATES
 	S_HEADQUARTERS,
 	S_CHARACTERCREATION,
     S_GAME,
-	S_CHOOSE,
     S_COUNT
 	
 };
@@ -73,7 +73,7 @@ void renderToScreen();      // dump the contents of the buffer to the screen, on
 void inventory();
 void enemydata();
 bool collision(char collider);
-void renderChooseCharacter();
+
 // define variables
 struct pistol
 {
