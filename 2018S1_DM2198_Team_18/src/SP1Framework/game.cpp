@@ -30,20 +30,12 @@ bool levelDgem = false;
 bool hqSpawn = false;
 bool playerRespawn = false;
 
-bool nameSelect = false;
-bool characterSelect = false;
-
-bool nameArray[5] = { false };
 string names[5] = { "Enos", "Okin", "Ilya", "Setsuna", "Ilias" };
-
+bool nameArray[5] = { false };
 bool charArray[5] = { false };
 
-bool firstChar = true;
-bool secondChar = false;
-bool thirdChar = false;
-bool fourthChar = false;
-bool fifthChar = false;
-bool sixthChar = false;
+bool nameSelect = false;
+bool characterSelect = false;
 
 bool equipPistol = true;
 bool equipSmg = false;
@@ -530,12 +522,7 @@ void enemydata() {
 
 void playershoot()
 {
-	playershot = false;
-
-	if (playerbulletshot > g_dElapsedTime)
-		return;
-
-	else if (g_abKeyPressed[K_UP]) {
+	if (g_abKeyPressed[K_UP]) {
 		playerdirection[ps] = 1; // shoot up
 	}
 	else if (g_abKeyPressed[K_DOWN]) {
@@ -554,15 +541,19 @@ void playershoot()
 		else playerdirection[ps] = playerdirection[31];
 	}
 
+	playershot = false;
+
+	if (playerbulletshot > g_dElapsedTime)
+		return;
+
 	if (g_abKeyPressed[K_SPACE] && playerdirection[ps] != 0) {
 		g_sPlayershots[ps].m_cLocation.X = g_sChar.m_cLocation.X;
 		g_sPlayershots[ps].m_cLocation.Y = g_sChar.m_cLocation.Y;
 		ps++;
 		playerdirection[ps] = 0;
-		shootbuffer = 0;
-		if (ps >= 32)
-			ps = 0;
 	}
+	if (ps >= 32)
+		ps = 0;
 
 	p = ps;
 	for (ps = 0; ps < 32; ps++) {
@@ -581,7 +572,6 @@ void playershoot()
 		if (g_sPlayershots[ps].m_cLocation.X >= 110 || g_sPlayershots[ps].m_cLocation.X <= 0 || g_sPlayershots[ps].m_cLocation.Y >= 30 || g_sPlayershots[ps].m_cLocation.Y <= 0) {
 			g_sPlayershots[ps].m_cLocation.X = 0;
 			g_sPlayershots[ps].m_cLocation.Y = 0;
-			playerdirection[ps] = 0;
 		}
 	}
 	ps = p;
@@ -979,33 +969,33 @@ void renderCharacterCreation()
 	
 	if (charArray[0] == true)
 	{
-		g_sChar.m_cLocation.X = 49;
-		g_sChar.m_cLocation.Y = 21;
-		g_Console.writeToBuffer(g_sChar.m_cLocation, (char)2, 0x0F);
+		c.X = 49;
+		c.Y = 21;
+		g_Console.writeToBuffer(c, (char)2, 0x0F);
 	}
 	if (charArray[1] == true)
 	{
-		g_sChar.m_cLocation.X = 49;
-		g_sChar.m_cLocation.Y = 21;
-		g_Console.writeToBuffer(g_sChar.m_cLocation, (char)3, 0x0C);
+		c.X = 49;
+		c.Y = 21;
+		g_Console.writeToBuffer(c, (char)3, 0x0C);
 	}
 	if (charArray[2] == true)
 	{
-		g_sChar.m_cLocation.X = 49;
-		g_sChar.m_cLocation.Y = 21;
-		g_Console.writeToBuffer(g_sChar.m_cLocation, (char)4, 0x09);
+		c.X = 49;
+		c.Y = 21;
+		g_Console.writeToBuffer(c, (char)4, 0x09);
 	}
 	if (charArray[3] == true)
 	{
-		g_sChar.m_cLocation.X = 49;
-		g_sChar.m_cLocation.Y = 21;
-		g_Console.writeToBuffer(g_sChar.m_cLocation, (char)5, 0x0A);
+		c.X = 49;
+		c.Y = 21;
+		g_Console.writeToBuffer(c, (char)5, 0x0A);
 	}
 	if (charArray[4] == true)
 	{
-		g_sChar.m_cLocation.X = 49;
-		g_sChar.m_cLocation.Y = 21;
-		g_Console.writeToBuffer(g_sChar.m_cLocation, (char)6, 0x0E);
+		c.X = 49;
+		c.Y = 21;
+		g_Console.writeToBuffer(c, (char)6, 0x0E);
 	}
 }
 
