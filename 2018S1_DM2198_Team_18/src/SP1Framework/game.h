@@ -63,7 +63,6 @@ void clearScreen();         // clears the current screen and draw from scratch
 void renderSplashScreen();  // renders the splash screen
 void renderStartMenu();
 void renderInstructions();
-void renderHQ();
 void renderCharacterCreation();
 void renderGame();          // renders the game stuff
 void renderMap();           // renders the map to the buffer first

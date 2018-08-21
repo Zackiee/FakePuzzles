@@ -210,8 +210,6 @@ void render()
 			break;
 		case S_CHARACTERCREATION: renderCharacterCreation();
 			break;
-		case S_HEADQUARTERS: renderHQ();
-			break;
         case S_GAME: renderGame();
             break;
 		case S_CHOOSE: renderChooseCharacter();
@@ -1155,15 +1153,6 @@ void renderGame()
     renderCharacter();  // renders the character into the buffer
 	renderEntities();
 	playershoot();
-}
-
-void renderHQ()
-{
-	COORD c;
-	int i = 0;
-	int a = 0;
-	//Render Headquarters
-	
 }
 
 void renderMap()
