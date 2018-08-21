@@ -867,18 +867,21 @@ void renderInstructions()
 	int i = 0;
 	int a = 0;
 
-	string Instructions;
-	ifstream instructionFile;
-	
-	instructionFile.open("Instructions.txt");
-	if (instructionFile.is_open())
+	if (instruction == true)
 	{
-		while (getline(instructionFile, Instructions))
+		string Instructions;
+		ifstream instructionFile;
+
+		instructionFile.open("Instructions.txt");
+		if (instructionFile.is_open())
 		{
-			c.X = 0;
-			c.Y = i;
-			i++;
-			g_Console.writeToBuffer(c, Instructions, 0x0B);
+			while (getline(instructionFile, Instructions))
+			{
+				c.X = 0;
+				c.Y = i;
+				i++;
+				g_Console.writeToBuffer(c, Instructions, 0x0B);
+			}
 		}
 	}
 }
