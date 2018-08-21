@@ -15,26 +15,21 @@ int money = 0;
 int shootdirection[128] = { 0, };
 int playerdirection[64] = { 0, };
 
-bool hq = true;
 bool inven = true;
 bool shop = false;
-bool levelA = false;
-bool levelB = false;
-bool levelC = false;
-bool levelD = false;
-bool levelAgem = false;
-bool levelBgem = false;
-bool levelCgem = false;
-bool levelDgem = false;
 bool hqSpawn = false;
 bool playerRespawn = false;
+
+bool nameSelect = false;
+bool characterSelect = false;
 
 string names[5] = { "Enos", "Okin", "Ilya", "Setsuna", "Ilias" };
 bool nameArray[5] = { false };
 bool charArray[5] = { false };
 
-bool nameSelect = false;
-bool characterSelect = false;
+bool levels[5] = { false };
+bool gems[4] = { false };
+bool weapons[5] = { false };
 
 bool boughtPistol = true;
 bool boughtSmg = false;
@@ -109,6 +104,10 @@ void init( void )
 	{
 		map[i] = new char[g_Console.getConsoleSize().X];
 	}
+
+	levels[0] = true;
+	weapons[0] = true;
+
 }
 
 //--------------------------------------------------------------
@@ -709,64 +708,64 @@ void moveCharacter()
 		g_bQuitGame = true;
 	}
 
-	if (hq == true)
+	if (levels[0] == true)
 	{
 		hqSpawn = false;
 
 		if (collision('a'))
 		{
-			hq = false;
-			levelA = true;
+			levels[0] = false;
+			levels[1] = true;
 			playerRespawn = true;
 		}
 		else if (collision('b'))
 		{
-			hq = false;
-			levelB = true;
+			levels[0] = false;
+			levels[2] = true;
 			playerRespawn = true;
 		}
 		else if (collision('c'))
 		{
-			hq = false;
-			levelC = true;
+			levels[0] = false;
+			levels[3] = true;
 			playerRespawn = true;
 		}
 		else if (collision('d'))
 		{
-			hq = false;
-			levelD = true;
+			levels[0] = false;
+			levels[4] = true;
 			playerRespawn = true;
 		}
 		else if (collision('%'))
 		{
-			hq = false;
+			levels[0] = false;
 			inven = false;
 		}
 	}
 
-	else if (levelA == true)
+	else if (levels[1] == true)
 	{
 		playerRespawn = false;
 
 		if (collision('%'))
 		{
-			levelA = false;
-			hq = true;
+			levels[1] = false;
+			levels[0] = true;
 			hqSpawn = true;
 		}
 		if (collision('*'))
 		{
-			levelAgem = true;
+			gems[0] = true;
 		}
 	}
-	else if (levelB == true)
+	else if (levels[2] == true)
 	{
 		playerRespawn = false;
 
 		if (collision('%'))
 		{
-			levelB = false;
-			hq = true;
+			levels[2] = false;
+			levels[0] = true;
 			hqSpawn = true;
 		}
 		if (collision('&'))
@@ -776,17 +775,17 @@ void moveCharacter()
 		}
 		if (collision('*'))
 		{
-			levelBgem = true;
+			gems[1] = true;
 		}
 	}
-	else if (levelC == true)
+	else if (levels[3] == true)
 	{
 		playerRespawn = false;
 
 		if (collision('%'))
 		{
-			levelC = false;
-			hq = true;
+			levels[3] = false;
+			levels[0] = true;
 			hqSpawn = true;
 		}
 		if (collision('&'))
@@ -796,17 +795,17 @@ void moveCharacter()
 		}
 		if (collision('*'))
 		{
-			levelCgem = true;
+			gems[2] = true;
 		}
 	}
-	else if (levelD == true)
+	else if (levels[4] == true)
 	{
 		playerRespawn = false;
 
 		if (collision('%'))
 		{
-			levelD = false;
-			hq = true;
+			levels[4] = false;
+			levels[0] = true;
 			hqSpawn = true;
 		}
 		if (collision('&'))
@@ -816,7 +815,7 @@ void moveCharacter()
 		}
 		if (collision('*'))
 		{
-			levelDgem = true;
+			gems[3] = true;
 		}
 	}
 	if (hqSpawn == true)
@@ -924,28 +923,26 @@ void renderStartMenu()
 void renderInstructions()
 {
 	COORD c;
+	int i = 0;
+	int a = 0;
 
-	c.Y = 9;
-	c.X = 45;
-	g_Console.writeToBuffer(c, "Instructions", 0x0B);
-	c.Y = 11;
-	c.X = 25;
-	g_Console.writeToBuffer(c, "- Use arrow keys to nagivate through the game.", 0x0B);
-	c.Y = 12;
-	c.X = 25;
-	g_Console.writeToBuffer(c, "- Space bar to use weapon.", 0x0B);
-	c.Y = 13;
-	c.X = 25;
-	g_Console.writeToBuffer(c, "- You will spawn at a headquarter, and enter the levels from there.", 0x0B);
-	c.Y = 14;
-	c.X = 25;
-	g_Console.writeToBuffer(c, "- Buy weapons using coin earned in headquarters.", 0x0B);
-	c.Y = 15;
-	c.X = 25;
-	g_Console.writeToBuffer(c, "- Collect the stars in all 4 levels to win the game.", 0x0B);
-	c.Y = 17;
-	c.X = 45;
-	g_Console.writeToBuffer(c, "Press return to start!", 0x0B);
+	if (instruction == true)
+	{
+		string Instructions;
+		ifstream instructionFile;
+
+		instructionFile.open("Instructions.txt");
+		if (instructionFile.is_open())
+		{
+			while (getline(instructionFile, Instructions))
+			{
+				c.X = 0;
+				c.Y = i;
+				i++;
+				g_Console.writeToBuffer(c, Instructions, 0x0B);
+			}
+		}
+	}
 }
 
 void renderCharacterCreation()
@@ -1024,31 +1021,31 @@ void renderCharacterCreation()
 	if (charArray[0] == true)
 	{
 		c.X = 49;
-		c.Y = 21;
+		c.Y = 22;
 		g_Console.writeToBuffer(c, (char)2, 0x0F);
 	}
 	if (charArray[1] == true)
 	{
 		c.X = 49;
-		c.Y = 21;
+		c.Y = 22;
 		g_Console.writeToBuffer(c, (char)3, 0x0C);
 	}
 	if (charArray[2] == true)
 	{
 		c.X = 49;
-		c.Y = 21;
+		c.Y = 22;
 		g_Console.writeToBuffer(c, (char)4, 0x09);
 	}
 	if (charArray[3] == true)
 	{
 		c.X = 49;
-		c.Y = 21;
+		c.Y = 22;
 		g_Console.writeToBuffer(c, (char)5, 0x0A);
 	}
 	if (charArray[4] == true)
 	{
 		c.X = 49;
-		c.Y = 21;
+		c.Y = 22;
 		g_Console.writeToBuffer(c, (char)6, 0x0E);
 	}
 }
@@ -1066,7 +1063,7 @@ void renderMap()
 	COORD c;
 	int i = 0;
 	int a = 0;
-	if (hq == true)
+	if (levels[0] == true)
 		{
 			string headquarters;
 			ifstream headquartersFile;
@@ -1086,7 +1083,7 @@ void renderMap()
 							headquarters[a] = 219;
 							break;
 						case '1':
-							if (levelAgem == true)
+							if (gems[0] == true)
 							{
 								headquarters[a] = 251;
 							}
@@ -1096,7 +1093,7 @@ void renderMap()
 							}
 							break;
 						case '2':
-							if (levelBgem == true)
+							if (gems[1] == true)
 							{
 								headquarters[a] = 251;
 							}
@@ -1106,7 +1103,7 @@ void renderMap()
 							}
 							break;
 						case '3':
-							if (levelCgem == true)
+							if (gems[2] == true)
 							{
 								headquarters[a] = 251;
 							}
@@ -1116,7 +1113,7 @@ void renderMap()
 							}
 							break;
 						case '4':
-							if (levelDgem == true)
+							if (gems[3] == true)
 							{
 								headquarters[a] = 251;
 							}
@@ -1126,7 +1123,7 @@ void renderMap()
 							}
 							break;
 						case 'u':
-							if (levelAgem == true)
+							if (gems[0] == true)
 							{
 								headquarters[a] = '*';
 							}
@@ -1136,7 +1133,7 @@ void renderMap()
 							}
 							break;
 						case 'i':
-							if (levelBgem == true)
+							if (gems[1] == true)
 							{
 								headquarters[a] = '*';
 							}
@@ -1146,7 +1143,7 @@ void renderMap()
 							}
 							break;
 						case 'o':
-							if (levelCgem == true)
+							if (gems[2] == true)
 							{
 								headquarters[a] = '*';
 							}
@@ -1156,7 +1153,7 @@ void renderMap()
 							}
 							break;
 						case 'p':
-							if (levelDgem == true)
+							if (gems[3] == true)
 							{
 								headquarters[a] = '*';
 							}
@@ -1166,7 +1163,7 @@ void renderMap()
 							}
 							break;
 						case '%':
-							if (levelAgem == true && levelBgem == true && levelCgem == true && levelDgem == true)
+							if (gems[0] == true && gems[1] == true && gems[2] == true && gems[3] == true)
 							{
 								headquarters[a] = '%';
 							}
@@ -1186,7 +1183,7 @@ void renderMap()
 			headquartersFile.close();
 		}
 	//Render Level A
-     if (levelA == true)
+     if (levels[1] == true)
 	{
 		string level1;
 		ifstream level1File;
@@ -1207,7 +1204,7 @@ void renderMap()
 						level1[a] = 219;
 						break;
 					case '*':
-						if (levelAgem == true)
+						if (gems[0] == true)
 						{
 							level1[a] = 255;
 						}
@@ -1223,7 +1220,7 @@ void renderMap()
 		level1File.close();
 	}
 	//Render Level B
-	else if (levelB == true)
+	else if (levels[2] == true)
 	{
 		string level2;
 		ifstream level2File;
@@ -1243,7 +1240,7 @@ void renderMap()
 						level2[a] = 219;
 						break;
 					case '*':
-						if (levelBgem == true)
+						if (gems[1] == true)
 						{
 							level2[a] = 255;
 						}
@@ -1259,7 +1256,7 @@ void renderMap()
 		level2File.close();
 	}
 	//Render Level C
-	else if (levelC == true)
+	else if (levels[3] == true)
 	{
 		string level3;
 		ifstream level3File;
@@ -1279,7 +1276,7 @@ void renderMap()
 						level3[a] = 219;
 						break;
 					case '*':
-						if (levelCgem == true)
+						if (gems[2] == true)
 						{
 							level3[a] = 255;
 						}
@@ -1295,7 +1292,7 @@ void renderMap()
 		level3File.close();
 	}
 	//Render Level D
-	else if (levelD == true)
+	else if (levels[4] == true)
 	{
 		string level4;
 		ifstream level4File;
@@ -1315,7 +1312,7 @@ void renderMap()
 						level4[a] = 219;
 						break;
 					case '*':
-						if (levelDgem == true)
+						if (gems[3] == true)
 						{
 							level4[a] = 255;
 						}
@@ -1548,7 +1545,6 @@ bool collision(char collider)
 	}
 	return collided;
 }
-
 
 void renderFramerate()
 {

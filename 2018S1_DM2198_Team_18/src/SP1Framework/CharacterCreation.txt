@@ -10,6 +10,7 @@
                                 *            [5] Ilias            *
                                 *                                 *
                                 *     Name selected :             *
+                                *     Press Space to Confirm      *
                                 *_________________________________*
                                 *                                 *
                                 *      Choose your Character      *
