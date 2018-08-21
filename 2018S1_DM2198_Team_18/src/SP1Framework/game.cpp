@@ -10,8 +10,10 @@
 #include <sstream>
 #include <fstream>
 #include <string>
+
 //using namespace irrklang;
 using namespace std;
+
 int money = 0;
 int shootdirection[128] = { 0, };
 int playerdirection[64] = { 0, };
@@ -134,11 +136,11 @@ void getInput( void )
     g_abKeyPressed[K_SPACE]  = isKeyPressed(VK_SPACE);
     g_abKeyPressed[K_ESCAPE] = isKeyPressed(VK_ESCAPE);
 	g_abKeyPressed[K_RETURN] = isKeyPressed(VK_RETURN);
-	g_abKeyPressed[K_1]	 = isKeyPressed(0x31);
-	g_abKeyPressed[K_2]	 = isKeyPressed(0X32);
-	g_abKeyPressed[K_3]	 = isKeyPressed(0x33);
-	g_abKeyPressed[K_4]	 = isKeyPressed(0x34);
-	g_abKeyPressed[K_5]   = isKeyPressed(0x35);
+	g_abKeyPressed[K_1]	     = isKeyPressed(0x31);
+	g_abKeyPressed[K_2]	     = isKeyPressed(0X32);
+	g_abKeyPressed[K_3]	     = isKeyPressed(0x33);
+	g_abKeyPressed[K_4]	     = isKeyPressed(0x34);
+	g_abKeyPressed[K_5]      = isKeyPressed(0x35);
 }
 
 //--------------------------------------------------------------
@@ -1306,7 +1308,7 @@ void renderMap()
 						break;
 					}
 				}
-				c.X = 40;
+				c.X = 39;
 				c.Y = 17 + i;
 				i++;
 				g_Console.writeToBuffer(c, shop, 0x00 + i);
