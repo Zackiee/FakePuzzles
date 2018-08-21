@@ -32,11 +32,9 @@ enum EGAMESTATES
     S_SPLASHSCREEN,
 	S_STARTMENU,
 	S_INSTRUCTIONS,
-	S_HEADQUARTERS,
 	S_CHARACTERCREATION,
     S_GAME,
     S_COUNT
-	
 };
 
 // struct for the game character

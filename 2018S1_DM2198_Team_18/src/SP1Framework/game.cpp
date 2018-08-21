@@ -29,20 +29,12 @@ bool levelDgem = false;
 bool hqSpawn = false;
 bool playerRespawn = false;
 
-bool nameSelect = false;
-bool characterSelect = false;
-
-bool nameArray[5] = { false };
 string names[5] = { "Enos", "Okin", "Ilya", "Setsuna", "Ilias" };
-
+bool nameArray[5] = { false };
 bool charArray[5] = { false };
 
-bool firstChar = true;
-bool secondChar = false;
-bool thirdChar = false;
-bool fourthChar = false;
-bool fifthChar = false;
-bool sixthChar = false;
+bool nameSelect = false;
+bool characterSelect = false;
 
 bool equipPistol = true;
 bool equipSmg = false;
@@ -980,33 +972,33 @@ void renderCharacterCreation()
 	
 	if (charArray[0] == true)
 	{
-		g_sChar.m_cLocation.X = 49;
-		g_sChar.m_cLocation.Y = 21;
-		g_Console.writeToBuffer(g_sChar.m_cLocation, (char)2, 0x0F);
+		c.X = 49;
+		c.Y = 21;
+		g_Console.writeToBuffer(c, (char)2, 0x0F);
 	}
 	if (charArray[1] == true)
 	{
-		g_sChar.m_cLocation.X = 49;
-		g_sChar.m_cLocation.Y = 21;
-		g_Console.writeToBuffer(g_sChar.m_cLocation, (char)3, 0x0C);
+		c.X = 49;
+		c.Y = 21;
+		g_Console.writeToBuffer(c, (char)3, 0x0C);
 	}
 	if (charArray[2] == true)
 	{
-		g_sChar.m_cLocation.X = 49;
-		g_sChar.m_cLocation.Y = 21;
-		g_Console.writeToBuffer(g_sChar.m_cLocation, (char)4, 0x09);
+		c.X = 49;
+		c.Y = 21;
+		g_Console.writeToBuffer(c, (char)4, 0x09);
 	}
 	if (charArray[3] == true)
 	{
-		g_sChar.m_cLocation.X = 49;
-		g_sChar.m_cLocation.Y = 21;
-		g_Console.writeToBuffer(g_sChar.m_cLocation, (char)5, 0x0A);
+		c.X = 49;
+		c.Y = 21;
+		g_Console.writeToBuffer(c, (char)5, 0x0A);
 	}
 	if (charArray[4] == true)
 	{
-		g_sChar.m_cLocation.X = 49;
-		g_sChar.m_cLocation.Y = 21;
-		g_Console.writeToBuffer(g_sChar.m_cLocation, (char)6, 0x0E);
+		c.X = 49;
+		c.Y = 21;
+		g_Console.writeToBuffer(c, (char)6, 0x0E);
 	}
 }
 
