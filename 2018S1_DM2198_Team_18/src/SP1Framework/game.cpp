@@ -559,40 +559,40 @@ void playershoot()
 		ps = 0;
 
 	// Equipping weapons
-	if (g_abKeyPressed[K_1] && boughtSmg == true) {
+	if (g_abKeyPressed[K_1] && boughtPistol == true) {
+		equipPistol = true;
+		equipSmg = false;
+		equipRifle = false;
+		equipSniper = false;
+		equipMinigun = false;
+	}
+	if (g_abKeyPressed[K_2] && boughtSmg == true) {
 		equipPistol = false;
 		equipSmg = true;
 		equipRifle = false;
 		equipSniper = false;
 		equipMinigun = false;
 	}
-	if (g_abKeyPressed[K_2] && boughtRifle == true) {
+	if (g_abKeyPressed[K_3] && boughtRifle == true) {
 		equipPistol = false;
 		equipSmg = false;
 		equipRifle = true;
 		equipSniper = false;
 		equipMinigun = false;
 	}
-	if (g_abKeyPressed[K_3] && boughtSniper == true) {
+	if (g_abKeyPressed[K_4] && boughtSniper == true) {
 		equipPistol = false;
 		equipSmg = false;
 		equipRifle = false;
 		equipSniper = true;
 		equipMinigun = false;
 	}
-	if (g_abKeyPressed[K_4] && boughtMinigun == true) {
+	if (g_abKeyPressed[K_5] && boughtMinigun == true) {
 		equipPistol = false;
 		equipSmg = false;
 		equipRifle = false;
 		equipSniper = false;
 		equipMinigun = true;
-	}
-	if (g_abKeyPressed[K_5] && boughtPistol == true) {
-		equipPistol = true;
-		equipSmg = false;
-		equipRifle = false;
-		equipSniper = false;
-		equipMinigun = false;
 	}
 
 	playershot = false;
@@ -1079,46 +1079,6 @@ void renderMap()
 						case '@':
 							headquarters[a] = 219;
 							break;
-						case '1':
-							if (gems[0] == true)
-							{
-								headquarters[a] = 251;
-							}
-							else
-							{
-								headquarters[a] = 'x';
-							}
-							break;
-						case '2':
-							if (gems[1] == true)
-							{
-								headquarters[a] = 251;
-							}
-							else
-							{
-								headquarters[a] = 'x';
-							}
-							break;
-						case '3':
-							if (gems[2] == true)
-							{
-								headquarters[a] = 251;
-							}
-							else
-							{
-								headquarters[a] = 'x';
-							}
-							break;
-						case '4':
-							if (gems[3] == true)
-							{
-								headquarters[a] = 251;
-							}
-							else
-							{
-								headquarters[a] = 'x';
-							}
-							break;
 						case 'u':
 							if (gems[0] == true)
 							{
@@ -1348,7 +1308,7 @@ void renderMap()
 						break;
 					}
 				}
-				c.X = 14;
+				c.X = 40;
 				c.Y = 17 + i;
 				i++;
 				g_Console.writeToBuffer(c, shop, 0x00 + i);
@@ -1356,19 +1316,19 @@ void renderMap()
 		}
 		shopFile.close();
 
-		if (g_abKeyPressed[K_1])
+		if (g_abKeyPressed[K_2])
 		{
 			boughtSmg = true;
 		}
-		 if (g_abKeyPressed[K_2])
+		 if (g_abKeyPressed[K_3])
 		{
 			boughtRifle = true;
 		}
-		if (g_abKeyPressed[K_3])
+		if (g_abKeyPressed[K_4])
 		{
 			boughtSniper = true;
 		}
-		if (g_abKeyPressed[K_4])
+		if (g_abKeyPressed[K_5])
 		{
 			boughtMinigun = true;
 		}
@@ -1401,7 +1361,7 @@ void renderMap()
 					case '1':
 						if (boughtPistol == true)
 						{
-							inventory[a] = 251;
+							inventory[a] = '1';
 						}
 						else
 						{
@@ -1411,7 +1371,7 @@ void renderMap()
 					case '2':
 						if (boughtSmg == true)
 						{
-							inventory[a] = 251;
+							inventory[a] = '2';
 						}
 						else
 						{
@@ -1421,7 +1381,7 @@ void renderMap()
 					case '3':
 						if (boughtRifle == true)
 						{
-							inventory[a] = 251;
+							inventory[a] = '3';
 						}
 						else
 						{
@@ -1431,7 +1391,7 @@ void renderMap()
 					case '4':
 						if (boughtSniper == true)
 						{
-							inventory[a] = 251;
+							inventory[a] = '4';
 						}
 						else
 						{
@@ -1441,7 +1401,47 @@ void renderMap()
 					case '5':
 						if (boughtMinigun == true)
 						{
-							inventory[a] = 251;
+							inventory[a] = '5';
+						}
+						else
+						{
+							inventory[a] = 'x';
+						}
+						break;
+					case '6':
+						if (gems[0] == true)
+						{
+							inventory[a] = '*';
+						}
+						else
+						{
+							inventory[a] = 'x';
+						}
+						break;
+					case '7':
+						if (gems[1] == true)
+						{
+							inventory[a] = '*';
+						}
+						else
+						{
+							inventory[a] = 'x';
+						}
+						break;
+					case '8':
+						if (gems[2] == true)
+						{
+							inventory[a] = '*';
+						}
+						else
+						{
+							inventory[a] = 'x';
+						}
+						break;
+					case '9':
+						if (gems[3] == true)
+						{
+							inventory[a] = '*';
 						}
 						else
 						{
@@ -1457,6 +1457,68 @@ void renderMap()
 			}
 		}
 		inventoryFile.close();
+
+		if (nameArray[0] == true)
+		{
+			c.X = 8;
+			c.Y = 20;
+			g_Console.writeToBuffer(c, names[0], 0x0F);
+		}
+		else if (nameArray[1] == true)
+		{
+			c.X = 8;
+			c.Y = 20;
+			g_Console.writeToBuffer(c, names[1], 0x0F);
+		}
+		else if (nameArray[2] == true)
+		{
+			c.X = 8;
+			c.Y = 20;
+			g_Console.writeToBuffer(c, names[2], 0x0F);
+		}
+		else if (nameArray[3] == true)
+		{
+			c.X = 8;
+			c.Y = 20;
+			g_Console.writeToBuffer(c, names[3], 0x0F);
+		}
+		else if (nameArray[4] == true)
+		{
+			c.X = 8;
+			c.Y = 20;
+			g_Console.writeToBuffer(c, names[4], 0x0F);
+		}
+
+		if (equipPistol == true)
+		{
+			c.X = 4;
+			c.Y = 23;
+			g_Console.writeToBuffer(c, "Pistol", 0x0F);
+		}
+		if (equipSmg == true)
+		{
+			c.X = 4;
+			c.Y = 23;
+			g_Console.writeToBuffer(c, "Smg", 0x0F);
+		}
+		if (equipRifle == true)
+		{
+			c.X = 4;
+			c.Y = 23;
+			g_Console.writeToBuffer(c, "Rifle", 0x0F);
+		}
+		if (equipSniper == true)
+		{
+			c.X = 4;
+			c.Y = 23;
+			g_Console.writeToBuffer(c, "Sniper", 0x0F);
+		}
+		if (equipMinigun == true)
+		{
+			c.X = 4;
+			c.Y = 23;
+			g_Console.writeToBuffer(c, "Minigun", 0x0F);
+		}
 	}
 }
 
