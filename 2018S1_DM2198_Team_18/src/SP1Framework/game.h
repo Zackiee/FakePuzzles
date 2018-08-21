@@ -23,7 +23,7 @@ enum EKEYS
 	K_3,
 	K_4,
 	K_5,
-	K_A,
+	//K_A,
 	K_COUNT
 };
 
