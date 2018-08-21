@@ -414,7 +414,7 @@ void enemydata() {
 	if (huggerbouncetime > g_dElapsedTime)
 		return;
 
-	for (h = 0; h < 4; h++) {
+	for (h = 0; h < 4; h++) { // x[h] in this case is used for a "no reverse rule". Example, if one enemy is moving up, he's not allowed to move down immediately after moving up
 		up = 99.0; left = 99.0; down = 99.0; right = 99.0;
 		if (map[g_sHugger[h].m_cLocation.Y - 1][g_sHugger[h].m_cLocation.X] == ' ' && x[h] != 3) {
 			up = sqrt(pow(g_sChar.m_cLocation.X - (g_sHugger[h].m_cLocation.X), 2) + pow(g_sChar.m_cLocation.Y - (g_sHugger[h].m_cLocation.Y - 1), 2));
@@ -429,19 +429,23 @@ void enemydata() {
 			right = sqrt(pow(g_sChar.m_cLocation.X - (g_sHugger[h].m_cLocation.X + 1), 2) + pow(g_sChar.m_cLocation.Y - (g_sHugger[h].m_cLocation.Y), 2));
 		}
 		min_double = min(min(up, down), min(left, right));
-		if (min_double == up && x[h] != 3) {
+		if (min_double == 99.0) { // don't move if not possible, and reset no reverse rule
+			x[h] = 0;
+			continue;
+		}
+		else if (min_double == up && x[h] != 3) { // move up
 			g_sHugger[h].m_cLocation.Y--;
 			x[h] = 1;
 		}
-		else if (min_double == left && x[h] != 4) {
+		else if (min_double == left && x[h] != 4) { // move left
 			g_sHugger[h].m_cLocation.X--;
 			x[h] = 2;
 		}
-		else if (min_double == down && x[h] != 1) {
+		else if (min_double == down && x[h] != 1) { // move down
 			g_sHugger[h].m_cLocation.Y++;
 			x[h] = 3;
 		}
-		else if (min_double == right && x[h] != 2) {
+		else if (min_double == right && x[h] != 2) { // move right
 			g_sHugger[h].m_cLocation.X++;
 			x[h] = 4;
 		}
