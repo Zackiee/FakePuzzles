@@ -890,6 +890,7 @@ void renderSplashScreen()  // renders the splash screen
 
 void renderStartMenu()
 {
+	// Render Start Menu
 	COORD c;
 	int i = 0;
 	int a = 0;
@@ -921,6 +922,7 @@ void renderStartMenu()
 
 void renderInstructions()
 {
+	// Render Instruction page 
 	COORD c;
 	int i = 0;
 	int a = 0;
