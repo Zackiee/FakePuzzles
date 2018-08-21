@@ -562,16 +562,14 @@ void playershoot()
 	}
 
 	if (g_abKeyPressed[K_SPACE] && playerdirection[ps] != 0) {
-		shootbuffer++;
-		if (shootbuffer == 3) {
-			g_sPlayershots[ps].m_cLocation.X = g_sChar.m_cLocation.X;
-			g_sPlayershots[ps].m_cLocation.Y = g_sChar.m_cLocation.Y;
-			ps++;
-			if (ps >= 32)
-				ps = 0;
-			playerdirection[ps] = 0;
-			shootbuffer = 0;
-		}
+		g_sPlayershots[ps].m_cLocation.X = g_sChar.m_cLocation.X;
+		g_sPlayershots[ps].m_cLocation.Y = g_sChar.m_cLocation.Y;
+		ps++;
+		playerbulletshot = true;
+		playerdirection[ps] = 0;
+		shootbuffer = 0;
+		if (ps >= 32)
+			ps = 0;
 	}
 
 	p = ps;
@@ -595,8 +593,6 @@ void playershoot()
 		}
 	}
 	ps = p;
-
-	playershot = true;
 
 	if (playershot)
 		playerbulletshot = g_dElapsedTime + 0.05; // player bullets fly as fast as enemy bullets for now
