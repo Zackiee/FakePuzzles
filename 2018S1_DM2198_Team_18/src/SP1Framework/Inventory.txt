@@ -1,12 +1,10 @@
 
- @###########@
- @ INVENTORY @
- @ Coins: $0 @
- @___________@
- @  WEAPONS  @
- @ 1 Pistol  @
- @ 2 Smg     @
- @ 3 Rifle   @
- @ 4 Sniper  @
- @ 5 Minigun @
- #############
+ @#######################@############@
+ @ PLAYER PROFILE        | WEAPONS    @
+ @ Name:        Coins:$0 | [1]Pistol  @ 
+ @_______________________| [2]Smg     @
+ @ CURRENT GUN | GEMS    | [3]Rifle   @
+ @             | 6 7 8 9 | [4]Sniper  @
+ @             | A B C D | [5]Minigun @
+ @             |         |            @
+ ######################################
