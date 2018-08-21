@@ -542,7 +542,7 @@ void playershoot()
 	if (playerbulletshot > g_dElapsedTime)
 		return;
 
-	if (g_abKeyPressed[K_UP]) {
+	else if (g_abKeyPressed[K_UP]) {
 		playerdirection[ps] = 1; // shoot up
 	}
 	else if (g_abKeyPressed[K_DOWN]) {
@@ -593,7 +593,7 @@ void playershoot()
 	}
 	ps = p;
 
-	playerbulletshot = true;
+	playershot = true;
 
 	if (playershot)
 		playerbulletshot = g_dElapsedTime + 0.05; // player bullets fly as fast as enemy bullets for now
