@@ -15,7 +15,6 @@ int money = 0;
 int shootdirection[128] = { 0, };
 int playerdirection[32] = { 0, };
 
-bool hq = true;
 bool inven = true;
 bool shop = false;
 bool hqSpawn = false;
@@ -868,21 +867,18 @@ void renderInstructions()
 	int i = 0;
 	int a = 0;
 
-	if (instruction == true)
+	string Instructions;
+	ifstream instructionFile;
+	
+	instructionFile.open("Instructions.txt");
+	if (instructionFile.is_open())
 	{
-		string Instructions;
-		ifstream instructionFile;
-
-		instructionFile.open("Instructions.txt");
-		if (instructionFile.is_open())
+		while (getline(instructionFile, Instructions))
 		{
-			while (getline(instructionFile, Instructions))
-			{
-				c.X = 0;
-				c.Y = i;
-				i++;
-				g_Console.writeToBuffer(c, Instructions, 0x0B);
-			}
+			c.X = 0;
+			c.Y = i;
+			i++;
+			g_Console.writeToBuffer(c, Instructions, 0x0B);
 		}
 	}
 }
