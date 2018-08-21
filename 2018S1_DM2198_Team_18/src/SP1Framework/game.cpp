@@ -540,7 +540,7 @@ void playershoot()
 	if (playerbulletshot > g_dElapsedTime)
 		return;
 
-	if (g_abKeyPressed[K_UP]) {
+	else if (g_abKeyPressed[K_UP]) {
 		playerdirection[ps] = 1; // shoot up
 	}
 	else if (g_abKeyPressed[K_DOWN]) {
@@ -560,16 +560,13 @@ void playershoot()
 	}
 
 	if (g_abKeyPressed[K_SPACE] && playerdirection[ps] != 0) {
-		shootbuffer++;
-		if (shootbuffer == 3) {
-			g_sPlayershots[ps].m_cLocation.X = g_sChar.m_cLocation.X;
-			g_sPlayershots[ps].m_cLocation.Y = g_sChar.m_cLocation.Y;
-			ps++;
-			if (ps >= 32)
-				ps = 0;
-			playerdirection[ps] = 0;
-			shootbuffer = 0;
-		}
+		g_sPlayershots[ps].m_cLocation.X = g_sChar.m_cLocation.X;
+		g_sPlayershots[ps].m_cLocation.Y = g_sChar.m_cLocation.Y;
+		ps++;
+		playerdirection[ps] = 0;
+		shootbuffer = 0;
+		if (ps >= 32)
+			ps = 0;
 	}
 
 	p = ps;
