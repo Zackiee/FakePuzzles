@@ -1,16 +1,17 @@
 // This is the main file for the game logic and function
 //
 //
+#pragma comment(lib,"irrKlang.lib")
 #include "game.h"
 #include "Framework\console.h"
 #include <iostream>
+#include <irrKlang.h>
 #include <iomanip>
 #include <sstream>
 #include <fstream>
 #include <string>
-
+using namespace irrklang;
 using namespace std;
-
 int money = 0;
 int shootdirection[128] = { 0, };
 int playerdirection[64] = { 0, };
@@ -243,6 +244,12 @@ void instructions()
 	{
 		g_eGameState = S_CHARACTERCREATION;
 	}
+}
+int audioPlay(int argc, const char** argv)
+{
+	ISoundEngine* sound = createIrrKlangDevice();
+	if (!sound)
+		return 0;
 }
 
 void characterCreation()
