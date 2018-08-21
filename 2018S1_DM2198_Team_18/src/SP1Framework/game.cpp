@@ -1,16 +1,17 @@
 // This is the main file for the game logic and function
 //
 //
+#pragma comment(lib,"irrKlang.lib")
 #include "game.h"
 #include "Framework\console.h"
 #include <iostream>
+#include <irrKlang.h>
 #include <iomanip>
 #include <sstream>
 #include <fstream>
 #include <string>
-
+using namespace irrklang;
 using namespace std;
-
 int money = 0;
 int shootdirection[128] = { 0, };
 int playerdirection[64] = { 0, };
@@ -76,13 +77,13 @@ void init( void )
 		g_sGunner[i].m_cLocation.X = 5 + X;
 		g_sGunner[i].m_cLocation.Y = 16;
 	}
-	for (int i = 0; i < 128; i++) {
-		g_sBullets[i].m_cLocation.X = 0;
-		g_sBullets[i].m_cLocation.Y = 0;
-	}
 	for (int ps = 0; ps < 64; ps++) {
 		g_sPlayershots[ps].m_cLocation.X = 0;
 		g_sPlayershots[ps].m_cLocation.Y = 0;
+	}
+	for (int i = 0; i < 128; i++) {
+		g_sBullets[i].m_cLocation.X = 0;
+		g_sBullets[i].m_cLocation.Y = 0;
 	}
     g_sChar.m_bActive = true;
     // sets the width, height and the font name to use in the console
@@ -233,6 +234,12 @@ void instructions()
 		g_eGameState = S_CHARACTERCREATION;
 	}
 }
+int audioPlay(int argc, const char** argv)
+{
+	ISoundEngine* sound = createIrrKlangDevice();
+	if (!sound)
+		return 0;
+}
 
 void characterCreation()
 {
@@ -350,12 +357,13 @@ void renderEntities()
 	for (int g = 0; g < 4; g++) {
 		g_Console.writeToBuffer(g_sGunner[g].m_cLocation, (char)83, charE_Color);
 	}
-	for (int i = 0; i < 128; i++) {
-		g_Console.writeToBuffer(g_sBullets[i].m_cLocation, (char)7, charE_Color);
-	}
 	// For player bullets
 	for (int ps = 0; ps < 64; ps++) {
 		g_Console.writeToBuffer(g_sPlayershots[ps].m_cLocation, (char)7, 0x06);
+	}
+	// For enemy bullets
+	for (int i = 0; i < 128; i++) {
+		g_Console.writeToBuffer(g_sBullets[i].m_cLocation, (char)7, charE_Color);
 	}
 }
 int b = 0, i = 0, n = 0, g = 0, h = 0, p = 0, ps = 0, shootbuffer = 0;
@@ -616,7 +624,7 @@ void playershoot()
 		playerbulletshot = g_dElapsedTime + 0.02; // Sniper bullets fly around 50 tiles per second
 	}
 	else if (playershot) {
-		b++; // b stands for gun buffers, used for gun firing speeds
+		b++;
 		playerbulletshot = g_dElapsedTime + 0.05; // player bullets fly as fast as enemy bullets for now
 	}
 }
