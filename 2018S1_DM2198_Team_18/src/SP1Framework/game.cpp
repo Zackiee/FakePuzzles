@@ -14,21 +14,21 @@
 //using namespace irrklang;
 using namespace std;
 
-int a = 0;
-int money = 0;
-int shootdirection[128] = { 0, };
-int playerdirection[64] = { 0, };
-
-string names[5] = { "Enos", "Okin", "Ilya", "Setsuna", "Ilias" };
+string names[5] = { "Enos", "Enzo", "Ilya", "Shin", "Ella" };
 bool charArray[5] = { false };
 bool levels[5] = { false };
 bool spawns[5] = { false };
 bool gems[4] = { false };
 bool equipWeapons[5] = { false };
 bool boughtWeapons[5] = { false };
+int a = 0;
 
 bool inven = true;
 bool shop = false;
+int coins = 0;
+
+int shootdirection[128] = { 0, };
+int playerdirection[64] = { 0, };
 
 double  g_dElapsedTime;
 double  huggerbouncetime = g_dElapsedTime;
@@ -66,9 +66,23 @@ void init( void )
 
     // sets the initial state for the game
     g_eGameState = S_SPLASHSCREEN;
+	
+    // sets the width, height and the font name to use in the console
+    g_Console.setConsoleFont(0, 16, L"Consolas");
 
+	for (int i = 0; i < g_Console.getConsoleSize().Y; i++)
+	{
+		map[i] = new char[g_Console.getConsoleSize().X];
+	}
+	//Player Initial Location
 	g_sChar.m_cLocation.X = 46;
 	g_sChar.m_cLocation.Y = 9;
+
+	//Set headquarters to default starting level and pistol as default weapon
+	levels[0] = true;
+	equipWeapons[0] = true;
+	boughtWeapons[0] = true;
+
 	for (int i = 0, X = 0; i < 4; i++, X += 2) {
 		g_sHugger[i].m_cLocation.X = 5 + X;
 		g_sHugger[i].m_cLocation.Y = 14;
@@ -83,18 +97,6 @@ void init( void )
 		g_sBullets[i].m_cLocation.X = 0;
 		g_sBullets[i].m_cLocation.Y = 0;
 	}
-    g_sChar.m_bActive = true;
-    // sets the width, height and the font name to use in the console
-    g_Console.setConsoleFont(0, 16, L"Consolas");
-
-	for (int i = 0; i < g_Console.getConsoleSize().Y; i++)
-	{
-		map[i] = new char[g_Console.getConsoleSize().X];
-	}
-
-	levels[0] = true;
-	equipWeapons[0] = true;
-	boughtWeapons[0] = true;
 }
 
 //--------------------------------------------------------------
@@ -594,18 +596,6 @@ void gameplay()            // gameplay logic
 	gunnerdata();
 	enemybullet();
 	playershoot();
-}
-
-void inventory()		// handles inventory, inventory[0] contains money, inventory[1] && inventory[2] contains the 2 weapons held
-{
-	vector<int> inventory;
-	inventory.push_back(10);
-	inventory.push_back(0);
-	inventory.push_back(0);
-	if (money >= 1) {
-		inventory[0] += money;
-		money = 0;
-	}
 }
 
 void moveCharacter()
@@ -1413,66 +1403,35 @@ void renderMap()
 		}
 		inventoryFile.close();
 
-		if (charArray[0] == true)
-		{
-			c.X = 8;
-			c.Y = 20;
-			g_Console.writeToBuffer(c, names[0], 0x0F);
-		}
-		else if (charArray[1] == true)
-		{
-			c.X = 8;
-			c.Y = 20;
-			g_Console.writeToBuffer(c, names[1], 0x0F);
-		}
-		else if (charArray[2] == true)
-		{
-			c.X = 8;
-			c.Y = 20;
-			g_Console.writeToBuffer(c, names[2], 0x0F);
-		}
-		else if (charArray[3] == true)
-		{
-			c.X = 8;
-			c.Y = 20;
-			g_Console.writeToBuffer(c, names[3], 0x0F);
-		}
-		else if (charArray[4] == true)
-		{
-			c.X = 8;
-			c.Y = 20;
-			g_Console.writeToBuffer(c, names[4], 0x0F);
-		}
-
 		if (equipWeapons[0] == true)
 		{
 			c.X = 4;
-			c.Y = 23;
-			g_Console.writeToBuffer(c, "Pistol", 0x0F);
+			c.Y = 24;
+			g_Console.writeToBuffer(c, "Pistol", 0x08);
 		}
 		if (equipWeapons[1] == true)
 		{
 			c.X = 4;
-			c.Y = 23;
-			g_Console.writeToBuffer(c, "Smg", 0x0F);
+			c.Y = 24;
+			g_Console.writeToBuffer(c, "Smg", 0x08);
 		}
 		if (equipWeapons[2] == true)
 		{
 			c.X = 4;
-			c.Y = 23;
-			g_Console.writeToBuffer(c, "Rifle", 0x0F);
+			c.Y = 24;
+			g_Console.writeToBuffer(c, "Rifle", 0x08);
 		}
 		if (equipWeapons[3] == true)
 		{
 			c.X = 4;
-			c.Y = 23;
-			g_Console.writeToBuffer(c, "Sniper", 0x0F);
+			c.Y = 24;
+			g_Console.writeToBuffer(c, "Sniper", 0x08);
 		}
 		if (equipWeapons[4] == true)
 		{
 			c.X = 4;
-			c.Y = 23;
-			g_Console.writeToBuffer(c, "Minigun", 0x0F);
+			c.Y = 24;
+			g_Console.writeToBuffer(c, "Minigun", 0x08);
 		}
 	}
 }
@@ -1480,11 +1439,7 @@ void renderMap()
 void renderCharacter()
 {
     // Draw the location of the character
-    //WORD charColor = 0x0F;
-    /*if (g_sChar.m_bActive)
-    {
-        charColor = 0x0E;
-    }*/
+	COORD c;
 
 	if (collision('q'))
 	{
@@ -1530,22 +1485,52 @@ void renderCharacter()
 	//Characters' rendering
 	if (charArray[0] == true)
 	{
+		if (inven == true)
+		{
+			c.X = 8;
+			c.Y = 20;
+			g_Console.writeToBuffer(c, names[0], 0x0F);
+		}
 		g_Console.writeToBuffer(g_sChar.m_cLocation, (char)2, 0x0F);
 	}
-	if (charArray[1] == true)
+	else if (charArray[1] == true)
 	{
+		if (inven == true)
+		{
+			c.X = 8;
+			c.Y = 20;
+			g_Console.writeToBuffer(c, names[1], 0x0F);
+		}
 		g_Console.writeToBuffer(g_sChar.m_cLocation, (char)3, 0x0C);
 	}
-	if (charArray[2] == true)
+	else if (charArray[2] == true)
 	{
+		if (inven == true)
+		{
+			c.X = 8;
+			c.Y = 20;
+			g_Console.writeToBuffer(c, names[2], 0x0F);
+		}
 		g_Console.writeToBuffer(g_sChar.m_cLocation, (char)4, 0x09);
 	}
-	if (charArray[3] == true)
+	else if (charArray[3] == true)
 	{
+		if (inven == true)
+		{
+			c.X = 8;
+			c.Y = 20;
+			g_Console.writeToBuffer(c, names[3], 0x0F);
+		}
 		g_Console.writeToBuffer(g_sChar.m_cLocation, (char)5, 0x0A);
 	}
-	if (charArray[4] == true)
+	else if (charArray[4] == true)
 	{
+		if (inven == true)
+		{
+			c.X = 8;
+			c.Y = 20;
+			g_Console.writeToBuffer(c, names[4], 0x0F);
+		}
 		g_Console.writeToBuffer(g_sChar.m_cLocation, (char)6, 0x0E);
 	}
 }

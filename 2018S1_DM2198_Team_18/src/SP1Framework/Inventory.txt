@@ -1,7 +1,8 @@
 
  @#######################@############@
- @ PLAYER PROFILE        | WEAPONS    @
- @ Name:        Coins:$0 | [1]Pistol  @ 
+ @ PLAYER PROFILE        |  WEAPONS   @
+ @ Name:                 |____________@ 
+ @ Lives:      Coins:    | [1]Pistol  @
  @_______________________| [2]Smg     @
  @ CURRENT GUN | GEMS    | [3]Rifle   @
  @             | 6 7 8 9 | [4]Sniper  @
