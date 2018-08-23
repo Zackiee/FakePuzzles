@@ -18,21 +18,16 @@ int money = 0;
 int shootdirection[128] = { 0, };
 int playerdirection[64] = { 0, };
 
-bool inven = true;
-bool shop = false;
-bool hqSpawn = false;
-bool playerRespawn = false;
-bool nameSelect = false;
-bool characterSelect = false;
-
 string names[5] = { "Enos", "Okin", "Ilya", "Setsuna", "Ilias" };
-bool nameArray[5] = { false };
 bool charArray[5] = { false };
-
 bool levels[5] = { false };
+bool spawns[5] = { false };
 bool gems[4] = { false };
 bool equipWeapons[5] = { false };
 bool boughtWeapons[5] = { false };
+
+bool inven = true;
+bool shop = false;
 
 double  g_dElapsedTime;
 double  huggerbouncetime = g_dElapsedTime;
@@ -245,102 +240,50 @@ void instructions()
 
 void characterCreation()
 {
-	if (g_abKeyPressed[K_1] && nameSelect == false)
-	{
-		nameArray[0] = true;
-		nameArray[1] = false;
-		nameArray[2] = false;
-		nameArray[3] = false;
-		nameArray[4] = false;
-	}
-
-	if (g_abKeyPressed[K_2] && nameSelect == false)
-	{
-		nameArray[1] = true;
-		nameArray[0] = false;
-		nameArray[2] = false;
-		nameArray[3] = false;
-		nameArray[4] = false;
-	}
-
-	if (g_abKeyPressed[K_3] && nameSelect == false)
-	{
-		nameArray[2] = true;
-		nameArray[0] = false;
-		nameArray[1] = false;
-		nameArray[3] = false;
-		nameArray[4] = false;
-	}
-
-	if (g_abKeyPressed[K_4] && nameSelect == false)
-	{
-		nameArray[3] = true;
-		nameArray[0] = false;
-		nameArray[1] = false;
-		nameArray[2] = false;
-		nameArray[4] = false;
-	}
-	if (g_abKeyPressed[K_5] && nameSelect == false)
-	{
-		nameArray[4] = true;
-		nameArray[0] = false;
-		nameArray[1] = false;
-		nameArray[2] = false;
-		nameArray[3] = false;
-	}
-	if (g_abKeyPressed[K_SPACE] && characterSelect == false)
-	{
-		nameSelect = true;
-	}
-	if (g_abKeyPressed[K_1] && nameSelect == true)
+	if (g_abKeyPressed[K_1])
 	{
 		charArray[0] = true;
 		charArray[1] = false;
 		charArray[2] = false;
 		charArray[3] = false;
 		charArray[4] = false;
-		characterSelect = true;
 	}
 
-	if (g_abKeyPressed[K_2] && nameSelect == true)
+	if (g_abKeyPressed[K_2])
 	{
 		charArray[1] = true;
 		charArray[0] = false;
 		charArray[2] = false;
 		charArray[3] = false;
 		charArray[4] = false;
-		characterSelect = true;
 	}
 
-	if (g_abKeyPressed[K_3] && nameSelect == true)
+	if (g_abKeyPressed[K_3])
 	{
 		charArray[2] = true;
 		charArray[0] = false;
 		charArray[1] = false;
 		charArray[3] = false;
 		charArray[4] = false;
-		characterSelect = true;
 	}
 
-	if (g_abKeyPressed[K_4] && nameSelect == true)
+	if (g_abKeyPressed[K_4])
 	{
 		charArray[3] = true;
 		charArray[0] = false;
 		charArray[1] = false;
 		charArray[2] = false;
 		charArray[4] = false;
-		characterSelect = true;
 	}
-	if (g_abKeyPressed[K_5] && nameSelect == true)
+	if (g_abKeyPressed[K_5])
 	{
 		charArray[4] = true;
 		charArray[0] = false;
 		charArray[1] = false;
 		charArray[2] = false;
 		charArray[3] = false;
-		characterSelect = true;
 	}
-	if (g_abKeyPressed[K_SPACE] && nameSelect == true && characterSelect == true)
+	if (g_abKeyPressed[K_SPACE] && (charArray[0] == true || charArray[1] == true || charArray[2] == true || charArray[3] == true || charArray[4] == true))
 	{
 		g_eGameState = S_GAME;
 	}
@@ -719,31 +662,34 @@ void moveCharacter()
 
 	if (levels[0] == true)
 	{
-		hqSpawn = false;
+		spawns[1] = false;
+		spawns[2] = false;
+		spawns[3] = false;
+		spawns[4] = false;
 
 		if (collision('a'))
 		{
 			levels[0] = false;
 			levels[1] = true;
-			playerRespawn = true;
+			spawns[0] = true;
 		}
 		else if (collision('b'))
 		{
 			levels[0] = false;
 			levels[2] = true;
-			playerRespawn = true;
+			spawns[0] = true;
 		}
 		else if (collision('c'))
 		{
 			levels[0] = false;
 			levels[3] = true;
-			playerRespawn = true;
+			spawns[0] = true;
 		}
 		else if (collision('d'))
 		{
 			levels[0] = false;
 			levels[4] = true;
-			playerRespawn = true;
+			spawns[0] = true;
 		}
 		else if (collision('%'))
 		{
@@ -754,13 +700,13 @@ void moveCharacter()
 
 	else if (levels[1] == true)
 	{
-		playerRespawn = false;
+		spawns[0] = false;
 
 		if (collision('%'))
 		{
 			levels[1] = false;
 			levels[0] = true;
-			hqSpawn = true;
+			spawns[1] = true;
 		}
 		if (collision('*'))
 		{
@@ -769,13 +715,13 @@ void moveCharacter()
 	}
 	else if (levels[2] == true)
 	{
-		playerRespawn = false;
+		spawns[0] = false;
 
 		if (collision('%'))
 		{
 			levels[2] = false;
 			levels[0] = true;
-			hqSpawn = true;
+			spawns[2] = true;
 		}
 		if (collision('&'))
 		{
@@ -789,13 +735,13 @@ void moveCharacter()
 	}
 	else if (levels[3] == true)
 	{
-		playerRespawn = false;
+		spawns[0] = false;
 
 		if (collision('%'))
 		{
 			levels[3] = false;
 			levels[0] = true;
-			hqSpawn = true;
+			spawns[3] = true;
 		}
 		if (collision('&'))
 		{
@@ -809,13 +755,13 @@ void moveCharacter()
 	}
 	else if (levels[4] == true)
 	{
-		playerRespawn = false;
+		spawns[0] = false;
 
 		if (collision('%'))
 		{
 			levels[4] = false;
 			levels[0] = true;
-			hqSpawn = true;
+			spawns[4] = true;
 		}
 		if (collision('&'))
 		{
@@ -827,16 +773,32 @@ void moveCharacter()
 			gems[3] = true;
 		}
 	}
-	if (hqSpawn == true)
-	{
-		g_sChar.m_cLocation.X = 46;
-		g_sChar.m_cLocation.Y = 10;
-	}
 
-	if (playerRespawn == true)
+	if (spawns[0] == true)
 	{
 		g_sChar.m_cLocation.X = 5;
 		g_sChar.m_cLocation.Y = 2;
+	}
+	if (spawns[1] == true)
+	{
+		g_sChar.m_cLocation.X = 12;
+		g_sChar.m_cLocation.Y = 6;
+	}
+	if (spawns[2] == true)
+	{
+		g_sChar.m_cLocation.X = 29;
+		g_sChar.m_cLocation.Y = 6;
+	}
+	if (spawns[3] == true)
+	{
+		g_sChar.m_cLocation.X = 46;
+		g_sChar.m_cLocation.Y = 6;
+
+	}
+	if (spawns[4] == true)
+	{
+		g_sChar.m_cLocation.X = 63;
+		g_sChar.m_cLocation.Y = 6;
 	}
 }
 void processUserInput()
@@ -951,6 +913,7 @@ void renderInstructions()
 			g_Console.writeToBuffer(c, instructions, 0x0B);
 		}
 	}
+	instructionFile.close();
 }
 
 void renderCharacterCreation()
@@ -995,65 +958,49 @@ void renderCharacterCreation()
 	}
 	creationFile.close();
 
-	if (nameArray[0] == true)
+	if (charArray[0] == true)
 	{
 		c.X = 54;
 		c.Y = 11;
 		g_Console.writeToBuffer(c, names[0], 0x0B);
-	}
-	if (nameArray[1] == true)
-	{
-		c.X = 54;
-		c.Y = 11;
-		g_Console.writeToBuffer(c, names[1], 0x0B);
-	}
-	if (nameArray[2] == true)
-	{
-		c.X = 54;
-		c.Y = 11;
-		g_Console.writeToBuffer(c, names[2], 0x0B);
-	}
-	if (nameArray[3] == true)
-	{
-		c.X = 54;
-		c.Y = 11;
-		g_Console.writeToBuffer(c, names[3], 0x0B);
-	}
-	if (nameArray[4] == true)
-	{
-		c.X = 54;
-		c.Y = 11;
-		g_Console.writeToBuffer(c, names[4], 0x0B);
-	}
-	
-	if (charArray[0] == true)
-	{
 		c.X = 49;
-		c.Y = 22;
+		c.Y = 19;
 		g_Console.writeToBuffer(c, (char)2, 0x0F);
 	}
 	if (charArray[1] == true)
 	{
+		c.X = 54;
+		c.Y = 11;
+		g_Console.writeToBuffer(c, names[1], 0x0B);
 		c.X = 49;
-		c.Y = 22;
+		c.Y = 19;
 		g_Console.writeToBuffer(c, (char)3, 0x0C);
 	}
 	if (charArray[2] == true)
 	{
+		c.X = 54;
+		c.Y = 11;
+		g_Console.writeToBuffer(c, names[2], 0x0B);
 		c.X = 49;
-		c.Y = 22;
+		c.Y = 19;
 		g_Console.writeToBuffer(c, (char)4, 0x09);
 	}
 	if (charArray[3] == true)
 	{
+		c.X = 54;
+		c.Y = 11;
+		g_Console.writeToBuffer(c, names[3], 0x0B);
 		c.X = 49;
-		c.Y = 22;
+		c.Y = 19;
 		g_Console.writeToBuffer(c, (char)5, 0x0A);
 	}
 	if (charArray[4] == true)
 	{
+		c.X = 54;
+		c.Y = 11;
+		g_Console.writeToBuffer(c, names[4], 0x0B);
 		c.X = 49;
-		c.Y = 22;
+		c.Y = 19;
 		g_Console.writeToBuffer(c, (char)6, 0x0E);
 	}
 }
@@ -1071,6 +1018,7 @@ void renderMap()
 	COORD c;
 	int i = 0;
 	int a = 0;
+	//Render Headquarters
 	if (levels[0] == true)
 		{
 			string headquarters;
@@ -1469,31 +1417,31 @@ void renderMap()
 		}
 		inventoryFile.close();
 
-		if (nameArray[0] == true)
+		if (charArray[0] == true)
 		{
 			c.X = 8;
 			c.Y = 20;
 			g_Console.writeToBuffer(c, names[0], 0x0F);
 		}
-		else if (nameArray[1] == true)
+		else if (charArray[1] == true)
 		{
 			c.X = 8;
 			c.Y = 20;
 			g_Console.writeToBuffer(c, names[1], 0x0F);
 		}
-		else if (nameArray[2] == true)
+		else if (charArray[2] == true)
 		{
 			c.X = 8;
 			c.Y = 20;
 			g_Console.writeToBuffer(c, names[2], 0x0F);
 		}
-		else if (nameArray[3] == true)
+		else if (charArray[3] == true)
 		{
 			c.X = 8;
 			c.Y = 20;
 			g_Console.writeToBuffer(c, names[3], 0x0F);
 		}
-		else if (nameArray[4] == true)
+		else if (charArray[4] == true)
 		{
 			c.X = 8;
 			c.Y = 20;
