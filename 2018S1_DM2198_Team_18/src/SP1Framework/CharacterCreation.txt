@@ -4,10 +4,10 @@
                                 * * * * * * * * * * * * * * * * * *
                                 *      Choose your character      *
                                 *            [1] Enos             *
-                                *            [2] Okin             *
+                                *            [2] Enzo             *
                                 *            [3] Ilya             *
-                                *            [4] Setsuna          *
-                                *            [5] Ilias            *
+                                *            [4] Shin             *
+                                *            [5] Ella             *
                                 *                                 *
                                 *     Name selected :             *
                                 *_________________________________*
