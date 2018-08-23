@@ -25,7 +25,7 @@ int a = 0;
 
 bool inven = true;
 bool shop = false;
-int coins = 0;
+int coins = 250;
 int lives = 3;
 
 int shootdirection[128] = { 0, };
@@ -270,6 +270,28 @@ void huggerdata() {
 		if (map[g_sHugger[h].m_cLocation.Y][g_sHugger[h].m_cLocation.X + 1] == ' ' && x[h] != 2) {
 			right = sqrt(pow(g_sChar.m_cLocation.X - (g_sHugger[h].m_cLocation.X + 1), 2) + pow(g_sChar.m_cLocation.Y - (g_sHugger[h].m_cLocation.Y), 2));
 		}
+
+		//Hugger collision with player
+		if (levels[1] == true || levels[2] == true || levels[3] == true || levels[4] == true)
+		{
+			if ((g_sHugger[h].m_cLocation.Y - 1 == g_sChar.m_cLocation.Y) && (g_sHugger[h].m_cLocation.X == g_sChar.m_cLocation.X)) {
+				spawns[0] = true;
+				lives--;
+			}
+			if ((g_sHugger[h].m_cLocation.Y == g_sChar.m_cLocation.Y) && (g_sHugger[h].m_cLocation.X - 1 == g_sChar.m_cLocation.X)) {
+				spawns[0] = true;
+				lives--;
+			}
+			if ((g_sHugger[h].m_cLocation.Y + 1 == g_sChar.m_cLocation.Y) && (g_sHugger[h].m_cLocation.X == g_sChar.m_cLocation.X)) {
+				spawns[0] = true;
+				lives--;
+			}
+			if ((g_sHugger[h].m_cLocation.Y == g_sChar.m_cLocation.Y) && (g_sHugger[h].m_cLocation.X + 1 == g_sChar.m_cLocation.X)) {
+				spawns[0] = true;
+				lives--;
+			}
+		}
+
 		min_double = min(min(up, down), min(left, right));
 		if (min_double == 99.0) { // don't move if not possible, and reset no reverse rule
 			x[h] = 0;
@@ -521,6 +543,36 @@ void playershoot()
 	}
 }
 
+void respawn()
+{
+	if (spawns[0] == true)
+	{
+		g_sChar.m_cLocation.X = 5;
+		g_sChar.m_cLocation.Y = 2;
+	}
+	if (spawns[1] == true)
+	{
+		g_sChar.m_cLocation.X = 12;
+		g_sChar.m_cLocation.Y = 6;
+	}
+	if (spawns[2] == true)
+	{
+		g_sChar.m_cLocation.X = 29;
+		g_sChar.m_cLocation.Y = 6;
+	}
+	if (spawns[3] == true)
+	{
+		g_sChar.m_cLocation.X = 46;
+		g_sChar.m_cLocation.Y = 6;
+
+	}
+	if (spawns[4] == true)
+	{
+		g_sChar.m_cLocation.X = 63;
+		g_sChar.m_cLocation.Y = 6;
+	}
+}
+
 void gameplay()            // gameplay logic
 {
 	processUserInput(); // checks if you should change states or do something else with the game, e.g. pause, exit
@@ -530,6 +582,7 @@ void gameplay()            // gameplay logic
 	gunnerdata();
 	playershoot();
 	enemybullet();
+	respawn();
 }
 
 void moveCharacter()
@@ -697,33 +750,6 @@ void moveCharacter()
 		{
 			gems[3] = true;
 		}
-	}
-
-	if (spawns[0] == true)
-	{
-		g_sChar.m_cLocation.X = 5;
-		g_sChar.m_cLocation.Y = 2;
-	}
-	if (spawns[1] == true)
-	{
-		g_sChar.m_cLocation.X = 12;
-		g_sChar.m_cLocation.Y = 6;
-	}
-	if (spawns[2] == true)
-	{
-		g_sChar.m_cLocation.X = 29;
-		g_sChar.m_cLocation.Y = 6;
-	}
-	if (spawns[3] == true)
-	{
-		g_sChar.m_cLocation.X = 46;
-		g_sChar.m_cLocation.Y = 6;
-
-	}
-	if (spawns[4] == true)
-	{
-		g_sChar.m_cLocation.X = 63;
-		g_sChar.m_cLocation.Y = 6;
 	}
 }
 void processUserInput()
