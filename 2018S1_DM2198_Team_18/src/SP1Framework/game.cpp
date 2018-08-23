@@ -204,7 +204,7 @@ void render()
 
 void splashScreenWait()    // waits for time to pass in splash screen
 {
-    if (g_dElapsedTime > 2) // wait for 3 seconds to switch to game mode, else do nothing
+    if (g_dElapsedTime > 2) // wait for 2 seconds to switch to game mode, else do nothing
         g_eGameState = S_STARTMENU;
 }
 
@@ -290,8 +290,6 @@ void characterCreation()
 	}
 }
 
-melee hugger;
-ranged gunner;
 void renderEntities()
 {
 	// Draw the location of the enemies
@@ -312,7 +310,7 @@ void renderEntities()
 		g_Console.writeToBuffer(g_sBullets[i].m_cLocation, (char)7, charE_Color);
 	}
 }
-int b = 0, i = 0, n = 0, g = 0, h = 0, p = 0, ps = 0, shootbuffer = 0;
+int b = 0, i = 0, n = 0, g = 0, h = 0, p = 0, ps = 0, bhugger[4] = { 0, }, bgunner[4] = { 0, }, bbullet[128] = { 0, }, bplayer = 0, bplayershoot[64] = { 0, }; // variables starting with b is used for buffer, others are used for array and stuff
 int x[4] = { 0, };
 bool fooeyhappened1, fooeyhappened2, fooeyhappened3, playershot;
 void huggerdata() {
@@ -325,13 +323,13 @@ void huggerdata() {
 
 	for (h = 0; h < 4; h++) { // x[h] in this case is used for a "no reverse rule". Example, if one enemy is moving up, he's not allowed to move down immediately after moving up
 		up = 99.0; left = 99.0; down = 99.0; right = 99.0;
-		if (map[g_sHugger[h].m_cLocation.Y - 1][g_sHugger[h].m_cLocation.X] == ' ' && x[h] != 3) {
+		if (map[g_sHugger[h].m_cLocation.Y - 1][g_sHugger[h].m_cLocation.X] == ' ' && x[h] != 3 && bhugger[h] >= 2) {
 			up = sqrt(pow(g_sChar.m_cLocation.X - (g_sHugger[h].m_cLocation.X), 2) + pow(g_sChar.m_cLocation.Y - (g_sHugger[h].m_cLocation.Y - 1), 2));
 		}
 		if (map[g_sHugger[h].m_cLocation.Y][g_sHugger[h].m_cLocation.X - 1] == ' ' && x[h] != 4) {
 			left = sqrt(pow(g_sChar.m_cLocation.X - (g_sHugger[h].m_cLocation.X - 1), 2) + pow(g_sChar.m_cLocation.Y - (g_sHugger[h].m_cLocation.Y), 2));
 		}
-		if (map[g_sHugger[h].m_cLocation.Y + 1][g_sHugger[h].m_cLocation.X] == ' ' && x[h] != 1) {
+		if (map[g_sHugger[h].m_cLocation.Y + 1][g_sHugger[h].m_cLocation.X] == ' ' && x[h] != 1 && bhugger[h] >= 2) {
 			down = sqrt(pow(g_sChar.m_cLocation.X - (g_sHugger[h].m_cLocation.X), 2) + pow(g_sChar.m_cLocation.Y - (g_sHugger[h].m_cLocation.Y + 1), 2));
 		}
 		if (map[g_sHugger[h].m_cLocation.Y][g_sHugger[h].m_cLocation.X + 1] == ' ' && x[h] != 2) {
@@ -342,28 +340,32 @@ void huggerdata() {
 			x[h] = 0;
 			continue;
 		}
-		else if (min_double == up && x[h] != 3) { // move up
+		else if (min_double == up && x[h] != 3 && bhugger[h] >= 2) { // move up
 			g_sHugger[h].m_cLocation.Y--;
 			x[h] = 1;
+			bhugger[h] = 0;
 		}
 		else if (min_double == left && x[h] != 4) { // move left
 			g_sHugger[h].m_cLocation.X--;
 			x[h] = 2;
 		}
-		else if (min_double == down && x[h] != 1) { // move down
+		else if (min_double == down && x[h] != 1 && bhugger[h] >= 2) { // move down
 			g_sHugger[h].m_cLocation.Y++;
 			x[h] = 3;
+			bhugger[h] = 0;
 		}
 		else if (min_double == right && x[h] != 2) { // move right
 			g_sHugger[h].m_cLocation.X++;
 			x[h] = 4;
 		}
+		bhugger[h]++;
 	}
 
 	fooeyhappened1 = true;
 
-	if (fooeyhappened1)
+	if (fooeyhappened1) {
 		huggerbouncetime = g_dElapsedTime + 0.17; // huggers act around seven times per second
+	}
 }
 void gunnerdata() {
 	fooeyhappened2 = false;
@@ -373,11 +375,13 @@ void gunnerdata() {
 
 	for (g = 0; g < 4; g++) {
 		if (sqrt(pow((g_sGunner[g].m_cLocation.X - g_sChar.m_cLocation.X), 2)) <= 8 && sqrt(pow((g_sGunner[g].m_cLocation.Y - g_sChar.m_cLocation.Y), 2)) <= 8) {
-			if (g_sGunner[g].m_cLocation.Y < g_sChar.m_cLocation.Y && map[g_sGunner[g].m_cLocation.Y - 1][g_sGunner[g].m_cLocation.X] == ' ') {
+			if (g_sGunner[g].m_cLocation.Y < g_sChar.m_cLocation.Y && map[g_sGunner[g].m_cLocation.Y - 1][g_sGunner[g].m_cLocation.X] == ' ' && bhugger[g] >= 2) {
 				g_sGunner[g].m_cLocation.Y--;
+				bhugger[g] = 0;
 			}
-			if (g_sGunner[g].m_cLocation.Y > g_sChar.m_cLocation.Y && map[g_sGunner[g].m_cLocation.Y + 1][g_sGunner[g].m_cLocation.X] == ' ') {
+			if (g_sGunner[g].m_cLocation.Y > g_sChar.m_cLocation.Y && map[g_sGunner[g].m_cLocation.Y + 1][g_sGunner[g].m_cLocation.X] == ' ' && bhugger[g] >= 2) {
 				g_sGunner[g].m_cLocation.Y++;
+				bhugger[g] = 0;
 			}
 			if (g_sGunner[g].m_cLocation.X < g_sChar.m_cLocation.X && map[g_sGunner[g].m_cLocation.Y][g_sGunner[g].m_cLocation.X - 1] == ' ') {
 				g_sGunner[g].m_cLocation.X--;
@@ -387,11 +391,13 @@ void gunnerdata() {
 			}
 		}
 		else {
-			if (g_sGunner[g].m_cLocation.Y < g_sChar.m_cLocation.Y && map[g_sGunner[g].m_cLocation.Y + 1][g_sGunner[g].m_cLocation.X] == ' ') {
+			if (g_sGunner[g].m_cLocation.Y < g_sChar.m_cLocation.Y && map[g_sGunner[g].m_cLocation.Y + 1][g_sGunner[g].m_cLocation.X] == ' ' && bhugger[g] >= 2) {
 				g_sGunner[g].m_cLocation.Y++;
+				bhugger[g] = 0;
 			}
-			if (g_sGunner[g].m_cLocation.Y > g_sChar.m_cLocation.Y && map[g_sGunner[g].m_cLocation.Y - 1][g_sGunner[g].m_cLocation.X] == ' ') {
+			if (g_sGunner[g].m_cLocation.Y > g_sChar.m_cLocation.Y && map[g_sGunner[g].m_cLocation.Y - 1][g_sGunner[g].m_cLocation.X] == ' ' && bhugger[g] >= 2) {
 				g_sGunner[g].m_cLocation.Y--;
+				bhugger[g] = 0;
 			}
 			if (g_sGunner[g].m_cLocation.X < g_sChar.m_cLocation.X && map[g_sGunner[g].m_cLocation.Y][g_sGunner[g].m_cLocation.X + 1] == ' ') {
 				g_sGunner[g].m_cLocation.X++;
@@ -419,6 +425,7 @@ void gunnerdata() {
 			}
 			else shootdirection[i] = 2; //shoot left
 		}
+		bhugger[g]++;
 	}
 
 	if (i >= 123) {
@@ -427,8 +434,9 @@ void gunnerdata() {
 
 	fooeyhappened2 = true;
 
-	if (fooeyhappened2)
+	if (fooeyhappened2) {
 		gunnerbouncetime = g_dElapsedTime + 0.5; // gunners act around twice per second
+	}
 }
 void enemybullet() {
 	fooeyhappened3 = false;
@@ -438,16 +446,18 @@ void enemybullet() {
 
 	n = i;
 	for (i = 0; i < 128; i++) {
-		if (shootdirection[i] == 1) { // shoot up
+		if (shootdirection[i] == 1 && bbullet[i] >= 2) { // move up
 			g_sBullets[i].m_cLocation.Y--;
+			bbullet[i] = 0;
 		}
-		if (shootdirection[i] == 2) { // shoot left
+		if (shootdirection[i] == 2) { // move left
 			g_sBullets[i].m_cLocation.X--;
 		}
-		if (shootdirection[i] == 3) { // shoot down
+		if (shootdirection[i] == 3 && bbullet[i] >= 2) { // move down
 			g_sBullets[i].m_cLocation.Y++;
+			bbullet[i] = 0;
 		}
-		if (shootdirection[i] == 4) { // shoot right
+		if (shootdirection[i] == 4) { // move right
 			g_sBullets[i].m_cLocation.X++;
 		}
 		if (g_sBullets[i].m_cLocation.X >= 110 || g_sBullets[i].m_cLocation.X <= 0 || g_sBullets[i].m_cLocation.Y >= 30 || g_sBullets[i].m_cLocation.Y <= 0) {
@@ -455,13 +465,15 @@ void enemybullet() {
 			g_sBullets[i].m_cLocation.Y = 0;
 			shootdirection[i] = 0;
 		}
+		bbullet[i]++;
 	}
 	i = n;
 
 	fooeyhappened3 = true;
 
-	if (fooeyhappened3)
+	if (fooeyhappened3) {
 		bulletbouncetime = g_dElapsedTime + 0.05; // enemy bullets move around 20 tiles per second
+	}
 }
 
 void playershoot()
@@ -539,22 +551,25 @@ void playershoot()
 
 	p = ps;
 	for (ps = 0; ps < 64; ps++) {
-		if (playerdirection[ps] == 1) { // shoot up
+		if (playerdirection[ps] == 1 && bplayershoot[ps] >= 2) { // move up
 			g_sPlayershots[ps].m_cLocation.Y--;
+			bplayershoot[ps] = 0;
 		}
-		if (playerdirection[ps] == 2) { // shoot down
+		if (playerdirection[ps] == 2 && bplayershoot[ps] >= 2) { // move down
 			g_sPlayershots[ps].m_cLocation.Y++;
+			bplayershoot[ps] = 0;
 		}
-		if (playerdirection[ps] == 3) { // shoot left
+		if (playerdirection[ps] == 3) { // move left
 			g_sPlayershots[ps].m_cLocation.X--;
 		}
-		if (playerdirection[ps] == 4) { // shoot right
+		if (playerdirection[ps] == 4) { // move right
 			g_sPlayershots[ps].m_cLocation.X++;
 		}
 		if (g_sPlayershots[ps].m_cLocation.X >= 110 || g_sPlayershots[ps].m_cLocation.X <= 0 || g_sPlayershots[ps].m_cLocation.Y >= 30 || g_sPlayershots[ps].m_cLocation.Y <= 0) {
 			g_sPlayershots[ps].m_cLocation.X = 0;
 			g_sPlayershots[ps].m_cLocation.Y = 0;
 		}
+		bplayershoot[ps]++;
 	}
 	ps = p;
 
@@ -601,36 +616,35 @@ void moveCharacter()
 
 	// Updating the location of the character based on the key press
 	// providing a beep sound whenver we shift the character
-	if (g_abKeyPressed[K_UP] && map[g_sChar.m_cLocation.Y - 1][g_sChar.m_cLocation.X] == ' ')
+	if (g_abKeyPressed[K_UP] && map[g_sChar.m_cLocation.Y - 1][g_sChar.m_cLocation.X] == ' ' && bplayer >= 2)
 	{
 		//Beep(1440, 30);
 		g_sChar.m_cLocation.Y--;
-		bSomethingHappened = true;
-
+		bplayer = 0;
 	}
 	if (g_abKeyPressed[K_LEFT] && map[g_sChar.m_cLocation.Y][g_sChar.m_cLocation.X - 1] == ' ')
 	{
 		//Beep(1440, 30);
 		g_sChar.m_cLocation.X--;
-		bSomethingHappened = true;
 	}
-	if (g_abKeyPressed[K_DOWN] && map[g_sChar.m_cLocation.Y + 1][g_sChar.m_cLocation.X] == ' ')
+	if (g_abKeyPressed[K_DOWN] && map[g_sChar.m_cLocation.Y + 1][g_sChar.m_cLocation.X] == ' ' && bplayer >= 2)
 	{
 		//Beep(1440, 30);
 		g_sChar.m_cLocation.Y++;
-		bSomethingHappened = true;
+		bplayer = 0;
 	}
 	if (g_abKeyPressed[K_RIGHT] && map[g_sChar.m_cLocation.Y][g_sChar.m_cLocation.X + 1] == ' ')
 	{
 		//Beep(1440, 30);
 		g_sChar.m_cLocation.X++;
-		bSomethingHappened = true;
 	}
+	bplayer++;
+	bSomethingHappened = true;
 
 	if (bSomethingHappened)
 	{
 		// set the bounce time to some time in the future to prevent accidental triggers
-		g_dBounceTime = g_dElapsedTime + 0.125; // 125ms should be enough
+		g_dBounceTime = g_dElapsedTime + 0.111; // 111ms should be enough
 	}
 
 	if (collision('S') || collision('H') || collision('O') || collision('P'))
