@@ -26,6 +26,7 @@ int a = 0;
 bool inven = true;
 bool shop = false;
 int coins = 0;
+int lives = 3;
 
 int shootdirection[128] = { 0, };
 int playerdirection[64] = { 0, };
@@ -169,11 +170,11 @@ void update(double dt)
     {
         case S_SPLASHSCREEN : splashScreenWait(); // game logic for the splash screen
             break;
-		case S_STARTMENU: startMenu();
+		case S_STARTMENU: processUserInput();
 			break;
-		case S_INSTRUCTIONS: instructions();
+		case S_INSTRUCTIONS: processUserInput();
 			break;
-		case S_CHARACTERCREATION: characterCreation();
+		case S_CHARACTERCREATION: processUserInput();
 			break;
         case S_GAME: gameplay(); // gameplay logic when we are in the game
             break;
@@ -214,87 +215,12 @@ void splashScreenWait()    // waits for time to pass in splash screen
         g_eGameState = S_STARTMENU;
 }
 
-void startMenu()
-{
-	if (g_abKeyPressed[K_1])
-	{
-		g_eGameState = S_CHARACTERCREATION;
-	}
-
-	if (g_abKeyPressed[K_2])
-	{
-		g_eGameState = S_INSTRUCTIONS;
-	}
-
-	if (g_abKeyPressed[K_3])
-	{
-		g_bQuitGame = true;
-	}
-}
-void instructions()
-{
-	if (g_abKeyPressed[K_RETURN])
-	{
-		g_eGameState = S_CHARACTERCREATION;
-	}
-}
 //int audioPlay(int argc, const char** argv)
 //{
 //	ISoundEngine* sound = createIrrKlangDevice();
 //	if (!sound)
 //		return 0;
 //}
-
-void characterCreation()
-{
-	if (g_abKeyPressed[K_1])
-	{
-		charArray[0] = true;
-		charArray[1] = false;
-		charArray[2] = false;
-		charArray[3] = false;
-		charArray[4] = false;
-	}
-
-	if (g_abKeyPressed[K_2])
-	{
-		charArray[1] = true;
-		charArray[0] = false;
-		charArray[2] = false;
-		charArray[3] = false;
-		charArray[4] = false;
-	}
-
-	if (g_abKeyPressed[K_3])
-	{
-		charArray[2] = true;
-		charArray[0] = false;
-		charArray[1] = false;
-		charArray[3] = false;
-		charArray[4] = false;
-	}
-
-	if (g_abKeyPressed[K_4])
-	{
-		charArray[3] = true;
-		charArray[0] = false;
-		charArray[1] = false;
-		charArray[2] = false;
-		charArray[4] = false;
-	}
-	if (g_abKeyPressed[K_5])
-	{
-		charArray[4] = true;
-		charArray[0] = false;
-		charArray[1] = false;
-		charArray[2] = false;
-		charArray[3] = false;
-	}
-	if (g_abKeyPressed[K_SPACE] && (charArray[0] == true || charArray[1] == true || charArray[2] == true || charArray[3] == true || charArray[4] == true))
-	{
-		g_eGameState = S_GAME;
-	}
-}
 
 void renderEntities()
 {
@@ -805,6 +731,78 @@ void processUserInput()
     // quits the game if player hits the escape key
     if (g_abKeyPressed[K_ESCAPE])
         g_bQuitGame = true;
+
+	if (g_eGameState == S_STARTMENU)
+	{
+		if (g_abKeyPressed[K_1])
+		{
+			g_eGameState = S_CHARACTERCREATION;
+		}
+
+		if (g_abKeyPressed[K_2])
+		{
+			g_eGameState = S_INSTRUCTIONS;
+		}
+
+		if (g_abKeyPressed[K_3])
+		{
+			g_bQuitGame = true;
+		}
+	}
+	if (g_eGameState == S_INSTRUCTIONS)
+	{
+		if (g_abKeyPressed[K_RETURN])
+		{
+			g_eGameState = S_CHARACTERCREATION;
+		}
+	}
+	if (g_eGameState == S_CHARACTERCREATION)
+	{
+		if (g_abKeyPressed[K_1])
+		{
+			charArray[0] = true;
+			charArray[1] = false;
+			charArray[2] = false;
+			charArray[3] = false;
+			charArray[4] = false;
+		}
+		if (g_abKeyPressed[K_2])
+		{
+			charArray[1] = true;
+			charArray[0] = false;
+			charArray[2] = false;
+			charArray[3] = false;
+			charArray[4] = false;
+		}
+		if (g_abKeyPressed[K_3])
+		{
+			charArray[2] = true;
+			charArray[0] = false;
+			charArray[1] = false;
+			charArray[3] = false;
+			charArray[4] = false;
+		}
+		if (g_abKeyPressed[K_4])
+		{
+			charArray[3] = true;
+			charArray[0] = false;
+			charArray[1] = false;
+			charArray[2] = false;
+			charArray[4] = false;
+		}
+		if (g_abKeyPressed[K_5])
+		{
+			charArray[4] = true;
+			charArray[0] = false;
+			charArray[1] = false;
+			charArray[2] = false;
+			charArray[3] = false;
+		}
+		if (g_abKeyPressed[K_SPACE] && (charArray[0] == true || charArray[1] == true || charArray[2] == true || charArray[3] == true || charArray[4] == true))
+		{
+			g_eGameState = S_GAME;
+		}
+	}
 }
 
 void clearScreen()
@@ -1439,10 +1437,15 @@ void renderMap()
 		}
 		inventoryFile.close();
 
+		//Render Lives
+		c.X = 9;
+		c.Y = 21;
+		g_Console.writeToBuffer(c, to_string(lives), 0x0F);
+		//Render Coins
 		c.X = 21;
 		c.Y = 21;
 		g_Console.writeToBuffer(c, to_string(coins), 0x0F);
-
+		//Render Current Gun
 		if (equipWeapons[0] == true)
 		{
 			c.X = 4;
