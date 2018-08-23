@@ -1,11 +1,11 @@
 
- @#############################################@ 
- @                   SHOP                      @
- @_____________________________________________@
- @        GUNS        |       PAYMENT          @
- @ Smg     - 20 Coins | Press 2 to buy Smg     @
- @ Rifle   - 30 Coins | Press 3 to buy Rifle   @
- @ Sniper  - 50 Coins | Press 4 to buy Sniper  @
- @ Minigun - 90 Coins | Press 5 to buy Minigun @
- @                    |                        @
- ###############################################
+ @##############################################@ 
+ @                    SHOP                      @
+ @______________________________________________@
+ @        GUNS         |       PAYMENT          @
+ @ Smg     - 40 Coins  | Press 2 to buy Smg     @
+ @ Rifle   - 70 Coins  | Press 3 to buy Rifle   @
+ @ Sniper  - 100 Coins | Press 4 to buy Sniper  @
+ @ Minigun - 150 Coins | Press 5 to buy Minigun @
+ @                     |                        @
+ ################################################

@@ -297,19 +297,22 @@ void renderEntities()
 	// Draw the location of the enemies
 	WORD charE_Color = 0x0C;
 	
-	for (int h = 0; h < 4; h++) {
-		g_Console.writeToBuffer(g_sHugger[h].m_cLocation, (char)128, charE_Color);
-	}
-	for (int g = 0; g < 4; g++) {
-		g_Console.writeToBuffer(g_sGunner[g].m_cLocation, (char)83, charE_Color);
+	if (levels[0] == false)
+	{
+		for (int h = 0; h < 4; h++) {
+			g_Console.writeToBuffer(g_sHugger[h].m_cLocation, (char)128, charE_Color);
+		}
+		for (int g = 0; g < 4; g++) {
+			g_Console.writeToBuffer(g_sGunner[g].m_cLocation, (char)83, charE_Color);
+		}
+		// For enemy bullets
+		for (int i = 0; i < 128; i++) {
+			g_Console.writeToBuffer(g_sBullets[i].m_cLocation, (char)7, charE_Color);
+		}
 	}
 	// For player bullets
 	for (int ps = 0; ps < 64; ps++) {
 		g_Console.writeToBuffer(g_sPlayershots[ps].m_cLocation, (char)7, 0x06);
-	}
-	// For enemy bullets
-	for (int i = 0; i < 128; i++) {
-		g_Console.writeToBuffer(g_sBullets[i].m_cLocation, (char)7, charE_Color);
 	}
 }
 int b = 0, i = 0, n = 0, g = 0, h = 0, p = 0, ps = 0, bhugger[4] = { 0, }, bgunner[4] = { 0, }, bbullet[128] = { 0, }, bplayer = 0, bplayershoot[64] = { 0, }; // variables starting with b is used for buffer, others are used for array and stuff
@@ -1261,20 +1264,24 @@ void renderMap()
 		}
 		shopFile.close();
 
-		if (g_abKeyPressed[K_2])
+		if (g_abKeyPressed[K_2] && boughtWeapons[1] == false && (coins >= 40))
 		{
+			coins -= 40;
 			boughtWeapons[1] = true;
 		}
-		 if (g_abKeyPressed[K_3])
+		 if (g_abKeyPressed[K_3] && boughtWeapons[2] == false && (coins >= 70))
 		{
+			 coins -= 70;
 			 boughtWeapons[2] = true;
 		}
-		if (g_abKeyPressed[K_4])
+		if (g_abKeyPressed[K_4] && boughtWeapons[3] == false && (coins >= 100))
 		{
+			coins -= 100;
 			boughtWeapons[3] = true;
 		}
-		if (g_abKeyPressed[K_5])
+		if (g_abKeyPressed[K_5] && boughtWeapons[4] == false && (coins >= 150))
 		{
+			coins -= 150;
 			boughtWeapons[4] = true;
 		}
 	}
@@ -1316,6 +1323,12 @@ void renderMap()
 					case '2':
 						if (boughtWeapons[1] == true)
 						{
+							if (shop == true)
+							{
+								c.X = 52;
+								c.Y = 22;
+								g_Console.writeToBuffer(c, "Sold Out ", 0x06);
+							}
 							inventory[a] = '2';
 						}
 						else
@@ -1326,6 +1339,12 @@ void renderMap()
 					case '3':
 						if (boughtWeapons[2] == true)
 						{
+							if (shop == true)
+							{
+								c.X = 52;
+								c.Y = 23;
+								g_Console.writeToBuffer(c, "Sold Out ", 0x07);
+							}
 							inventory[a] = '3';
 						}
 						else
@@ -1336,6 +1355,12 @@ void renderMap()
 					case '4':
 						if (boughtWeapons[3] == true)
 						{
+							if (shop == true)
+							{
+								c.X = 52;
+								c.Y = 24;
+								g_Console.writeToBuffer(c, "Sold Out ", 0x08);
+							}
 							inventory[a] = '4';
 						}
 						else
@@ -1346,6 +1371,12 @@ void renderMap()
 					case '5':
 						if (boughtWeapons[4] == true)
 						{
+							if (shop == true)
+							{
+								c.X = 52;
+								c.Y = 25;
+								g_Console.writeToBuffer(c, "Sold Out ", 0x09);
+							}
 							inventory[a] = '5';
 						}
 						else
@@ -1402,6 +1433,10 @@ void renderMap()
 			}
 		}
 		inventoryFile.close();
+
+		c.X = 21;
+		c.Y = 21;
+		g_Console.writeToBuffer(c, to_string(coins), 0x0F);
 
 		if (equipWeapons[0] == true)
 		{
