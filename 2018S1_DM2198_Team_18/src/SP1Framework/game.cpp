@@ -14,25 +14,21 @@
 //using namespace irrklang;
 using namespace std;
 
+int a = 0;
 int money = 0;
 int shootdirection[128] = { 0, };
 int playerdirection[64] = { 0, };
 
-bool inven = true;
-bool shop = false;
-bool hqSpawn = false;
-bool playerRespawn = false;
-bool nameSelect = false;
-bool characterSelect = false;
-
 string names[5] = { "Enos", "Okin", "Ilya", "Setsuna", "Ilias" };
-bool nameArray[5] = { false };
 bool charArray[5] = { false };
-
 bool levels[5] = { false };
+bool spawns[5] = { false };
 bool gems[4] = { false };
 bool equipWeapons[5] = { false };
 bool boughtWeapons[5] = { false };
+
+bool inven = true;
+bool shop = false;
 
 double  g_dElapsedTime;
 double  huggerbouncetime = g_dElapsedTime;
@@ -208,7 +204,7 @@ void render()
 
 void splashScreenWait()    // waits for time to pass in splash screen
 {
-    if (g_dElapsedTime > 2) // wait for 3 seconds to switch to game mode, else do nothing
+    if (g_dElapsedTime > 2) // wait for 2 seconds to switch to game mode, else do nothing
         g_eGameState = S_STARTMENU;
 }
 
@@ -245,109 +241,55 @@ void instructions()
 
 void characterCreation()
 {
-	if (g_abKeyPressed[K_1] && nameSelect == false)
-	{
-		nameArray[0] = true;
-		nameArray[1] = false;
-		nameArray[2] = false;
-		nameArray[3] = false;
-		nameArray[4] = false;
-	}
-
-	if (g_abKeyPressed[K_2] && nameSelect == false)
-	{
-		nameArray[1] = true;
-		nameArray[0] = false;
-		nameArray[2] = false;
-		nameArray[3] = false;
-		nameArray[4] = false;
-	}
-
-	if (g_abKeyPressed[K_3] && nameSelect == false)
-	{
-		nameArray[2] = true;
-		nameArray[0] = false;
-		nameArray[1] = false;
-		nameArray[3] = false;
-		nameArray[4] = false;
-	}
-
-	if (g_abKeyPressed[K_4] && nameSelect == false)
-	{
-		nameArray[3] = true;
-		nameArray[0] = false;
-		nameArray[1] = false;
-		nameArray[2] = false;
-		nameArray[4] = false;
-	}
-	if (g_abKeyPressed[K_5] && nameSelect == false)
-	{
-		nameArray[4] = true;
-		nameArray[0] = false;
-		nameArray[1] = false;
-		nameArray[2] = false;
-		nameArray[3] = false;
-	}
-	if (g_abKeyPressed[K_SPACE] && characterSelect == false)
-	{
-		nameSelect = true;
-	}
-	if (g_abKeyPressed[K_1] && nameSelect == true)
+	if (g_abKeyPressed[K_1])
 	{
 		charArray[0] = true;
 		charArray[1] = false;
 		charArray[2] = false;
 		charArray[3] = false;
 		charArray[4] = false;
-		characterSelect = true;
 	}
 
-	if (g_abKeyPressed[K_2] && nameSelect == true)
+	if (g_abKeyPressed[K_2])
 	{
 		charArray[1] = true;
 		charArray[0] = false;
 		charArray[2] = false;
 		charArray[3] = false;
 		charArray[4] = false;
-		characterSelect = true;
 	}
 
-	if (g_abKeyPressed[K_3] && nameSelect == true)
+	if (g_abKeyPressed[K_3])
 	{
 		charArray[2] = true;
 		charArray[0] = false;
 		charArray[1] = false;
 		charArray[3] = false;
 		charArray[4] = false;
-		characterSelect = true;
 	}
 
-	if (g_abKeyPressed[K_4] && nameSelect == true)
+	if (g_abKeyPressed[K_4])
 	{
 		charArray[3] = true;
 		charArray[0] = false;
 		charArray[1] = false;
 		charArray[2] = false;
 		charArray[4] = false;
-		characterSelect = true;
 	}
-	if (g_abKeyPressed[K_5] && nameSelect == true)
+	if (g_abKeyPressed[K_5])
 	{
 		charArray[4] = true;
 		charArray[0] = false;
 		charArray[1] = false;
 		charArray[2] = false;
 		charArray[3] = false;
-		characterSelect = true;
 	}
-	if (g_abKeyPressed[K_SPACE] && nameSelect == true && characterSelect == true)
+	if (g_abKeyPressed[K_SPACE] && (charArray[0] == true || charArray[1] == true || charArray[2] == true || charArray[3] == true || charArray[4] == true))
 	{
 		g_eGameState = S_GAME;
 	}
 }
 
-melee hugger;
-ranged gunner;
 void renderEntities()
 {
 	// Draw the location of the enemies
@@ -368,46 +310,11 @@ void renderEntities()
 		g_Console.writeToBuffer(g_sBullets[i].m_cLocation, (char)7, charE_Color);
 	}
 }
-int b = 0, i = 0, n = 0, g = 0, h = 0, p = 0, ps = 0, shootbuffer = 0;
+int b = 0, i = 0, n = 0, g = 0, h = 0, p = 0, ps = 0, bhugger[4] = { 0, }, bgunner[4] = { 0, }, bbullet[128] = { 0, }, bplayer = 0, bplayershoot[64] = { 0, }; // variables starting with b is used for buffer, others are used for array and stuff
 int x[4] = { 0, };
 bool fooeyhappened1, fooeyhappened2, fooeyhappened3, playershot;
-void enemydata() {
+void huggerdata() {
 	double up, left, down, right, min_double;
-	melee hugger;
-	ranged gunner;
-
-	fooeyhappened3 = false;
-
-	if (bulletbouncetime > g_dElapsedTime)
-		return;
-
-
-	n = i;
-	for (i = 0; i < 128; i++) {
-		if (shootdirection[i] == 1) { // shoot up
-			g_sBullets[i].m_cLocation.Y--;
-		}
-		if (shootdirection[i] == 2) { // shoot left
-			g_sBullets[i].m_cLocation.X--;
-		}
-		if (shootdirection[i] == 3) { // shoot down
-			g_sBullets[i].m_cLocation.Y++;
-		}
-		if (shootdirection[i] == 4) { // shoot right
-			g_sBullets[i].m_cLocation.X++;
-		}
-		if (g_sBullets[i].m_cLocation.X >= 110 || g_sBullets[i].m_cLocation.X <= 0 || g_sBullets[i].m_cLocation.Y >= 30 || g_sBullets[i].m_cLocation.Y <= 0) {
-			g_sBullets[i].m_cLocation.X = 0;
-			g_sBullets[i].m_cLocation.Y = 0;
-			shootdirection[i] = 0;
-		}
-	}
-	i = n;
-
-	fooeyhappened3 = true;
-
-	if (fooeyhappened3)
-		bulletbouncetime = g_dElapsedTime + 0.05; // enemy bullets move around 20 tiles per second
 
 	fooeyhappened1 = false;
 
@@ -416,13 +323,13 @@ void enemydata() {
 
 	for (h = 0; h < 4; h++) { // x[h] in this case is used for a "no reverse rule". Example, if one enemy is moving up, he's not allowed to move down immediately after moving up
 		up = 99.0; left = 99.0; down = 99.0; right = 99.0;
-		if (map[g_sHugger[h].m_cLocation.Y - 1][g_sHugger[h].m_cLocation.X] == ' ' && x[h] != 3) {
+		if (map[g_sHugger[h].m_cLocation.Y - 1][g_sHugger[h].m_cLocation.X] == ' ' && x[h] != 3 && bhugger[h] >= 2) {
 			up = sqrt(pow(g_sChar.m_cLocation.X - (g_sHugger[h].m_cLocation.X), 2) + pow(g_sChar.m_cLocation.Y - (g_sHugger[h].m_cLocation.Y - 1), 2));
 		}
 		if (map[g_sHugger[h].m_cLocation.Y][g_sHugger[h].m_cLocation.X - 1] == ' ' && x[h] != 4) {
 			left = sqrt(pow(g_sChar.m_cLocation.X - (g_sHugger[h].m_cLocation.X - 1), 2) + pow(g_sChar.m_cLocation.Y - (g_sHugger[h].m_cLocation.Y), 2));
 		}
-		if (map[g_sHugger[h].m_cLocation.Y + 1][g_sHugger[h].m_cLocation.X] == ' ' && x[h] != 1) {
+		if (map[g_sHugger[h].m_cLocation.Y + 1][g_sHugger[h].m_cLocation.X] == ' ' && x[h] != 1 && bhugger[h] >= 2) {
 			down = sqrt(pow(g_sChar.m_cLocation.X - (g_sHugger[h].m_cLocation.X), 2) + pow(g_sChar.m_cLocation.Y - (g_sHugger[h].m_cLocation.Y + 1), 2));
 		}
 		if (map[g_sHugger[h].m_cLocation.Y][g_sHugger[h].m_cLocation.X + 1] == ' ' && x[h] != 2) {
@@ -433,30 +340,34 @@ void enemydata() {
 			x[h] = 0;
 			continue;
 		}
-		else if (min_double == up && x[h] != 3) { // move up
+		else if (min_double == up && x[h] != 3 && bhugger[h] >= 2) { // move up
 			g_sHugger[h].m_cLocation.Y--;
 			x[h] = 1;
+			bhugger[h] = 0;
 		}
 		else if (min_double == left && x[h] != 4) { // move left
 			g_sHugger[h].m_cLocation.X--;
 			x[h] = 2;
 		}
-		else if (min_double == down && x[h] != 1) { // move down
+		else if (min_double == down && x[h] != 1 && bhugger[h] >= 2) { // move down
 			g_sHugger[h].m_cLocation.Y++;
 			x[h] = 3;
+			bhugger[h] = 0;
 		}
 		else if (min_double == right && x[h] != 2) { // move right
 			g_sHugger[h].m_cLocation.X++;
 			x[h] = 4;
 		}
+		bhugger[h]++;
 	}
 
 	fooeyhappened1 = true;
 
-	if (fooeyhappened1)
-		huggerbouncetime = g_dElapsedTime + 0.15; // huggers act around seven times per second
-
-
+	if (fooeyhappened1) {
+		huggerbouncetime = g_dElapsedTime + 0.17; // huggers act around seven times per second
+	}
+}
+void gunnerdata() {
 	fooeyhappened2 = false;
 
 	if (gunnerbouncetime > g_dElapsedTime)
@@ -464,11 +375,13 @@ void enemydata() {
 
 	for (g = 0; g < 4; g++) {
 		if (sqrt(pow((g_sGunner[g].m_cLocation.X - g_sChar.m_cLocation.X), 2)) <= 8 && sqrt(pow((g_sGunner[g].m_cLocation.Y - g_sChar.m_cLocation.Y), 2)) <= 8) {
-			if (g_sGunner[g].m_cLocation.Y < g_sChar.m_cLocation.Y && map[g_sGunner[g].m_cLocation.Y - 1][g_sGunner[g].m_cLocation.X] == ' ') {
+			if (g_sGunner[g].m_cLocation.Y < g_sChar.m_cLocation.Y && map[g_sGunner[g].m_cLocation.Y - 1][g_sGunner[g].m_cLocation.X] == ' ' && bhugger[g] >= 2) {
 				g_sGunner[g].m_cLocation.Y--;
+				bhugger[g] = 0;
 			}
-			if (g_sGunner[g].m_cLocation.Y > g_sChar.m_cLocation.Y && map[g_sGunner[g].m_cLocation.Y + 1][g_sGunner[g].m_cLocation.X] == ' ') {
+			if (g_sGunner[g].m_cLocation.Y > g_sChar.m_cLocation.Y && map[g_sGunner[g].m_cLocation.Y + 1][g_sGunner[g].m_cLocation.X] == ' ' && bhugger[g] >= 2) {
 				g_sGunner[g].m_cLocation.Y++;
+				bhugger[g] = 0;
 			}
 			if (g_sGunner[g].m_cLocation.X < g_sChar.m_cLocation.X && map[g_sGunner[g].m_cLocation.Y][g_sGunner[g].m_cLocation.X - 1] == ' ') {
 				g_sGunner[g].m_cLocation.X--;
@@ -478,11 +391,13 @@ void enemydata() {
 			}
 		}
 		else {
-			if (g_sGunner[g].m_cLocation.Y < g_sChar.m_cLocation.Y && map[g_sGunner[g].m_cLocation.Y + 1][g_sGunner[g].m_cLocation.X] == ' ') {
+			if (g_sGunner[g].m_cLocation.Y < g_sChar.m_cLocation.Y && map[g_sGunner[g].m_cLocation.Y + 1][g_sGunner[g].m_cLocation.X] == ' ' && bhugger[g] >= 2) {
 				g_sGunner[g].m_cLocation.Y++;
+				bhugger[g] = 0;
 			}
-			if (g_sGunner[g].m_cLocation.Y > g_sChar.m_cLocation.Y && map[g_sGunner[g].m_cLocation.Y - 1][g_sGunner[g].m_cLocation.X] == ' ') {
+			if (g_sGunner[g].m_cLocation.Y > g_sChar.m_cLocation.Y && map[g_sGunner[g].m_cLocation.Y - 1][g_sGunner[g].m_cLocation.X] == ' ' && bhugger[g] >= 2) {
 				g_sGunner[g].m_cLocation.Y--;
+				bhugger[g] = 0;
 			}
 			if (g_sGunner[g].m_cLocation.X < g_sChar.m_cLocation.X && map[g_sGunner[g].m_cLocation.Y][g_sGunner[g].m_cLocation.X + 1] == ' ') {
 				g_sGunner[g].m_cLocation.X++;
@@ -510,22 +425,59 @@ void enemydata() {
 			}
 			else shootdirection[i] = 2; //shoot left
 		}
+		bhugger[g]++;
 	}
 
-	if (i >= 127) {
+	if (i >= 123) {
 		i = 0;
 	}
 
 	fooeyhappened2 = true;
 
-	if (fooeyhappened2)
-		gunnerbouncetime = g_dElapsedTime + 0.6; // gunners act around twice per second
+	if (fooeyhappened2) {
+		gunnerbouncetime = g_dElapsedTime + 0.5; // gunners act around twice per second
+	}
+}
+void enemybullet() {
+	fooeyhappened3 = false;
+
+	if (bulletbouncetime > g_dElapsedTime)
+		return;
+
+	n = i;
+	for (i = 0; i < 128; i++) {
+		if (shootdirection[i] == 1 && bbullet[i] >= 2) { // move up
+			g_sBullets[i].m_cLocation.Y--;
+			bbullet[i] = 0;
+		}
+		if (shootdirection[i] == 2) { // move left
+			g_sBullets[i].m_cLocation.X--;
+		}
+		if (shootdirection[i] == 3 && bbullet[i] >= 2) { // move down
+			g_sBullets[i].m_cLocation.Y++;
+			bbullet[i] = 0;
+		}
+		if (shootdirection[i] == 4) { // move right
+			g_sBullets[i].m_cLocation.X++;
+		}
+		if (g_sBullets[i].m_cLocation.X >= 110 || g_sBullets[i].m_cLocation.X <= 0 || g_sBullets[i].m_cLocation.Y >= 30 || g_sBullets[i].m_cLocation.Y <= 0) {
+			g_sBullets[i].m_cLocation.X = 0;
+			g_sBullets[i].m_cLocation.Y = 0;
+			shootdirection[i] = 0;
+		}
+		bbullet[i]++;
+	}
+	i = n;
+
+	fooeyhappened3 = true;
+
+	if (fooeyhappened3) {
+		bulletbouncetime = g_dElapsedTime + 0.05; // enemy bullets move around 20 tiles per second
+	}
 }
 
 void playershoot()
 {
-	playerdirection[ps] = 0;
-
 	if (g_abKeyPressed[K_UP]) {
 		playerdirection[ps] = 1; // shoot up
 	}
@@ -546,16 +498,15 @@ void playershoot()
 	}
 
 	if (g_abKeyPressed[K_SPACE] && playerdirection[ps] != 0) {
-		if (equipWeapons[0] && b >= 8 || equipWeapons[1] && b >= 4 || equipWeapons[2] && b >= 6 || equipWeapons[4] && b >= 1 || equipWeapons[3] && b >= 101) { // Pistol fires around 3 times per second, Smg fires around 7 times per second, Assault rifle fires around 5 times per second, Minigun fires around 20 times per second
+		if (equipWeapons[0] && b >= 8 || equipWeapons[1] && b >= 4 || equipWeapons[2] && b >= 6 || equipWeapons[3] && b >= 91 || equipWeapons[4] && b >= 1) { // Pistol fires around 3 times per second, Smg fires around 7 times per second, Assault rifle fires around 5 times per second, Sniper fires around once every 2 seconds, Minigun fires around 20 times per second
 			g_sPlayershots[ps].m_cLocation.X = g_sChar.m_cLocation.X;
 			g_sPlayershots[ps].m_cLocation.Y = g_sChar.m_cLocation.Y;
 			ps++;
+			if (ps >= 64) { ps = 0; }
+			playerdirection[ps] = 0;
 			b = 0;
 		}
 	}
-	if (ps >= 64)
-		ps = 0;
-
 	// Equipping weapons
 	if (g_abKeyPressed[K_1] && boughtWeapons[0] == true) {
 		equipWeapons[0] = true;
@@ -600,22 +551,25 @@ void playershoot()
 
 	p = ps;
 	for (ps = 0; ps < 64; ps++) {
-		if (playerdirection[ps] == 1) { // shoot up
+		if (playerdirection[ps] == 1 && bplayershoot[ps] >= 2) { // move up
 			g_sPlayershots[ps].m_cLocation.Y--;
+			bplayershoot[ps] = 0;
 		}
-		if (playerdirection[ps] == 2) { // shoot down
+		if (playerdirection[ps] == 2 && bplayershoot[ps] >= 2) { // move down
 			g_sPlayershots[ps].m_cLocation.Y++;
+			bplayershoot[ps] = 0;
 		}
-		if (playerdirection[ps] == 3) { // shoot left
+		if (playerdirection[ps] == 3) { // move left
 			g_sPlayershots[ps].m_cLocation.X--;
 		}
-		if (playerdirection[ps] == 4) { // shoot right
+		if (playerdirection[ps] == 4) { // move right
 			g_sPlayershots[ps].m_cLocation.X++;
 		}
 		if (g_sPlayershots[ps].m_cLocation.X >= 110 || g_sPlayershots[ps].m_cLocation.X <= 0 || g_sPlayershots[ps].m_cLocation.Y >= 30 || g_sPlayershots[ps].m_cLocation.Y <= 0) {
 			g_sPlayershots[ps].m_cLocation.X = 0;
 			g_sPlayershots[ps].m_cLocation.Y = 0;
 		}
+		bplayershoot[ps]++;
 	}
 	ps = p;
 
@@ -633,10 +587,12 @@ void playershoot()
 
 void gameplay()            // gameplay logic
 {
-    processUserInput(); // checks if you should change states or do something else with the game, e.g. pause, exit
-    moveCharacter();    // moves the character, collision detection, physics, etc
-                        // sound can be played here too.
-	enemydata();
+	processUserInput(); // checks if you should change states or do something else with the game, e.g. pause, exit
+	moveCharacter();    // moves the character, collision detection, physics, etc
+						// sound can be played here too.
+	huggerdata();
+	gunnerdata();
+	enemybullet();
 	playershoot();
 }
 
@@ -660,36 +616,35 @@ void moveCharacter()
 
 	// Updating the location of the character based on the key press
 	// providing a beep sound whenver we shift the character
-	if (g_abKeyPressed[K_UP] && map[g_sChar.m_cLocation.Y - 1][g_sChar.m_cLocation.X] == ' ')
+	if (g_abKeyPressed[K_UP] && map[g_sChar.m_cLocation.Y - 1][g_sChar.m_cLocation.X] == ' ' && bplayer >= 2)
 	{
 		//Beep(1440, 30);
 		g_sChar.m_cLocation.Y--;
-		bSomethingHappened = true;
-
+		bplayer = 0;
 	}
 	if (g_abKeyPressed[K_LEFT] && map[g_sChar.m_cLocation.Y][g_sChar.m_cLocation.X - 1] == ' ')
 	{
 		//Beep(1440, 30);
 		g_sChar.m_cLocation.X--;
-		bSomethingHappened = true;
 	}
-	if (g_abKeyPressed[K_DOWN] && map[g_sChar.m_cLocation.Y + 1][g_sChar.m_cLocation.X] == ' ')
+	if (g_abKeyPressed[K_DOWN] && map[g_sChar.m_cLocation.Y + 1][g_sChar.m_cLocation.X] == ' ' && bplayer >= 2)
 	{
 		//Beep(1440, 30);
 		g_sChar.m_cLocation.Y++;
-		bSomethingHappened = true;
+		bplayer = 0;
 	}
 	if (g_abKeyPressed[K_RIGHT] && map[g_sChar.m_cLocation.Y][g_sChar.m_cLocation.X + 1] == ' ')
 	{
 		//Beep(1440, 30);
 		g_sChar.m_cLocation.X++;
-		bSomethingHappened = true;
 	}
+	bplayer++;
+	bSomethingHappened = true;
 
 	if (bSomethingHappened)
 	{
 		// set the bounce time to some time in the future to prevent accidental triggers
-		g_dBounceTime = g_dElapsedTime + 0.125; // 125ms should be enough
+		g_dBounceTime = g_dElapsedTime + 0.111; // 111ms should be enough
 	}
 
 	if (collision('S') || collision('H') || collision('O') || collision('P'))
@@ -708,31 +663,34 @@ void moveCharacter()
 
 	if (levels[0] == true)
 	{
-		hqSpawn = false;
+		spawns[1] = false;
+		spawns[2] = false;
+		spawns[3] = false;
+		spawns[4] = false;
 
 		if (collision('a'))
 		{
 			levels[0] = false;
 			levels[1] = true;
-			playerRespawn = true;
+			spawns[0] = true;
 		}
 		else if (collision('b'))
 		{
 			levels[0] = false;
 			levels[2] = true;
-			playerRespawn = true;
+			spawns[0] = true;
 		}
 		else if (collision('c'))
 		{
 			levels[0] = false;
 			levels[3] = true;
-			playerRespawn = true;
+			spawns[0] = true;
 		}
 		else if (collision('d'))
 		{
 			levels[0] = false;
 			levels[4] = true;
-			playerRespawn = true;
+			spawns[0] = true;
 		}
 		else if (collision('%'))
 		{
@@ -743,13 +701,13 @@ void moveCharacter()
 
 	else if (levels[1] == true)
 	{
-		playerRespawn = false;
+		spawns[0] = false;
 
 		if (collision('%'))
 		{
 			levels[1] = false;
 			levels[0] = true;
-			hqSpawn = true;
+			spawns[1] = true;
 		}
 		if (collision('*'))
 		{
@@ -758,13 +716,13 @@ void moveCharacter()
 	}
 	else if (levels[2] == true)
 	{
-		playerRespawn = false;
+		spawns[0] = false;
 
 		if (collision('%'))
 		{
 			levels[2] = false;
 			levels[0] = true;
-			hqSpawn = true;
+			spawns[2] = true;
 		}
 		if (collision('&'))
 		{
@@ -778,13 +736,13 @@ void moveCharacter()
 	}
 	else if (levels[3] == true)
 	{
-		playerRespawn = false;
+		spawns[0] = false;
 
 		if (collision('%'))
 		{
 			levels[3] = false;
 			levels[0] = true;
-			hqSpawn = true;
+			spawns[3] = true;
 		}
 		if (collision('&'))
 		{
@@ -798,13 +756,13 @@ void moveCharacter()
 	}
 	else if (levels[4] == true)
 	{
-		playerRespawn = false;
+		spawns[0] = false;
 
 		if (collision('%'))
 		{
 			levels[4] = false;
 			levels[0] = true;
-			hqSpawn = true;
+			spawns[4] = true;
 		}
 		if (collision('&'))
 		{
@@ -816,16 +774,32 @@ void moveCharacter()
 			gems[3] = true;
 		}
 	}
-	if (hqSpawn == true)
-	{
-		g_sChar.m_cLocation.X = 46;
-		g_sChar.m_cLocation.Y = 10;
-	}
 
-	if (playerRespawn == true)
+	if (spawns[0] == true)
 	{
 		g_sChar.m_cLocation.X = 5;
 		g_sChar.m_cLocation.Y = 2;
+	}
+	if (spawns[1] == true)
+	{
+		g_sChar.m_cLocation.X = 12;
+		g_sChar.m_cLocation.Y = 6;
+	}
+	if (spawns[2] == true)
+	{
+		g_sChar.m_cLocation.X = 29;
+		g_sChar.m_cLocation.Y = 6;
+	}
+	if (spawns[3] == true)
+	{
+		g_sChar.m_cLocation.X = 46;
+		g_sChar.m_cLocation.Y = 6;
+
+	}
+	if (spawns[4] == true)
+	{
+		g_sChar.m_cLocation.X = 63;
+		g_sChar.m_cLocation.Y = 6;
 	}
 }
 void processUserInput()
@@ -841,13 +815,13 @@ void clearScreen()
     g_Console.clearBuffer(0x0F);
 }
 
-void renderSplashScreen()  // renders the splash screen
+void renderSplashScreen()
 {
-	int i = 0;
-	int a = 0;
+	//Render Splash Screen
 	COORD c = g_Console.getConsoleSize();
 	string splashscreen;
 	ifstream splashscreenFile;
+	int i = 0;
 
 	splashscreenFile.open("Splashscreen.txt");
 	if (splashscreenFile.is_open())
@@ -889,13 +863,11 @@ void renderSplashScreen()  // renders the splash screen
 
 void renderStartMenu()
 {
-	// Render Start Menu
+	//Render Start Menu
 	COORD c;
-	int i = 0;
-	int a = 0;
-
 	string menu;
 	ifstream menuFile;
+	int i = 0;
 	
 	menuFile.open("MainMenu.txt");
 	if (menuFile.is_open())
@@ -921,13 +893,11 @@ void renderStartMenu()
 
 void renderInstructions()
 {
-	// Render Instruction page 
-	COORD c;
-	int i = 0;
-	int a = 0;
-
+	//Render Instructions
+	COORD c;	
 	string instructions;
 	ifstream instructionFile;
+	int i = 0;
 
 	instructionFile.open("Instructions.txt");
 	if (instructionFile.is_open())
@@ -940,16 +910,16 @@ void renderInstructions()
 			g_Console.writeToBuffer(c, instructions, 0x0B);
 		}
 	}
+	instructionFile.close();
 }
 
 void renderCharacterCreation()
 {
+	//Render Character Creation
 	COORD c;
-	int i = 0;
-	int a = 0;
-
 	string creation;
 	ifstream creationFile;
+	int i = 0;
 	
 	creationFile.open("CharacterCreation.txt");
 	if (creationFile.is_open())
@@ -984,65 +954,49 @@ void renderCharacterCreation()
 	}
 	creationFile.close();
 
-	if (nameArray[0] == true)
+	if (charArray[0] == true)
 	{
 		c.X = 54;
 		c.Y = 11;
 		g_Console.writeToBuffer(c, names[0], 0x0B);
-	}
-	if (nameArray[1] == true)
-	{
-		c.X = 54;
-		c.Y = 11;
-		g_Console.writeToBuffer(c, names[1], 0x0B);
-	}
-	if (nameArray[2] == true)
-	{
-		c.X = 54;
-		c.Y = 11;
-		g_Console.writeToBuffer(c, names[2], 0x0B);
-	}
-	if (nameArray[3] == true)
-	{
-		c.X = 54;
-		c.Y = 11;
-		g_Console.writeToBuffer(c, names[3], 0x0B);
-	}
-	if (nameArray[4] == true)
-	{
-		c.X = 54;
-		c.Y = 11;
-		g_Console.writeToBuffer(c, names[4], 0x0B);
-	}
-	
-	if (charArray[0] == true)
-	{
 		c.X = 49;
-		c.Y = 22;
+		c.Y = 19;
 		g_Console.writeToBuffer(c, (char)2, 0x0F);
 	}
 	if (charArray[1] == true)
 	{
+		c.X = 54;
+		c.Y = 11;
+		g_Console.writeToBuffer(c, names[1], 0x0B);
 		c.X = 49;
-		c.Y = 22;
+		c.Y = 19;
 		g_Console.writeToBuffer(c, (char)3, 0x0C);
 	}
 	if (charArray[2] == true)
 	{
+		c.X = 54;
+		c.Y = 11;
+		g_Console.writeToBuffer(c, names[2], 0x0B);
 		c.X = 49;
-		c.Y = 22;
+		c.Y = 19;
 		g_Console.writeToBuffer(c, (char)4, 0x09);
 	}
 	if (charArray[3] == true)
 	{
+		c.X = 54;
+		c.Y = 11;
+		g_Console.writeToBuffer(c, names[3], 0x0B);
 		c.X = 49;
-		c.Y = 22;
+		c.Y = 19;
 		g_Console.writeToBuffer(c, (char)5, 0x0A);
 	}
 	if (charArray[4] == true)
 	{
+		c.X = 54;
+		c.Y = 11;
+		g_Console.writeToBuffer(c, names[4], 0x0B);
 		c.X = 49;
-		c.Y = 22;
+		c.Y = 19;
 		g_Console.writeToBuffer(c, (char)6, 0x0E);
 	}
 }
@@ -1059,7 +1013,8 @@ void renderMap()
 {
 	COORD c;
 	int i = 0;
-	int a = 0;
+
+	//Render Headquarters
 	if (levels[0] == true)
 		{
 			string headquarters;
@@ -1458,31 +1413,31 @@ void renderMap()
 		}
 		inventoryFile.close();
 
-		if (nameArray[0] == true)
+		if (charArray[0] == true)
 		{
 			c.X = 8;
 			c.Y = 20;
 			g_Console.writeToBuffer(c, names[0], 0x0F);
 		}
-		else if (nameArray[1] == true)
+		else if (charArray[1] == true)
 		{
 			c.X = 8;
 			c.Y = 20;
 			g_Console.writeToBuffer(c, names[1], 0x0F);
 		}
-		else if (nameArray[2] == true)
+		else if (charArray[2] == true)
 		{
 			c.X = 8;
 			c.Y = 20;
 			g_Console.writeToBuffer(c, names[2], 0x0F);
 		}
-		else if (nameArray[3] == true)
+		else if (charArray[3] == true)
 		{
 			c.X = 8;
 			c.Y = 20;
 			g_Console.writeToBuffer(c, names[3], 0x0F);
 		}
-		else if (nameArray[4] == true)
+		else if (charArray[4] == true)
 		{
 			c.X = 8;
 			c.Y = 20;
