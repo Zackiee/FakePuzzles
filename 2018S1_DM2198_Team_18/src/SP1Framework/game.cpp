@@ -808,7 +808,7 @@ void moveCharacter()
 		}
 		if (collision('&'))
 		{
-			g_sChar.m_cLocation.X = 55;
+			g_sChar.m_cLocation.X = 60;
 			g_sChar.m_cLocation.Y = 2;
 		}
 		if (collision('*'))
