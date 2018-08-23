@@ -43,6 +43,10 @@ SGameChar   g_sHugger[4];
 SGameChar	g_sGunner[4];
 SGameChar	g_sBullets[128]; // consider enemy bullets as characters in the code
 SGameChar	g_sPlayershots[64]; // consider player bullets as characters as well
+
+
+
+
 EGAMESTATES g_eGameState = S_SPLASHSCREEN;
 double  g_dBounceTime; // this is to prevent key bouncing, so we won't trigger keypresses more than once
 
@@ -322,13 +326,13 @@ void huggerdata() {
 
 	for (h = 0; h < 4; h++) { // x[h] in this case is used for a "no reverse rule". Example, if one enemy is moving up, he's not allowed to move down immediately after moving up
 		up = 99.0; left = 99.0; down = 99.0; right = 99.0;
-		if (map[g_sHugger[h].m_cLocation.Y - 1][g_sHugger[h].m_cLocation.X] == ' ' && x[h] != 3 && bhugger[h] >= 2) {
+		if (map[g_sHugger[h].m_cLocation.Y - 1][g_sHugger[h].m_cLocation.X] == ' ' && x[h] != 3) {
 			up = sqrt(pow(g_sChar.m_cLocation.X - (g_sHugger[h].m_cLocation.X), 2) + pow(g_sChar.m_cLocation.Y - (g_sHugger[h].m_cLocation.Y - 1), 2));
 		}
 		if (map[g_sHugger[h].m_cLocation.Y][g_sHugger[h].m_cLocation.X - 1] == ' ' && x[h] != 4) {
 			left = sqrt(pow(g_sChar.m_cLocation.X - (g_sHugger[h].m_cLocation.X - 1), 2) + pow(g_sChar.m_cLocation.Y - (g_sHugger[h].m_cLocation.Y), 2));
 		}
-		if (map[g_sHugger[h].m_cLocation.Y + 1][g_sHugger[h].m_cLocation.X] == ' ' && x[h] != 1 && bhugger[h] >= 2) {
+		if (map[g_sHugger[h].m_cLocation.Y + 1][g_sHugger[h].m_cLocation.X] == ' ' && x[h] != 1) {
 			down = sqrt(pow(g_sChar.m_cLocation.X - (g_sHugger[h].m_cLocation.X), 2) + pow(g_sChar.m_cLocation.Y - (g_sHugger[h].m_cLocation.Y + 1), 2));
 		}
 		if (map[g_sHugger[h].m_cLocation.Y][g_sHugger[h].m_cLocation.X + 1] == ' ' && x[h] != 2) {
@@ -337,9 +341,10 @@ void huggerdata() {
 		min_double = min(min(up, down), min(left, right));
 		if (min_double == 99.0) { // don't move if not possible, and reset no reverse rule
 			x[h] = 0;
+			bhugger[h]++;
 			continue;
 		}
-		else if (min_double == up && x[h] != 3 && bhugger[h] >= 2) { // move up
+		else if (min_double == up && x[h] != 3 && bhugger[h] >= 3) { // move up
 			g_sHugger[h].m_cLocation.Y--;
 			x[h] = 1;
 			bhugger[h] = 0;
@@ -348,7 +353,7 @@ void huggerdata() {
 			g_sHugger[h].m_cLocation.X--;
 			x[h] = 2;
 		}
-		else if (min_double == down && x[h] != 1 && bhugger[h] >= 2) { // move down
+		else if (min_double == down && x[h] != 1 && bhugger[h] >= 3) { // move down
 			g_sHugger[h].m_cLocation.Y++;
 			x[h] = 3;
 			bhugger[h] = 0;
@@ -363,7 +368,7 @@ void huggerdata() {
 	fooeyhappened1 = true;
 
 	if (fooeyhappened1) {
-		huggerbouncetime = g_dElapsedTime + 0.17; // huggers act around seven times per second
+		huggerbouncetime = g_dElapsedTime + 0.17; // huggers act around six times per second
 	}
 }
 void gunnerdata() {
@@ -591,8 +596,8 @@ void gameplay()            // gameplay logic
 						// sound can be played here too.
 	huggerdata();
 	gunnerdata();
-	enemybullet();
 	playershoot();
+	enemybullet();
 }
 
 void inventory()		// handles inventory, inventory[0] contains money, inventory[1] && inventory[2] contains the 2 weapons held
