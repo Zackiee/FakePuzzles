@@ -14,6 +14,7 @@
 //using namespace irrklang;
 using namespace std;
 
+int a = 0;
 int money = 0;
 int shootdirection[128] = { 0, };
 int playerdirection[64] = { 0, };
@@ -800,13 +801,13 @@ void clearScreen()
     g_Console.clearBuffer(0x0F);
 }
 
-void renderSplashScreen()  // renders the splash screen
+void renderSplashScreen()
 {
-	int i = 0;
-	int a = 0;
+	//Render Splash Screen
 	COORD c = g_Console.getConsoleSize();
 	string splashscreen;
 	ifstream splashscreenFile;
+	int i = 0;
 
 	splashscreenFile.open("Splashscreen.txt");
 	if (splashscreenFile.is_open())
@@ -848,13 +849,11 @@ void renderSplashScreen()  // renders the splash screen
 
 void renderStartMenu()
 {
-	// Render Start Menu
+	//Render Start Menu
 	COORD c;
-	int i = 0;
-	int a = 0;
-
 	string menu;
 	ifstream menuFile;
+	int i = 0;
 	
 	menuFile.open("MainMenu.txt");
 	if (menuFile.is_open())
@@ -880,13 +879,11 @@ void renderStartMenu()
 
 void renderInstructions()
 {
-	// Render Instruction page 
-	COORD c;
-	int i = 0;
-	int a = 0;
-
+	//Render Instructions
+	COORD c;	
 	string instructions;
 	ifstream instructionFile;
+	int i = 0;
 
 	instructionFile.open("Instructions.txt");
 	if (instructionFile.is_open())
@@ -904,12 +901,11 @@ void renderInstructions()
 
 void renderCharacterCreation()
 {
+	//Render Character Creation
 	COORD c;
-	int i = 0;
-	int a = 0;
-
 	string creation;
 	ifstream creationFile;
+	int i = 0;
 	
 	creationFile.open("CharacterCreation.txt");
 	if (creationFile.is_open())
@@ -1003,7 +999,7 @@ void renderMap()
 {
 	COORD c;
 	int i = 0;
-	int a = 0;
+
 	//Render Headquarters
 	if (levels[0] == true)
 		{
