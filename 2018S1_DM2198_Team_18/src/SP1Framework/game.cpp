@@ -420,11 +420,6 @@ void huggerdata() {
 
 	if (fooeyhappened1)
 		huggerbouncetime = g_dElapsedTime + 0.17; // huggers act around seven times per second
-	ranged gunner;
-
-
-
-
 }
 void gunnerdata() {
 	fooeyhappened2 = false;
@@ -482,7 +477,7 @@ void gunnerdata() {
 		}
 	}
 
-	if (i >= 127) {
+	if (i >= 123) {
 		i = 0;
 	}
 
@@ -527,8 +522,6 @@ void enemybullet() {
 
 void playershoot()
 {
-	playerdirection[ps] = 0;
-
 	if (g_abKeyPressed[K_UP]) {
 		playerdirection[ps] = 1; // shoot up
 	}
@@ -553,12 +546,11 @@ void playershoot()
 			g_sPlayershots[ps].m_cLocation.X = g_sChar.m_cLocation.X;
 			g_sPlayershots[ps].m_cLocation.Y = g_sChar.m_cLocation.Y;
 			ps++;
+			if (ps >= 64) { ps = 0; }
+			playerdirection[ps] = 0;
 			b = 0;
 		}
 	}
-	if (ps >= 64)
-		ps = 0;
-
 	// Equipping weapons
 	if (g_abKeyPressed[K_1] && boughtWeapons[0] == true) {
 		equipWeapons[0] = true;
