@@ -71,14 +71,7 @@ void renderWin();           // renders the win screen
 bool collision(char collider);
 
 // define variables
-struct pistol
-{
-	int id = 1;
-};
-struct smg
-{
-	int id = 2;
-};
+
 struct melee {
 	int hp = 3;
 };
