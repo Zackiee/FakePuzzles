@@ -775,7 +775,7 @@ void moveCharacter()
 			g_sHugger[0].m_cLocation.X = 5; g_sHugger[0].m_cLocation.Y = 12;
 			g_sHugger[1].m_cLocation.X = 17; g_sHugger[1].m_cLocation.Y = 3;
 			g_sHugger[2].m_cLocation.X = 34; g_sHugger[2].m_cLocation.Y = 11;
-			g_sHugger[3].m_cLocation.X = 54; g_sHugger[3].m_cLocation.Y = 16;
+			g_sHugger[3].m_cLocation.X = 54; g_sHugger[3].m_cLocation.Y = 14;
 			g_sHugger[4].m_cLocation.X = 39; g_sHugger[4].m_cLocation.Y = 13;
 			g_sGunner[0].m_cLocation.X = 18; g_sGunner[0].m_cLocation.Y = 14;
 			aaa++;
