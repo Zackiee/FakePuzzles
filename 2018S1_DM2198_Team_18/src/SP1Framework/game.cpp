@@ -27,7 +27,7 @@ int a = 0, aaa = 0;
 bool inven = true;
 bool shop = false;
 int coins = 0;
-int lives = 3;
+int lives = 7;
 
 int shootdirection[128] = { 0, };
 int playerdirection[64] = { 0, };
@@ -42,7 +42,7 @@ bool    g_abKeyPressed[K_COUNT];
 
 // Game specific variables here
 SGameChar   g_sChar;
-SGameChar   g_sHugger[4];
+SGameChar   g_sHugger[8];
 SGameChar	g_sGunner[4];
 SGameChar	g_sBullets[128]; // consider enemy bullets as characters in the code
 SGameChar	g_sPlayershots[64]; // consider player bullets as characters as well
@@ -86,9 +86,11 @@ void init( void )
 	equipWeapons[0] = true;
 	boughtWeapons[0] = true;
 
-	for (int i = 0; i < 4; i++) {
+	for (int i = 0; i < 8; i++) {
 		g_sHugger[i].m_cLocation.X = 0;
 		g_sHugger[i].m_cLocation.Y = 0;
+	}
+	for (int i = 0; i < 4; i++) {
 		g_sGunner[i].m_cLocation.X = 0;
 		g_sGunner[i].m_cLocation.Y = 0;
 	}
@@ -235,7 +237,7 @@ void renderEntities()
 	
 	if (levels[0] == false)
 	{
-		for (int h = 0; h < 4; h++) {
+		for (int h = 0; h < 8; h++) {
 			g_Console.writeToBuffer(g_sHugger[h].m_cLocation, (char)128, charE_Color);
 		}
 		for (int g = 0; g < 4; g++) {
@@ -251,8 +253,8 @@ void renderEntities()
 		g_Console.writeToBuffer(g_sPlayershots[ps].m_cLocation, (char)7, 0x06);
 	}
 }
-int b = 0, i = 0, n = 0, g = 0, h = 0, p = 0, ps = 0, bhugger[4] = { 0, }, bgunner[4] = { 0, }, bbullet[128] = { 0, }, bplayer = 0, bplayershoot[64] = { 0, }; // variables starting with b is used for buffer, others are used for array and stuff
-int x[4] = { 0, };
+int b = 0, i = 0, n = 0, g = 0, h = 0, p = 0, ps = 0, bhugger[8] = { 0, }, bgunner[4] = { 0, }, bbullet[128] = { 0, }, bplayer = 0, bplayershoot[64] = { 0, }; // variables starting with b is used for buffer, others are used for array and stuff
+int x[8] = { 0, };
 bool fooeyhappened1, fooeyhappened2, fooeyhappened3, playershot;
 void huggerdata() {
 	double up, left, down, right, min_double;
@@ -262,7 +264,7 @@ void huggerdata() {
 	if (huggerbouncetime > g_dElapsedTime)
 		return;
 
-	for (h = 0; h < 4; h++) { // x[h] in this case is used for a "no reverse rule". Example, if one enemy is moving up, he's not allowed to move down immediately after moving up
+	for (h = 0; h < 8; h++) { // x[h] in this case is used for a "no reverse rule". Example, if one enemy is moving up, he's not allowed to move down immediately after moving up
 		if (g_sHugger[h].m_cLocation.X == 0 && g_sHugger[h].m_cLocation.Y == 0) {
 			continue;
 		}
@@ -278,16 +280,6 @@ void huggerdata() {
 		}
 		if (map[g_sHugger[h].m_cLocation.Y][g_sHugger[h].m_cLocation.X + 1] == ' ' && x[h] != 2) {
 			right = sqrt(pow(g_sChar.m_cLocation.X - (g_sHugger[h].m_cLocation.X + 1), 2) + pow(g_sChar.m_cLocation.Y - (g_sHugger[h].m_cLocation.Y), 2));
-		}
-
-		//Hugger collision with player
-		if (levels[1] == true || levels[2] == true || levels[3] == true || levels[4] == true)
-		{
-			if ((g_sHugger[h].m_cLocation.Y == g_sChar.m_cLocation.Y) && (g_sHugger[h].m_cLocation.X == g_sChar.m_cLocation.X))
-			{
-				spawns[0] = true;
-				lives--;
-			}
 		}
 		min_double = min(min(up, down), min(left, right));
 		if (min_double == 99.0) { // don't move if not possible, and reset no reverse rule
@@ -312,6 +304,15 @@ void huggerdata() {
 		else if (min_double == right && x[h] != 2) { // move right
 			g_sHugger[h].m_cLocation.X++;
 			x[h] = 4;
+		}
+		//Hugger collision with player
+		if (levels[1] == true || levels[2] == true || levels[3] == true || levels[4] == true)
+		{
+			if ((g_sHugger[h].m_cLocation.Y == g_sChar.m_cLocation.Y) && (g_sHugger[h].m_cLocation.X == g_sChar.m_cLocation.X))
+			{
+				spawns[0] = true;
+				lives--;
+			}
 		}
 		bhugger[h]++;
 	}
@@ -547,20 +548,22 @@ void playershoot()
 		//Player's bullet collision with enemies
 		if (levels[1] == true || levels[2] == true || levels[3] == true || levels[4] == true)
 		{
-			for (h = 0; h < 4; h++) {
+			for (h = 0; h < 8; h++) {
 				if ((g_sPlayershots[ps].m_cLocation.Y == g_sHugger[h].m_cLocation.Y) && (g_sPlayershots[ps].m_cLocation.X == g_sHugger[h].m_cLocation.X)) {
 					g_sPlayershots[ps].m_cLocation.X = 1;
 					g_sPlayershots[ps].m_cLocation.Y = 0;
-					coins += 10;
+					coins += 5;
 					g_sHugger[h].m_cLocation.X = 0;
 					g_sHugger[h].m_cLocation.Y = 0;
-				} // g_sGunner[h] imstead of [g] because h and g serve the same purpose
-				if ((g_sPlayershots[ps].m_cLocation.Y == g_sGunner[h].m_cLocation.Y) && (g_sPlayershots[ps].m_cLocation.X == g_sGunner[h].m_cLocation.X)) {
+				}
+			}
+			for (g = 0; g < 4; g++) {
+				if ((g_sPlayershots[ps].m_cLocation.Y == g_sGunner[g].m_cLocation.Y) && (g_sPlayershots[ps].m_cLocation.X == g_sGunner[g].m_cLocation.X)) {
 					g_sPlayershots[ps].m_cLocation.X = 1;
 					g_sPlayershots[ps].m_cLocation.Y = 0;
-					coins += 10;
-					g_sGunner[h].m_cLocation.X = 0;
-					g_sGunner[h].m_cLocation.Y = 0;
+					coins += 5;
+					g_sGunner[g].m_cLocation.X = 0;
+					g_sGunner[g].m_cLocation.Y = 0;
 				}
 			}
 		}
@@ -687,9 +690,11 @@ void moveCharacter()
 
 	if (levels[0] == true)
 	{
-		for (aaa = 0; aaa < 4; aaa++) {
+		for (aaa = 0; aaa < 8; aaa++) {
 			g_sHugger[aaa].m_cLocation.X = 0;
 			g_sHugger[aaa].m_cLocation.Y = 0;
+		}
+		for (aaa = 0; aaa < 4; aaa++) {
 			g_sGunner[aaa].m_cLocation.X = 0;
 			g_sGunner[aaa].m_cLocation.Y = 0;
 		}
@@ -743,8 +748,12 @@ void moveCharacter()
 			g_sHugger[0].m_cLocation.X = 6; g_sHugger[0].m_cLocation.Y = 16;
 			g_sHugger[1].m_cLocation.X = 94; g_sHugger[1].m_cLocation.Y = 4;
 			g_sHugger[2].m_cLocation.X = 84; g_sHugger[2].m_cLocation.Y = 17;
+			g_sHugger[3].m_cLocation.X = 78; g_sHugger[3].m_cLocation.Y = 11;
+			g_sHugger[4].m_cLocation.X = 35; g_sHugger[4].m_cLocation.Y = 12;
+			g_sHugger[5].m_cLocation.X = 29; g_sHugger[5].m_cLocation.Y = 17;
 			g_sGunner[0].m_cLocation.X = 54; g_sGunner[0].m_cLocation.Y = 4;
 			g_sGunner[1].m_cLocation.X = 54; g_sGunner[1].m_cLocation.Y = 16;
+			g_sGunner[2].m_cLocation.X = 40; g_sGunner[2].m_cLocation.Y = 8;
 			aaa++;
 		}
 
@@ -767,6 +776,7 @@ void moveCharacter()
 			g_sHugger[1].m_cLocation.X = 17; g_sHugger[1].m_cLocation.Y = 3;
 			g_sHugger[2].m_cLocation.X = 34; g_sHugger[2].m_cLocation.Y = 11;
 			g_sHugger[3].m_cLocation.X = 54; g_sHugger[3].m_cLocation.Y = 16;
+			g_sHugger[4].m_cLocation.X = 39; g_sHugger[4].m_cLocation.Y = 13;
 			g_sGunner[0].m_cLocation.X = 18; g_sGunner[0].m_cLocation.Y = 14;
 			aaa++;
 		}
