@@ -92,7 +92,7 @@ void init( void )
 		g_sGunner[i].m_cLocation.Y = 0;
 	}
 	for (int ps = 0; ps < 64; ps++) {
-		g_sPlayershots[ps].m_cLocation.X = 0;
+		g_sPlayershots[ps].m_cLocation.X = 1;
 		g_sPlayershots[ps].m_cLocation.Y = 0;
 	}
 	for (int i = 0; i < 128; i++) {
@@ -344,7 +344,7 @@ void gunnerdata() {
 		if (g_sGunner[g].m_cLocation.X == 0 && g_sGunner[g].m_cLocation.Y == 0) {
 			continue;
 		}
-		if (sqrt(pow((g_sGunner[g].m_cLocation.X - g_sChar.m_cLocation.X), 2)) <= 8 && sqrt(pow((g_sGunner[g].m_cLocation.Y - g_sChar.m_cLocation.Y), 2)) <= 8) {
+		if (sqrt(pow((g_sGunner[g].m_cLocation.X - g_sChar.m_cLocation.X), 2)) <= 8 && sqrt(pow((g_sGunner[g].m_cLocation.Y - g_sChar.m_cLocation.Y), 2)) <= 4) {
 			if (g_sGunner[g].m_cLocation.Y < g_sChar.m_cLocation.Y && map[g_sGunner[g].m_cLocation.Y - 1][g_sGunner[g].m_cLocation.X] == ' ' && bhugger[g] >= 2) {
 				g_sGunner[g].m_cLocation.Y--;
 				bhugger[g] = 0;
@@ -554,8 +554,8 @@ void playershoot()
 		if (playerdirection[ps] == 4) { // move right
 			g_sPlayershots[ps].m_cLocation.X++;
 		}
-		if (g_sPlayershots[ps].m_cLocation.X >= 110 || g_sPlayershots[ps].m_cLocation.X <= 0 || g_sPlayershots[ps].m_cLocation.Y >= 30 || g_sPlayershots[ps].m_cLocation.Y <= 0) {
-			g_sPlayershots[ps].m_cLocation.X = 0;
+		if (g_sPlayershots[ps].m_cLocation.X >= 108 || g_sPlayershots[ps].m_cLocation.X <= 1 || g_sPlayershots[ps].m_cLocation.Y >= 28 || g_sPlayershots[ps].m_cLocation.Y <= 1) {
+			g_sPlayershots[ps].m_cLocation.X = 1;
 			g_sPlayershots[ps].m_cLocation.Y = 0;
 		}
 		bplayershoot[ps]++;
