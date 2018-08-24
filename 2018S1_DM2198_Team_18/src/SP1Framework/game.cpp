@@ -85,11 +85,11 @@ void init( void )
 	equipWeapons[0] = true;
 	boughtWeapons[0] = true;
 
-	for (int i = 0, X = 0; i < 4; i++, X += 2) {
-		g_sHugger[i].m_cLocation.X = 5 + X;
-		g_sHugger[i].m_cLocation.Y = 14;
-		g_sGunner[i].m_cLocation.X = 5 + X;
-		g_sGunner[i].m_cLocation.Y = 16;
+	for (int i = 0; i < 4; i++) {
+		g_sHugger[i].m_cLocation.X = 0;
+		g_sHugger[i].m_cLocation.Y = 0;
+		g_sGunner[i].m_cLocation.X = 0;
+		g_sGunner[i].m_cLocation.Y = 0;
 	}
 	for (int ps = 0; ps < 64; ps++) {
 		g_sPlayershots[ps].m_cLocation.X = 0;
@@ -254,6 +254,9 @@ void huggerdata() {
 		return;
 
 	for (h = 0; h < 4; h++) { // x[h] in this case is used for a "no reverse rule". Example, if one enemy is moving up, he's not allowed to move down immediately after moving up
+		if (g_sHugger[h].m_cLocation.X == 0 && g_sHugger[h].m_cLocation.Y == 0) {
+			continue;
+		}
 		up = 99.0; left = 99.0; down = 99.0; right = 99.0;
 		if (map[g_sHugger[h].m_cLocation.Y - 1][g_sHugger[h].m_cLocation.X] == ' ' && x[h] != 3) {
 			up = sqrt(pow(g_sChar.m_cLocation.X - (g_sHugger[h].m_cLocation.X), 2) + pow(g_sChar.m_cLocation.Y - (g_sHugger[h].m_cLocation.Y - 1), 2));
@@ -316,7 +319,19 @@ void huggerdata() {
 		//Hugger collision with player
 		if (levels[1] == true || levels[2] == true || levels[3] == true || levels[4] == true)
 		{
-			if ((g_sHugger[h].m_cLocation.Y == g_sChar.m_cLocation.Y) && (g_sHugger[h].m_cLocation.X == g_sChar.m_cLocation.X)) {
+			if ((g_sHugger[h].m_cLocation.Y - 1 == g_sChar.m_cLocation.Y) && (g_sHugger[h].m_cLocation.X == g_sChar.m_cLocation.X)) {
+				spawns[0] = true;
+				lives--;
+			}
+			if ((g_sHugger[h].m_cLocation.Y == g_sChar.m_cLocation.Y) && (g_sHugger[h].m_cLocation.X - 1 == g_sChar.m_cLocation.X)) {
+				spawns[0] = true;
+				lives--;
+			}
+			if ((g_sHugger[h].m_cLocation.Y + 1 == g_sChar.m_cLocation.Y) && (g_sHugger[h].m_cLocation.X == g_sChar.m_cLocation.X)) {
+				spawns[0] = true;
+				lives--;
+			}
+			if ((g_sHugger[h].m_cLocation.Y == g_sChar.m_cLocation.Y) && (g_sHugger[h].m_cLocation.X + 1 == g_sChar.m_cLocation.X)) {
 				spawns[0] = true;
 				lives--;
 			}
@@ -337,6 +352,9 @@ void gunnerdata() {
 		return;
 
 	for (g = 0; g < 4; g++) {
+		if (g_sGunner[g].m_cLocation.X == 0 && g_sGunner[g].m_cLocation.Y == 0) {
+			continue;
+		}
 		if (sqrt(pow((g_sGunner[g].m_cLocation.X - g_sChar.m_cLocation.X), 2)) <= 8 && sqrt(pow((g_sGunner[g].m_cLocation.Y - g_sChar.m_cLocation.Y), 2)) <= 8) {
 			if (g_sGunner[g].m_cLocation.Y < g_sChar.m_cLocation.Y && map[g_sGunner[g].m_cLocation.Y - 1][g_sGunner[g].m_cLocation.X] == ' ' && bhugger[g] >= 2) {
 				g_sGunner[g].m_cLocation.Y--;
@@ -409,54 +427,52 @@ void gunnerdata() {
 
 	if (fooeyhappened2) {
 		gunnerbouncetime = g_dElapsedTime + 0.5; // gunners act around twice per second
-	}
-
-	
+	}	
 }
 void enemybullet() {
-	fooeyhappened3 = false;
+	if (levels[1] == true || levels[2] == true || levels[3] == true || levels[4] == true) {
+		fooeyhappened3 = false;
 
-	if (bulletbouncetime > g_dElapsedTime)
-		return;
+		if (bulletbouncetime > g_dElapsedTime)
+			return;
 
-	n = i;
-	for (i = 0; i < 128; i++) {
-		if (shootdirection[i] == 1 && bbullet[i] >= 2) { // move up
-			g_sBullets[i].m_cLocation.Y--;
-			bbullet[i] = 0;
-		}
-		if (shootdirection[i] == 2) { // move left
-			g_sBullets[i].m_cLocation.X--;
-		}
-		if (shootdirection[i] == 3 && bbullet[i] >= 2) { // move down
-			g_sBullets[i].m_cLocation.Y++;
-			bbullet[i] = 0;
-		}
-		if (shootdirection[i] == 4) { // move right
-			g_sBullets[i].m_cLocation.X++;
-		}
-		if (levels[1] == true || levels[2] == true || levels[3] == true || levels[4] == true) {
-			if ((g_sBullets[i].m_cLocation.Y == g_sChar.m_cLocation.Y) && (g_sBullets[i].m_cLocation.X == g_sChar.m_cLocation.X)) {
+		n = i;
+		for (i = 0; i < 128; i++) {
+			if (shootdirection[i] == 1 && bbullet[i] >= 2) { // move up
+				g_sBullets[i].m_cLocation.Y--;
+				bbullet[i] = 0;
+			}
+			if (shootdirection[i] == 2) { // move left
+				g_sBullets[i].m_cLocation.X--;
+			}
+			if (shootdirection[i] == 3 && bbullet[i] >= 2) { // move down
+				g_sBullets[i].m_cLocation.Y++;
+				bbullet[i] = 0;
+			}
+			if (shootdirection[i] == 4) { // move right
+				g_sBullets[i].m_cLocation.X++;
+			}
+			if ((g_sBullets[i].m_cLocation.Y == g_sChar.m_cLocation.Y) && (g_sBullets[i].m_cLocation.X == g_sChar.m_cLocation.X)) { // enemy bullet collision with player
 				spawns[0] = true;
 				lives--;
 				g_sBullets[i].m_cLocation.X = 0;
 				g_sBullets[i].m_cLocation.Y = 0;
 				shootdirection[i] = 0;
 			}
+			if (g_sBullets[i].m_cLocation.X >= 110 || g_sBullets[i].m_cLocation.X <= 0 || g_sBullets[i].m_cLocation.Y >= 30 || g_sBullets[i].m_cLocation.Y <= 0) {
+				g_sBullets[i].m_cLocation.X = 0;
+				g_sBullets[i].m_cLocation.Y = 0;
+				shootdirection[i] = 0;
+			}
+			bbullet[i]++;
 		}
-		if (g_sBullets[i].m_cLocation.X >= 110 || g_sBullets[i].m_cLocation.X <= 0 || g_sBullets[i].m_cLocation.Y >= 30 || g_sBullets[i].m_cLocation.Y <= 0) {
-			g_sBullets[i].m_cLocation.X = 0;
-			g_sBullets[i].m_cLocation.Y = 0;
-			shootdirection[i] = 0;
+		i = n;
+
+		fooeyhappened3 = true;
+
+		if (fooeyhappened3) {
+			bulletbouncetime = g_dElapsedTime + 0.05; // enemy bullets move around 20 tiles per second
 		}
-		bbullet[i]++;
-	}
-	i = n;
-
-	fooeyhappened3 = true;
-
-	if (fooeyhappened3) {
-		bulletbouncetime = g_dElapsedTime + 0.05; // enemy bullets move around 20 tiles per second
 	}
 }
 
