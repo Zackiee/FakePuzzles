@@ -549,6 +549,11 @@ void playershoot()
 
 void respawn()
 {
+	if (lives == 0)
+	{
+
+	}
+
 	if (spawns[0] == true)
 	{
 		g_sChar.m_cLocation.X = 5;
