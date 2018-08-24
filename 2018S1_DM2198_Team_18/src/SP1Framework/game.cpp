@@ -25,7 +25,7 @@ int a = 0;
 
 bool inven = true;
 bool shop = false;
-int coins = 250;
+int coins = 0;
 int lives = 3;
 
 int shootdirection[128] = { 0, };
@@ -580,16 +580,16 @@ void playershoot()
 		playerbulletshot = g_dElapsedTime + 0.05; // player bullets fly as fast as enemy bullets for now
 	}
 
-	//Player's bullet collision with walls
-	if (map[g_sPlayershots[ps].m_cLocation.Y][g_sPlayershots[ps].m_cLocation.X] == ' ') {
-
-	}
+	////Player's bullet collision with walls
+	//if ((g_sPlayershots[ps].m_cLocation.Y == ) && (g_sPlayershots[ps].m_cLocation.X == )) {
+	//	lives--;
+	//}
 
 	//Player's bullet collision with enemies
 	if (levels[1] == true || levels[2] == true || levels[3] == true || levels[4] == true)
 	{
 		if ((g_sPlayershots[ps].m_cLocation.Y == g_sHugger[h].m_cLocation.Y) && (g_sPlayershots[ps].m_cLocation.X == g_sHugger[h].m_cLocation.X)) {
-
+			coins += 10;
 		}
 	}
 }
