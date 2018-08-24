@@ -426,49 +426,49 @@ void gunnerdata() {
 	
 }
 void enemybullet() {
-	fooeyhappened3 = false;
+	if (levels[1] == true || levels[2] == true || levels[3] == true || levels[4] == true) {
+		fooeyhappened3 = false;
 
-	if (bulletbouncetime > g_dElapsedTime)
-		return;
+		if (bulletbouncetime > g_dElapsedTime)
+			return;
 
-	n = i;
-	for (i = 0; i < 128; i++) {
-		if (shootdirection[i] == 1 && bbullet[i] >= 2) { // move up
-			g_sBullets[i].m_cLocation.Y--;
-			bbullet[i] = 0;
-		}
-		if (shootdirection[i] == 2) { // move left
-			g_sBullets[i].m_cLocation.X--;
-		}
-		if (shootdirection[i] == 3 && bbullet[i] >= 2) { // move down
-			g_sBullets[i].m_cLocation.Y++;
-			bbullet[i] = 0;
-		}
-		if (shootdirection[i] == 4) { // move right
-			g_sBullets[i].m_cLocation.X++;
-		}
-		if (levels[1] == true || levels[2] == true || levels[3] == true || levels[4] == true) {
-			if ((g_sBullets[i].m_cLocation.Y == g_sChar.m_cLocation.Y) && (g_sBullets[i].m_cLocation.X == g_sChar.m_cLocation.X)) {
+		n = i;
+		for (i = 0; i < 128; i++) {
+			if (shootdirection[i] == 1 && bbullet[i] >= 2) { // move up
+				g_sBullets[i].m_cLocation.Y--;
+				bbullet[i] = 0;
+			}
+			if (shootdirection[i] == 2) { // move left
+				g_sBullets[i].m_cLocation.X--;
+			}
+			if (shootdirection[i] == 3 && bbullet[i] >= 2) { // move down
+				g_sBullets[i].m_cLocation.Y++;
+				bbullet[i] = 0;
+			}
+			if (shootdirection[i] == 4) { // move right
+				g_sBullets[i].m_cLocation.X++;
+			}
+			if ((g_sBullets[i].m_cLocation.Y == g_sChar.m_cLocation.Y) && (g_sBullets[i].m_cLocation.X == g_sChar.m_cLocation.X)) { // enemy bullet collision with player
 				spawns[0] = true;
 				lives--;
 				g_sBullets[i].m_cLocation.X = 0;
 				g_sBullets[i].m_cLocation.Y = 0;
 				shootdirection[i] = 0;
 			}
+			if (g_sBullets[i].m_cLocation.X >= 110 || g_sBullets[i].m_cLocation.X <= 0 || g_sBullets[i].m_cLocation.Y >= 30 || g_sBullets[i].m_cLocation.Y <= 0) {
+				g_sBullets[i].m_cLocation.X = 0;
+				g_sBullets[i].m_cLocation.Y = 0;
+				shootdirection[i] = 0;
+			}
+			bbullet[i]++;
 		}
-		if (g_sBullets[i].m_cLocation.X >= 110 || g_sBullets[i].m_cLocation.X <= 0 || g_sBullets[i].m_cLocation.Y >= 30 || g_sBullets[i].m_cLocation.Y <= 0) {
-			g_sBullets[i].m_cLocation.X = 0;
-			g_sBullets[i].m_cLocation.Y = 0;
-			shootdirection[i] = 0;
+		i = n;
+
+		fooeyhappened3 = true;
+
+		if (fooeyhappened3) {
+			bulletbouncetime = g_dElapsedTime + 0.05; // enemy bullets move around 20 tiles per second
 		}
-		bbullet[i]++;
-	}
-	i = n;
-
-	fooeyhappened3 = true;
-
-	if (fooeyhappened3) {
-		bulletbouncetime = g_dElapsedTime + 0.05; // enemy bullets move around 20 tiles per second
 	}
 }
 
