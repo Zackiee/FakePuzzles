@@ -10,6 +10,7 @@
 #include <sstream>
 #include <fstream>
 #include <string>
+#include <time.h>
 
 //using namespace irrklang;
 using namespace std;
@@ -201,6 +202,10 @@ void render()
 			break;
         case S_GAME: renderGame();
             break;
+		case S_WINSCREEN: renderWin();
+			break;
+		//case S_LOSESCREEN: renderLose();
+			//break;
     }
     renderFramerate();  // renders debug information, frame rate, elapsed time, etc
     renderToScreen();   // dump the contents of the buffer to the screen, one frame worth of game
@@ -586,7 +591,6 @@ void gameplay()            // gameplay logic
 	enemybullet();
 	respawn();
 }
-
 void moveCharacter()
 {
 	bool bSomethingHappened = false;
@@ -673,6 +677,7 @@ void moveCharacter()
 		}
 		else if (collision('%'))
 		{
+			g_eGameState = S_WINSCREEN;
 			levels[0] = false;
 			inven = false;
 		}
@@ -684,6 +689,7 @@ void moveCharacter()
 
 		if (collision('%'))
 		{
+			g_eGameState = S_WINSCREEN;
 			levels[1] = false;
 			levels[0] = true;
 			spawns[1] = true;
@@ -699,6 +705,7 @@ void moveCharacter()
 
 		if (collision('%'))
 		{
+			g_eGameState = S_WINSCREEN;
 			levels[2] = false;
 			levels[0] = true;
 			spawns[2] = true;
@@ -719,6 +726,7 @@ void moveCharacter()
 
 		if (collision('%'))
 		{
+			g_eGameState = S_WINSCREEN;
 			levels[3] = false;
 			levels[0] = true;
 			spawns[3] = true;
@@ -739,6 +747,7 @@ void moveCharacter()
 
 		if (collision('%'))
 		{
+			g_eGameState = S_WINSCREEN;
 			levels[4] = false;
 			levels[0] = true;
 			spawns[4] = true;
@@ -1032,7 +1041,50 @@ void renderGame()
 	renderEntities();
 	playershoot();
 }
+void renderWin()
+{
+	COORD c;
+	int i = 0;
+	if (1==1)
+	{
+		string winScreen;
+		ifstream winFile;
+		c.X = 20;
+		c.Y = 24;
+		g_Console.writeToBuffer(c, "Press 1 to proceed, Press 5 to quit the game", 0x08);
 
+		winFile.open("winscreen.txt");
+		if (winFile.is_open())
+		{
+			while (getline(winFile, winScreen))
+			{
+				for (b = 0; b < winScreen.length(); b++)
+				{
+					switch (winScreen[b])
+					{
+					case 'w':
+						winScreen[b] = 223;
+						break;
+					}
+					map[i][b] = winScreen[b];
+				}
+				c.X = 0;
+				c.Y = i;
+				i++;
+				g_Console.writeToBuffer(c, winScreen, 0x0A);
+			}
+		}
+		winFile.close();
+		if (g_abKeyPressed[K_1])
+		{
+			g_eGameState = S_GAME;
+		}
+		else if (g_abKeyPressed[K_5])
+		{
+			g_bQuitGame = true;
+		}
+	}
+}
 void renderMap()
 {
 	COORD c;
