@@ -559,26 +559,19 @@ void playershoot()
 		{
 			if ((g_sPlayershots[ps].m_cLocation.Y == g_sHugger[h].m_cLocation.Y) && (g_sPlayershots[ps].m_cLocation.X == g_sHugger[h].m_cLocation.X)) {
 				coins += 10;
-				g_sPlayershots[ps].m_cLocation.X = 0;
+				g_sPlayershots[ps].m_cLocation.X = 1;
 				g_sPlayershots[ps].m_cLocation.Y = 0;
 			}
 
 			if ((g_sPlayershots[ps].m_cLocation.Y == g_sGunner[g].m_cLocation.Y) && (g_sPlayershots[ps].m_cLocation.X == g_sGunner[g].m_cLocation.X)) {
 				coins += 10;
-				g_sPlayershots[ps].m_cLocation.X = 0;
+				g_sPlayershots[ps].m_cLocation.X = 1;
 				g_sPlayershots[ps].m_cLocation.Y = 0;
 			}
 
 		}
-		/*if ((g_sPlayershots[ps].m_cLocation.Y == '#') && (g_sPlayershots[ps].m_cLocation.X == '#')) {
-
-			coins += 10;
-			g_sPlayershots[ps].m_cLocation.X = 1;
-			g_sPlayershots[ps].m_cLocation.Y = 0;
-		}*/
-
 		if (g_sPlayershots[ps].m_cLocation.X >= 110 || g_sPlayershots[ps].m_cLocation.X <= 0 || g_sPlayershots[ps].m_cLocation.Y >= 30 || g_sPlayershots[ps].m_cLocation.Y <= 0) {
-			g_sPlayershots[ps].m_cLocation.X = 0;
+			g_sPlayershots[ps].m_cLocation.X = 1;
 			g_sPlayershots[ps].m_cLocation.Y = 0;
 		}
 		bplayershoot[ps]++;
