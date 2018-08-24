@@ -267,28 +267,6 @@ void huggerdata() {
 		if (map[g_sHugger[h].m_cLocation.Y][g_sHugger[h].m_cLocation.X + 1] == ' ' && x[h] != 2) {
 			right = sqrt(pow(g_sChar.m_cLocation.X - (g_sHugger[h].m_cLocation.X + 1), 2) + pow(g_sChar.m_cLocation.Y - (g_sHugger[h].m_cLocation.Y), 2));
 		}
-
-		//Hugger collision with player
-		if (levels[1] == true || levels[2] == true || levels[3] == true || levels[4] == true)
-		{
-			if ((g_sHugger[h].m_cLocation.Y - 1 == g_sChar.m_cLocation.Y) && (g_sHugger[h].m_cLocation.X == g_sChar.m_cLocation.X)) {
-				spawns[0] = true;
-				lives--;
-			}
-			if ((g_sHugger[h].m_cLocation.Y == g_sChar.m_cLocation.Y) && (g_sHugger[h].m_cLocation.X - 1 == g_sChar.m_cLocation.X)) {
-				spawns[0] = true;
-				lives--;
-			}
-			if ((g_sHugger[h].m_cLocation.Y + 1 == g_sChar.m_cLocation.Y) && (g_sHugger[h].m_cLocation.X == g_sChar.m_cLocation.X)) {
-				spawns[0] = true;
-				lives--;
-			}
-			if ((g_sHugger[h].m_cLocation.Y == g_sChar.m_cLocation.Y) && (g_sHugger[h].m_cLocation.X + 1 == g_sChar.m_cLocation.X)) {
-				spawns[0] = true;
-				lives--;
-			}
-		}
-
 		min_double = min(min(up, down), min(left, right));
 		if (min_double == 99.0) { // don't move if not possible, and reset no reverse rule
 			x[h] = 0;
@@ -312,6 +290,26 @@ void huggerdata() {
 		else if (min_double == right && x[h] != 2) { // move right
 			g_sHugger[h].m_cLocation.X++;
 			x[h] = 4;
+		}
+		//Hugger collision with player
+		if (levels[1] == true || levels[2] == true || levels[3] == true || levels[4] == true)
+		{
+			if ((g_sHugger[h].m_cLocation.Y - 1 == g_sChar.m_cLocation.Y) && (g_sHugger[h].m_cLocation.X == g_sChar.m_cLocation.X)) {
+				spawns[0] = true;
+				lives--;
+			}
+			if ((g_sHugger[h].m_cLocation.Y == g_sChar.m_cLocation.Y) && (g_sHugger[h].m_cLocation.X - 1 == g_sChar.m_cLocation.X)) {
+				spawns[0] = true;
+				lives--;
+			}
+			if ((g_sHugger[h].m_cLocation.Y + 1 == g_sChar.m_cLocation.Y) && (g_sHugger[h].m_cLocation.X == g_sChar.m_cLocation.X)) {
+				spawns[0] = true;
+				lives--;
+			}
+			if ((g_sHugger[h].m_cLocation.Y == g_sChar.m_cLocation.Y) && (g_sHugger[h].m_cLocation.X + 1 == g_sChar.m_cLocation.X)) {
+				spawns[0] = true;
+				lives--;
+			}
 		}
 		bhugger[h]++;
 	}
@@ -414,6 +412,15 @@ void enemybullet() {
 		}
 		if (shootdirection[i] == 4) { // move right
 			g_sBullets[i].m_cLocation.X++;
+		}
+		if (levels[1] == true || levels[2] == true || levels[3] == true || levels[4] == true) {
+			if ((g_sBullets[i].m_cLocation.Y == g_sChar.m_cLocation.Y) && (g_sBullets[i].m_cLocation.X == g_sChar.m_cLocation.X)) {
+				spawns[0] = true;
+				lives--;
+				g_sBullets[i].m_cLocation.X = 0;
+				g_sBullets[i].m_cLocation.Y = 0;
+				shootdirection[i] = 0;
+			}
 		}
 		if (g_sBullets[i].m_cLocation.X >= 110 || g_sBullets[i].m_cLocation.X <= 0 || g_sBullets[i].m_cLocation.Y >= 30 || g_sBullets[i].m_cLocation.Y <= 0) {
 			g_sBullets[i].m_cLocation.X = 0;
