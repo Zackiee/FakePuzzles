@@ -448,7 +448,7 @@ void enemybullet() {
 				g_sBullets[i].m_cLocation.Y = 0;
 				shootdirection[i] = 0;
 			}
-			if (g_sBullets[i].m_cLocation.X >= 110 || g_sBullets[i].m_cLocation.X <= 0 || g_sBullets[i].m_cLocation.Y >= 30 || g_sBullets[i].m_cLocation.Y <= 0) {
+			if (g_sBullets[i].m_cLocation.X >= 108 || g_sBullets[i].m_cLocation.X <= 1 || g_sBullets[i].m_cLocation.Y >= 28 || g_sBullets[i].m_cLocation.Y <= 1 || map[g_sBullets[i].m_cLocation.Y][g_sBullets[i].m_cLocation.X] != ' ') {
 				g_sBullets[i].m_cLocation.X = 0;
 				g_sBullets[i].m_cLocation.Y = 0;
 				shootdirection[i] = 0;
@@ -554,7 +554,7 @@ void playershoot()
 		if (playerdirection[ps] == 4) { // move right
 			g_sPlayershots[ps].m_cLocation.X++;
 		}
-		if (g_sPlayershots[ps].m_cLocation.X >= 108 || g_sPlayershots[ps].m_cLocation.X <= 1 || g_sPlayershots[ps].m_cLocation.Y >= 28 || g_sPlayershots[ps].m_cLocation.Y <= 1) {
+		if (g_sPlayershots[ps].m_cLocation.X >= 108 || g_sPlayershots[ps].m_cLocation.X <= 1 || g_sPlayershots[ps].m_cLocation.Y >= 28 || g_sPlayershots[ps].m_cLocation.Y <= 1 || map[g_sPlayershots[ps].m_cLocation.Y][g_sPlayershots[ps].m_cLocation.X] != ' ') {
 			g_sPlayershots[ps].m_cLocation.X = 1;
 			g_sPlayershots[ps].m_cLocation.Y = 0;
 		}
