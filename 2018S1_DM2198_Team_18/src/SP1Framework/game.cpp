@@ -639,6 +639,7 @@ void moveCharacter()
 		//Beep(1440, 30);
 		g_sChar.m_cLocation.Y--;
 		bplayer = 0;
+		saveProgression();
 	}
 	if (g_abKeyPressed[K_LEFT] && map[g_sChar.m_cLocation.Y][g_sChar.m_cLocation.X - 1] == ' ')
 	{
@@ -648,7 +649,7 @@ void moveCharacter()
 	if (g_abKeyPressed[K_DOWN] && map[g_sChar.m_cLocation.Y + 1][g_sChar.m_cLocation.X] == ' ' && bplayer >= 2)
 	{
 		//Beep(1440, 30);
-		g_sChar.m_cLocation.Y++;
+		g_sChar.m_cLocation.Y++; loadProgression();
 		bplayer = 0;
 	}
 	if (g_abKeyPressed[K_RIGHT] && map[g_sChar.m_cLocation.Y][g_sChar.m_cLocation.X + 1] == ' ')
@@ -1712,4 +1713,34 @@ void renderToScreen()
 {
     // Writes the buffer to the console, hence you will see what you have written
     g_Console.flushBufferToConsole();
+}
+
+void saveProgression()
+{
+	ofstream saveGame("saveGame.txt");
+	saveGame << coins << endl;
+	saveGame << lives << endl;
+	for (a = 0; a < 4; a++)
+	{
+		saveGame << gems[a] << endl;
+	}
+	for (a = 0; a < 5; a++)
+	{
+		saveGame << boughtWeapons[a] << endl;
+	}
+}
+
+void loadProgression()
+{
+	string loadGameFile = "";
+	ifstream loadGame("saveGame.txt");
+
+	getline(loadGame, loadGameFile);
+
+	coins = stoi(loadGameFile);
+	lives = stoi(loadGameFile);
+	for (a = 0; a < 4; a++)
+	{
+		gems[a] = stoi(loadGameFile);
+	}
 }
