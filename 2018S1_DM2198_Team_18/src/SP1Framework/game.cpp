@@ -26,7 +26,7 @@ int a = 0, aaa = 0;
 
 bool inven = true;
 bool shop = false;
-int coins = 0;
+int coins = 500;
 int lives = 7;
 
 int shootdirection[128] = { 0, };
@@ -1789,10 +1789,9 @@ void saveProgression()
 	saveGame << endl;
 	for (int a = 0; a < 5; a++)
 	{
-		saveGame << boughtWeapons[a] << endl;
+		saveGame << boughtWeapons[a] ? '1' : '0';
 	}
-	
-	
+	saveGame << endl;
 }
 
 void loadProgression()
