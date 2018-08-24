@@ -353,7 +353,7 @@ void gunnerdata() {
 		if (g_sGunner[g].m_cLocation.X == 0 && g_sGunner[g].m_cLocation.Y == 0) {
 			continue;
 		}
-		if (sqrt(pow((g_sGunner[g].m_cLocation.X - g_sChar.m_cLocation.X), 2)) <= 8 && sqrt(pow((g_sGunner[g].m_cLocation.Y - g_sChar.m_cLocation.Y), 2)) <= 4) {
+		if (sqrt(pow((g_sGunner[g].m_cLocation.X - g_sChar.m_cLocation.X), 2)) <= 10 && sqrt(pow((g_sGunner[g].m_cLocation.Y - g_sChar.m_cLocation.Y), 2)) <= 5) {
 			if (g_sGunner[g].m_cLocation.Y < g_sChar.m_cLocation.Y && map[g_sGunner[g].m_cLocation.Y - 1][g_sGunner[g].m_cLocation.X] == ' ' && bhugger[g] >= 2) {
 				g_sGunner[g].m_cLocation.Y--;
 				bhugger[g] = 0;
@@ -570,16 +570,22 @@ void playershoot()
 		//Player's bullet collision with enemies
 		if (levels[1] == true || levels[2] == true || levels[3] == true || levels[4] == true)
 		{
-			if ((g_sPlayershots[ps].m_cLocation.Y == g_sHugger[h].m_cLocation.Y) && (g_sPlayershots[ps].m_cLocation.X == g_sHugger[h].m_cLocation.X)) {
-				g_sPlayershots[ps].m_cLocation.X = 1;
-				g_sPlayershots[ps].m_cLocation.Y = 0;
+			for (h = 0; h < 4; h++) {
+				if ((g_sPlayershots[ps].m_cLocation.Y == g_sHugger[h].m_cLocation.Y) && (g_sPlayershots[ps].m_cLocation.X == g_sHugger[h].m_cLocation.X)) {
+					g_sPlayershots[ps].m_cLocation.X = 1;
+					g_sPlayershots[ps].m_cLocation.Y = 0;
+					coins += 5;
+					g_sHugger[h].m_cLocation.X = 0;
+					g_sHugger[h].m_cLocation.Y = 0;
+				} // g_sGunner[h] imstead of [g] because h and g serve the same purpose
+				if ((g_sPlayershots[ps].m_cLocation.Y == g_sGunner[h].m_cLocation.Y) && (g_sPlayershots[ps].m_cLocation.X == g_sGunner[h].m_cLocation.X)) {
+					g_sPlayershots[ps].m_cLocation.X = 1;
+					g_sPlayershots[ps].m_cLocation.Y = 0;
+					coins += 5;
+					g_sGunner[h].m_cLocation.X = 0;
+					g_sGunner[h].m_cLocation.Y = 0;
+				}
 			}
-
-			if ((g_sPlayershots[ps].m_cLocation.Y == g_sGunner[g].m_cLocation.Y) && (g_sPlayershots[ps].m_cLocation.X == g_sGunner[g].m_cLocation.X)) {
-				g_sPlayershots[ps].m_cLocation.X = 1;
-				g_sPlayershots[ps].m_cLocation.Y = 0;
-			}
-
 		}
 		if (g_sPlayershots[ps].m_cLocation.X >= 108 || g_sPlayershots[ps].m_cLocation.X <= 1 || g_sPlayershots[ps].m_cLocation.Y >= 28 || g_sPlayershots[ps].m_cLocation.Y <= 1 || map[g_sPlayershots[ps].m_cLocation.Y][g_sPlayershots[ps].m_cLocation.X] != ' ') { // player bullets near leaving the console window or player bullets' collision with walls
 			g_sPlayershots[ps].m_cLocation.X = 1;
