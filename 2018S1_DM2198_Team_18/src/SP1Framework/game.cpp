@@ -636,7 +636,6 @@ void moveCharacter()
 		//Beep(1440, 30);
 		g_sChar.m_cLocation.Y--;
 		bplayer = 0;
-		saveProgression();
 	}
 	if (g_abKeyPressed[K_LEFT] && map[g_sChar.m_cLocation.Y][g_sChar.m_cLocation.X - 1] == ' ')
 	{
@@ -646,7 +645,7 @@ void moveCharacter()
 	if (g_abKeyPressed[K_DOWN] && map[g_sChar.m_cLocation.Y + 1][g_sChar.m_cLocation.X] == ' ' && bplayer >= 2)
 	{
 		//Beep(1440, 30);
-		g_sChar.m_cLocation.Y++; loadProgression();
+		g_sChar.m_cLocation.Y++; 
 		bplayer = 0;
 	}
 	if (g_abKeyPressed[K_RIGHT] && map[g_sChar.m_cLocation.Y][g_sChar.m_cLocation.X + 1] == ' ')
@@ -666,6 +665,7 @@ void moveCharacter()
 	if (collision('S') || collision('H') || collision('O') || collision('P'))
 	{
 		shop = true;
+		
 	}
 	else
 	{
@@ -674,6 +674,7 @@ void moveCharacter()
 
 	if (collision('Q') || collision('U') || collision('I') || collision('T'))
 	{
+		saveProgression();
 		g_bQuitGame = true;
 	}
 
@@ -793,18 +794,22 @@ void moveCharacter()
 }
 void processUserInput()
 {
-    // quits the game if player hits the escape key
-	if (g_abKeyPressed[K_ESCAPE]){
+	// quits the game if player hits the escape key
+	if (g_abKeyPressed[K_ESCAPE]) {
 		g_bQuitGame = true;
 	}
-	if (g_eGameState == S_STARTMENU){
-		if (g_abKeyPressed[K_1]){
+	if (g_eGameState == S_STARTMENU) {
+		if (g_abKeyPressed[K_1]) {
 			g_eGameState = S_CHARACTERCREATION;
 		}
-		if (g_abKeyPressed[K_2]){
+		if (g_abKeyPressed[K_2]) {
+			loadProgression();
+			g_eGameState = S_GAME;
+		}
+		if (g_abKeyPressed[K_3]) {
 			g_eGameState = S_INSTRUCTIONS;
 		}
-		if (g_abKeyPressed[K_3]){
+		if (g_abKeyPressed[K_4]){
 			g_bQuitGame = true;
 		}
 	}
@@ -1111,6 +1116,7 @@ void renderMap()
 			headquartersFile.open("Headquarters.txt");
 			if (headquartersFile.is_open())
 			{
+
 				while (getline(headquartersFile, headquarters))
 				{
 					for (a = 0; a < headquarters.length(); a++)
@@ -1708,14 +1714,23 @@ void saveProgression()
 	ofstream saveGame("saveGame.txt");
 	saveGame << coins << endl;
 	saveGame << lives << endl;
-	for (a = 0; a < 4; a++)
+	for (int a = 0; a < 5; a++)
 	{
-		saveGame << gems[a] << endl;
+		saveGame << charArray[a] ? '1' : '0';
 	}
-	for (a = 0; a < 5; a++)
+	saveGame << endl;
+	for (int a = 0; a < 4; a++)
+	{
+		saveGame << gems[a] ? '1' : '0';
+		
+	}
+	saveGame << endl;
+	for (int a = 0; a < 5; a++)
 	{
 		saveGame << boughtWeapons[a] << endl;
 	}
+	
+	
 }
 
 void loadProgression()
@@ -1724,11 +1739,37 @@ void loadProgression()
 	ifstream loadGame("saveGame.txt");
 
 	getline(loadGame, loadGameFile);
-
 	coins = stoi(loadGameFile);
+	getline(loadGame, loadGameFile);
 	lives = stoi(loadGameFile);
-	for (a = 0; a < 4; a++)
+
+	getline(loadGame, loadGameFile);
+	for (int a = 0; a < loadGameFile.length(); a++)
 	{
-		gems[a] = stoi(loadGameFile);
+		charArray[a] = loadGameFile[a] == '1' ? true : false;
+		if (charArray[a]) break;
 	}
+
+	getline(loadGame, loadGameFile);
+	for (int a = 0; a < loadGameFile.length(); a++)
+	{
+		gems[a] = loadGameFile[a] == '1' ? true : false;
+	}
+
+	getline(loadGame, loadGameFile);
+	for (int a = 0; a < loadGameFile.length(); a++)
+	{
+		boughtWeapons[a] = loadGameFile[a] == '1' ? true : false;
+	}
+	
+	
+	/*for (int a = 0; a < 4; a++)
+	{
+		loadGame >> gems[a];
+	}
+
+	for (int a = 0; a < 5; a++)
+	{
+		loadGame >> boughtWeapons[a];
+	}*/
 }
