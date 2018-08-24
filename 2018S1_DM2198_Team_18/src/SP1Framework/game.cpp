@@ -497,6 +497,8 @@ void playershoot()
 			g_sPlayershots[ps].m_cLocation.Y = g_sChar.m_cLocation.Y;
 			ps++;
 			if (ps >= 64) { ps = 0; }
+			g_sPlayershots[ps].m_cLocation.X = 1;
+			g_sPlayershots[ps].m_cLocation.Y = 0; // this fixes a bug
 			playerdirection[ps] = 0;
 			b = 0;
 		}
