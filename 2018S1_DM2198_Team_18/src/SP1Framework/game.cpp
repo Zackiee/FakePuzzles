@@ -208,8 +208,8 @@ void render()
             break;
 		case S_WINSCREEN: renderWin();
 			break;
-		//case S_LOSESCREEN: renderLose();
-			//break;
+		case S_LOSESCREEN: renderLose();
+			break;
     }
     renderFramerate();  // renders debug information, frame rate, elapsed time, etc
     renderToScreen();   // dump the contents of the buffer to the screen, one frame worth of game
@@ -283,24 +283,12 @@ void huggerdata() {
 		//Hugger collision with player
 		if (levels[1] == true || levels[2] == true || levels[3] == true || levels[4] == true)
 		{
-			if ((g_sHugger[h].m_cLocation.Y - 1 == g_sChar.m_cLocation.Y) && (g_sHugger[h].m_cLocation.X == g_sChar.m_cLocation.X)) {
-				spawns[0] = true;
-				lives--;
-			}
-			if ((g_sHugger[h].m_cLocation.Y == g_sChar.m_cLocation.Y) && (g_sHugger[h].m_cLocation.X - 1 == g_sChar.m_cLocation.X)) {
-				spawns[0] = true;
-				lives--;
-			}
-			if ((g_sHugger[h].m_cLocation.Y + 1 == g_sChar.m_cLocation.Y) && (g_sHugger[h].m_cLocation.X == g_sChar.m_cLocation.X)) {
-				spawns[0] = true;
-				lives--;
-			}
-			if ((g_sHugger[h].m_cLocation.Y == g_sChar.m_cLocation.Y) && (g_sHugger[h].m_cLocation.X + 1 == g_sChar.m_cLocation.X)) {
+			if ((g_sHugger[h].m_cLocation.Y == g_sChar.m_cLocation.Y) && (g_sHugger[h].m_cLocation.X == g_sChar.m_cLocation.X))
+			{
 				spawns[0] = true;
 				lives--;
 			}
 		}
-
 		min_double = min(min(up, down), min(left, right));
 		if (min_double == 99.0) { // don't move if not possible, and reset no reverse rule
 			x[h] = 0;
@@ -324,15 +312,6 @@ void huggerdata() {
 		else if (min_double == right && x[h] != 2) { // move right
 			g_sHugger[h].m_cLocation.X++;
 			x[h] = 4;
-		}
-		//Hugger collision with player
-		if (levels[1] == true || levels[2] == true || levels[3] == true || levels[4] == true)
-		{
-			if ((g_sHugger[h].m_cLocation.Y == g_sChar.m_cLocation.Y) && (g_sHugger[h].m_cLocation.X == g_sChar.m_cLocation.X)) 
-			{
-				spawns[0] = true;
-				lives--;
-			}
 		}
 		bhugger[h]++;
 	}
@@ -385,7 +364,6 @@ void gunnerdata() {
 				g_sGunner[g].m_cLocation.X--;
 			}
 		}
-
 		//Gunner body collision with player
 		if (levels[1] == true || levels[2] == true || levels[3] == true || levels[4] == true)
 		{
@@ -395,7 +373,6 @@ void gunnerdata() {
 				lives--;
 			}
 		}
-
 		if (g_sGunner[g].m_cLocation.X == g_sChar.m_cLocation.X) {
 			i++;
 			g_sBullets[i].m_cLocation.X = g_sGunner[g].m_cLocation.X;
@@ -611,7 +588,7 @@ void respawn()
 {
 	if (lives == 0)
 	{
-
+		g_eGameState = S_LOSESCREEN;
 	}
 
 	if (spawns[0] == true)
@@ -666,6 +643,7 @@ void moveCharacter()
 		//Beep(1440, 30);
 		g_sChar.m_cLocation.Y--;
 		bplayer = 0;
+		saveProgression();
 	}
 	if (g_abKeyPressed[K_LEFT] && map[g_sChar.m_cLocation.Y][g_sChar.m_cLocation.X - 1] == ' ')
 	{
@@ -675,7 +653,7 @@ void moveCharacter()
 	if (g_abKeyPressed[K_DOWN] && map[g_sChar.m_cLocation.Y + 1][g_sChar.m_cLocation.X] == ' ' && bplayer >= 2)
 	{
 		//Beep(1440, 30);
-		g_sChar.m_cLocation.Y++;
+		g_sChar.m_cLocation.Y++; loadProgression();
 		bplayer = 0;
 	}
 	if (g_abKeyPressed[K_RIGHT] && map[g_sChar.m_cLocation.Y][g_sChar.m_cLocation.X + 1] == ' ')
@@ -1126,6 +1104,11 @@ void renderWin()
 	c.Y = 24;
 	g_Console.writeToBuffer(c, "Press return to proceed, Press escape to quit the game", 0x08);
 }
+
+void renderLose()
+{
+
+}
 void renderMap()
 {
 	COORD c;
@@ -1388,21 +1371,25 @@ void renderMap()
 		}
 		shopFile.close();
 
+		//Buying Smg
 		if (g_abKeyPressed[K_2] && boughtWeapons[1] == false && (coins >= 40))
 		{
 			coins -= 40;
 			boughtWeapons[1] = true;
 		}
-		 if (g_abKeyPressed[K_3] && boughtWeapons[2] == false && (coins >= 70))
+		//Buying Rifle
+		if (g_abKeyPressed[K_3] && boughtWeapons[2] == false && (coins >= 70))
 		{
 			 coins -= 70;
 			 boughtWeapons[2] = true;
 		}
+		//Buying Sniper
 		if (g_abKeyPressed[K_4] && boughtWeapons[3] == false && (coins >= 100))
 		{
 			coins -= 100;
 			boughtWeapons[3] = true;
 		}
+		//Buying Minigun
 		if (g_abKeyPressed[K_5] && boughtWeapons[4] == false && (coins >= 150))
 		{
 			coins -= 150;
@@ -1730,4 +1717,34 @@ void renderToScreen()
 {
     // Writes the buffer to the console, hence you will see what you have written
     g_Console.flushBufferToConsole();
+}
+
+void saveProgression()
+{
+	ofstream saveGame("saveGame.txt");
+	saveGame << coins << endl;
+	saveGame << lives << endl;
+	for (a = 0; a < 4; a++)
+	{
+		saveGame << gems[a] << endl;
+	}
+	for (a = 0; a < 5; a++)
+	{
+		saveGame << boughtWeapons[a] << endl;
+	}
+}
+
+void loadProgression()
+{
+	string loadGameFile = "";
+	ifstream loadGame("saveGame.txt");
+
+	getline(loadGame, loadGameFile);
+
+	coins = stoi(loadGameFile);
+	lives = stoi(loadGameFile);
+	for (a = 0; a < 4; a++)
+	{
+		gems[a] = stoi(loadGameFile);
+	}
 }

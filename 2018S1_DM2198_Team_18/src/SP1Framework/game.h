@@ -69,6 +69,8 @@ void renderToScreen();      // dump the contents of the buffer to the screen, on
 void renderWin();           // renders the win screen
 //void renderLose();          // renders the lose screen
 bool collision(char collider);
+void saveProgression();
+void loadProgression();
 
 // define variables
 
