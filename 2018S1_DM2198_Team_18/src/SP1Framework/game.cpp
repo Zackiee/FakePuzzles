@@ -545,19 +545,21 @@ void playershoot()
 
 	p = ps;
 	for (ps = 0; ps < 64; ps++) {
-		if (playerdirection[ps] == 1 && bplayershoot[ps] >= 2) { // move up
-			g_sPlayershots[ps].m_cLocation.Y--;
-			bplayershoot[ps] = 0;
-		}
-		if (playerdirection[ps] == 2 && bplayershoot[ps] >= 2) { // move down
-			g_sPlayershots[ps].m_cLocation.Y++;
-			bplayershoot[ps] = 0;
-		}
-		if (playerdirection[ps] == 3) { // move left
-			g_sPlayershots[ps].m_cLocation.X--;
-		}
-		if (playerdirection[ps] == 4) { // move right
-			g_sPlayershots[ps].m_cLocation.X++;
+		if (g_sPlayershots[ps].m_cLocation.X != 1 || g_sPlayershots[ps].m_cLocation.Y != 0) {
+			if (playerdirection[ps] == 1 && bplayershoot[ps] >= 2) { // move up
+				g_sPlayershots[ps].m_cLocation.Y--;
+				bplayershoot[ps] = 0;
+			}
+			if (playerdirection[ps] == 2 && bplayershoot[ps] >= 2) { // move down
+				g_sPlayershots[ps].m_cLocation.Y++;
+				bplayershoot[ps] = 0;
+			}
+			if (playerdirection[ps] == 3) { // move left
+				g_sPlayershots[ps].m_cLocation.X--;
+			}
+			if (playerdirection[ps] == 4) { // move right
+				g_sPlayershots[ps].m_cLocation.X++;
+			}
 		}
 		//Player's bullet collision with enemies
 		if (levels[1] == true || levels[2] == true || levels[3] == true || levels[4] == true)
