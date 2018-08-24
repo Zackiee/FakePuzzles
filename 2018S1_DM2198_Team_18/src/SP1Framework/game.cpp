@@ -570,7 +570,6 @@ void playershoot()
 			}
 
 		}
-		if (g_sPlayershots[ps].m_cLocation.X >= 110 || g_sPlayershots[ps].m_cLocation.X <= 0 || g_sPlayershots[ps].m_cLocation.Y >= 30 || g_sPlayershots[ps].m_cLocation.Y <= 0) {
 		if (g_sPlayershots[ps].m_cLocation.X >= 108 || g_sPlayershots[ps].m_cLocation.X <= 1 || g_sPlayershots[ps].m_cLocation.Y >= 28 || g_sPlayershots[ps].m_cLocation.Y <= 1 || map[g_sPlayershots[ps].m_cLocation.Y][g_sPlayershots[ps].m_cLocation.X] != ' ') {
 			g_sPlayershots[ps].m_cLocation.X = 1;
 			g_sPlayershots[ps].m_cLocation.Y = 0;
