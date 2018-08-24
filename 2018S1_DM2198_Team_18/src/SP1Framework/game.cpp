@@ -305,7 +305,7 @@ void huggerdata() {
 			g_sHugger[h].m_cLocation.X++;
 			x[h] = 4;
 		}
-		//Hugger collision with player
+		//Hugger collision with player and player bullets
 		if (levels[1] == true || levels[2] == true || levels[3] == true || levels[4] == true)
 		{
 			if ((g_sHugger[h].m_cLocation.Y == g_sChar.m_cLocation.Y) && (g_sHugger[h].m_cLocation.X == g_sChar.m_cLocation.X))
@@ -750,7 +750,7 @@ void moveCharacter()
 			g_sHugger[2].m_cLocation.X = 84; g_sHugger[2].m_cLocation.Y = 17;
 			g_sHugger[3].m_cLocation.X = 78; g_sHugger[3].m_cLocation.Y = 11;
 			g_sHugger[4].m_cLocation.X = 35; g_sHugger[4].m_cLocation.Y = 12;
-			g_sHugger[5].m_cLocation.X = 29; g_sHugger[5].m_cLocation.Y = 17;
+			g_sHugger[5].m_cLocation.X = 29; g_sHugger[5].m_cLocation.Y = 16;
 			g_sGunner[0].m_cLocation.X = 54; g_sGunner[0].m_cLocation.Y = 4;
 			g_sGunner[1].m_cLocation.X = 54; g_sGunner[1].m_cLocation.Y = 16;
 			g_sGunner[2].m_cLocation.X = 40; g_sGunner[2].m_cLocation.Y = 8;
