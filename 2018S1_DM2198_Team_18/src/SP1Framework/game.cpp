@@ -176,6 +176,10 @@ void update(double dt)
 			break;
         case S_GAME: gameplay(); // gameplay logic when we are in the game
             break;
+		case S_WINSCREEN: processUserInput();
+			break;
+		case S_LOSESCREEN: processUserInput();
+			break;
     }
 }
 //--------------------------------------------------------------
@@ -567,13 +571,11 @@ void playershoot()
 		if (levels[1] == true || levels[2] == true || levels[3] == true || levels[4] == true)
 		{
 			if ((g_sPlayershots[ps].m_cLocation.Y == g_sHugger[h].m_cLocation.Y) && (g_sPlayershots[ps].m_cLocation.X == g_sHugger[h].m_cLocation.X)) {
-				coins += 10;
 				g_sPlayershots[ps].m_cLocation.X = 1;
 				g_sPlayershots[ps].m_cLocation.Y = 0;
 			}
 
 			if ((g_sPlayershots[ps].m_cLocation.Y == g_sGunner[g].m_cLocation.Y) && (g_sPlayershots[ps].m_cLocation.X == g_sGunner[g].m_cLocation.X)) {
-				coins += 10;
 				g_sPlayershots[ps].m_cLocation.X = 1;
 				g_sPlayershots[ps].m_cLocation.Y = 0;
 			}
@@ -731,7 +733,6 @@ void moveCharacter()
 		}
 		else if (collision('%'))
 		{
-			g_eGameState = S_WINSCREEN;
 			levels[0] = false;
 			inven = false;
 		}
@@ -743,7 +744,6 @@ void moveCharacter()
 
 		if (collision('%'))
 		{
-			g_eGameState = S_WINSCREEN;
 			levels[1] = false;
 			levels[0] = true;
 			spawns[1] = true;
@@ -759,7 +759,6 @@ void moveCharacter()
 
 		if (collision('%'))
 		{
-			g_eGameState = S_WINSCREEN;
 			levels[2] = false;
 			levels[0] = true;
 			spawns[2] = true;
@@ -780,7 +779,6 @@ void moveCharacter()
 
 		if (collision('%'))
 		{
-			g_eGameState = S_WINSCREEN;
 			levels[3] = false;
 			levels[0] = true;
 			spawns[3] = true;
@@ -801,7 +799,6 @@ void moveCharacter()
 
 		if (collision('%'))
 		{
-			g_eGameState = S_WINSCREEN;
 			levels[4] = false;
 			levels[0] = true;
 			spawns[4] = true;
@@ -820,78 +817,73 @@ void moveCharacter()
 void processUserInput()
 {
     // quits the game if player hits the escape key
-    if (g_abKeyPressed[K_ESCAPE])
-        g_bQuitGame = true;
-
-	if (g_eGameState == S_STARTMENU)
-	{
-		if (g_abKeyPressed[K_1])
-		{
+	if (g_abKeyPressed[K_ESCAPE]){
+		g_bQuitGame = true;
+	}
+	if (g_eGameState == S_STARTMENU){
+		if (g_abKeyPressed[K_1]){
 			g_eGameState = S_CHARACTERCREATION;
 		}
-
-		if (g_abKeyPressed[K_2])
-		{
+		if (g_abKeyPressed[K_2]){
 			g_eGameState = S_INSTRUCTIONS;
 		}
-
-		if (g_abKeyPressed[K_3])
-		{
+		if (g_abKeyPressed[K_3]){
 			g_bQuitGame = true;
 		}
 	}
-	if (g_eGameState == S_INSTRUCTIONS)
-	{
-		if (g_abKeyPressed[K_RETURN])
-		{
+	if (g_eGameState == S_INSTRUCTIONS){
+		if (g_abKeyPressed[K_RETURN]){
 			g_eGameState = S_CHARACTERCREATION;
 		}
 	}
-	if (g_eGameState == S_CHARACTERCREATION)
-	{
-		if (g_abKeyPressed[K_1])
-		{
+	if (g_eGameState == S_CHARACTERCREATION){
+		if (g_abKeyPressed[K_1]){
 			charArray[0] = true;
 			charArray[1] = false;
 			charArray[2] = false;
 			charArray[3] = false;
 			charArray[4] = false;
 		}
-		if (g_abKeyPressed[K_2])
-		{
+		if (g_abKeyPressed[K_2]){
 			charArray[1] = true;
 			charArray[0] = false;
 			charArray[2] = false;
 			charArray[3] = false;
 			charArray[4] = false;
 		}
-		if (g_abKeyPressed[K_3])
-		{
+		if (g_abKeyPressed[K_3]){
 			charArray[2] = true;
 			charArray[0] = false;
 			charArray[1] = false;
 			charArray[3] = false;
 			charArray[4] = false;
 		}
-		if (g_abKeyPressed[K_4])
-		{
+		if (g_abKeyPressed[K_4]){
 			charArray[3] = true;
 			charArray[0] = false;
 			charArray[1] = false;
 			charArray[2] = false;
 			charArray[4] = false;
 		}
-		if (g_abKeyPressed[K_5])
-		{
+		if (g_abKeyPressed[K_5]){
 			charArray[4] = true;
 			charArray[0] = false;
 			charArray[1] = false;
 			charArray[2] = false;
 			charArray[3] = false;
 		}
-		if (g_abKeyPressed[K_SPACE] && (charArray[0] == true || charArray[1] == true || charArray[2] == true || charArray[3] == true || charArray[4] == true))
-		{
+		if (g_abKeyPressed[K_SPACE] && (charArray[0] == true || charArray[1] == true || charArray[2] == true || charArray[3] == true || charArray[4] == true)){
 			g_eGameState = S_GAME;
+		}
+	}
+	if (g_eGameState == S_WINSCREEN) {
+		if (g_abKeyPressed[K_RETURN]){
+			g_eGameState = S_STARTMENU;
+		}
+	}
+	if (g_eGameState == S_LOSESCREEN) {
+		if (g_abKeyPressed[K_RETURN]) {
+			g_eGameState = S_STARTMENU;
 		}
 	}
 }
@@ -910,7 +902,7 @@ void renderSplashScreen()
 	ifstream splashscreenFile;
 	int i = 0;
 
-	splashscreenFile.open("Splashscreen.txt");
+	splashscreenFile.open("SplashScreen.txt");
 	if (splashscreenFile.is_open())
 	{
 		while (getline(splashscreenFile, splashscreen))
@@ -1097,47 +1089,36 @@ void renderGame()
 }
 void renderWin()
 {
+	//Render Win Screen
 	COORD c;
+	string winScreen;
+	ifstream winFile;
 	int i = 0;
-	if (1==1)
-	{
-		string winScreen;
-		ifstream winFile;
-		c.X = 20;
-		c.Y = 24;
-		g_Console.writeToBuffer(c, "Press 1 to proceed, Press 5 to quit the game", 0x08);
 
-		winFile.open("winscreen.txt");
-		if (winFile.is_open())
+	winFile.open("WinScreen.txt");
+	if (winFile.is_open())
+	{
+		while (getline(winFile, winScreen))
 		{
-			while (getline(winFile, winScreen))
+			for (a = 0; a < winScreen.length(); a++)
 			{
-				for (b = 0; b < winScreen.length(); b++)
+				if (winScreen[a] == 'w')
 				{
-					switch (winScreen[b])
-					{
-					case 'w':
-						winScreen[b] = 223;
-						break;
-					}
-					map[i][b] = winScreen[b];
+					winScreen[a] = 223;
 				}
-				c.X = 0;
-				c.Y = i;
-				i++;
-				g_Console.writeToBuffer(c, winScreen, 0x0A);
+				map[i][a] = winScreen[a];
 			}
-		}
-		winFile.close();
-		if (g_abKeyPressed[K_1])
-		{
-			g_eGameState = S_GAME;
-		}
-		else if (g_abKeyPressed[K_5])
-		{
-			g_bQuitGame = true;
+			c.X = 0;
+			c.Y = i;
+			i++;
+			g_Console.writeToBuffer(c, winScreen, 0x0A);
 		}
 	}
+	winFile.close();
+
+	c.X = 20;
+	c.Y = 24;
+	g_Console.writeToBuffer(c, "Press return to proceed, Press escape to quit the game", 0x08);
 }
 void renderMap()
 {
@@ -1721,7 +1702,6 @@ bool collision(char collider)
 	}
 	return collided;
 }
-
 void renderFramerate()
 {
     COORD c;
