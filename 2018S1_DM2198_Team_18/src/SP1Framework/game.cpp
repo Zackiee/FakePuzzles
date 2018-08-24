@@ -208,8 +208,8 @@ void render()
             break;
 		case S_WINSCREEN: renderWin();
 			break;
-		case S_LOSESCREEN: renderLose();
-			break;
+		/*case S_LOSESCREEN: renderLose();
+			break;*/
     }
     renderFramerate();  // renders debug information, frame rate, elapsed time, etc
     renderToScreen();   // dump the contents of the buffer to the screen, one frame worth of game
