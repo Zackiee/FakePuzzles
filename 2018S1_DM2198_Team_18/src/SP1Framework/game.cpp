@@ -208,8 +208,8 @@ void render()
             break;
 		case S_WINSCREEN: renderWin();
 			break;
-		//case S_LOSESCREEN: renderLose();
-			//break;
+		case S_LOSESCREEN: renderLose();
+			break;
     }
     renderFramerate();  // renders debug information, frame rate, elapsed time, etc
     renderToScreen();   // dump the contents of the buffer to the screen, one frame worth of game
@@ -547,11 +547,14 @@ void playershoot()
 		if (levels[1] == true || levels[2] == true || levels[3] == true || levels[4] == true)
 		{
 			if ((g_sPlayershots[ps].m_cLocation.Y == g_sHugger[h].m_cLocation.Y) && (g_sPlayershots[ps].m_cLocation.X == g_sHugger[h].m_cLocation.X)) {
+				coins += 10;
 				g_sPlayershots[ps].m_cLocation.X = 1;
 				g_sPlayershots[ps].m_cLocation.Y = 0;
+
 			}
 
 			if ((g_sPlayershots[ps].m_cLocation.Y == g_sGunner[g].m_cLocation.Y) && (g_sPlayershots[ps].m_cLocation.X == g_sGunner[g].m_cLocation.X)) {
+				coins += 10;
 				g_sPlayershots[ps].m_cLocation.X = 1;
 				g_sPlayershots[ps].m_cLocation.Y = 0;
 			}
@@ -581,7 +584,7 @@ void respawn()
 {
 	if (lives == 0)
 	{
-
+		g_eGameState = S_LOSESCREEN;
 	}
 
 	if (spawns[0] == true)
@@ -1096,6 +1099,11 @@ void renderWin()
 	c.Y = 24;
 	g_Console.writeToBuffer(c, "Press return to proceed, Press escape to quit the game", 0x08);
 }
+
+void renderLose()
+{
+
+}
 void renderMap()
 {
 	COORD c;
@@ -1358,21 +1366,25 @@ void renderMap()
 		}
 		shopFile.close();
 
+		//Buying Smg
 		if (g_abKeyPressed[K_2] && boughtWeapons[1] == false && (coins >= 40))
 		{
 			coins -= 40;
 			boughtWeapons[1] = true;
 		}
-		 if (g_abKeyPressed[K_3] && boughtWeapons[2] == false && (coins >= 70))
+		//Buying Rifle
+		if (g_abKeyPressed[K_3] && boughtWeapons[2] == false && (coins >= 70))
 		{
 			 coins -= 70;
 			 boughtWeapons[2] = true;
 		}
+		//Buying Sniper
 		if (g_abKeyPressed[K_4] && boughtWeapons[3] == false && (coins >= 100))
 		{
 			coins -= 100;
 			boughtWeapons[3] = true;
 		}
+		//Buying Minigun
 		if (g_abKeyPressed[K_5] && boughtWeapons[4] == false && (coins >= 150))
 		{
 			coins -= 150;
