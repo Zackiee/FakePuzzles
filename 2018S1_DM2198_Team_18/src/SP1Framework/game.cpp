@@ -643,7 +643,6 @@ void moveCharacter()
 		//Beep(1440, 30);
 		g_sChar.m_cLocation.Y--;
 		bplayer = 0;
-		saveProgression();
 	}
 	if (g_abKeyPressed[K_LEFT] && map[g_sChar.m_cLocation.Y][g_sChar.m_cLocation.X - 1] == ' ')
 	{
@@ -653,7 +652,7 @@ void moveCharacter()
 	if (g_abKeyPressed[K_DOWN] && map[g_sChar.m_cLocation.Y + 1][g_sChar.m_cLocation.X] == ' ' && bplayer >= 2)
 	{
 		//Beep(1440, 30);
-		g_sChar.m_cLocation.Y++; loadProgression();
+		g_sChar.m_cLocation.Y++;
 		bplayer = 0;
 	}
 	if (g_abKeyPressed[K_RIGHT] && map[g_sChar.m_cLocation.Y][g_sChar.m_cLocation.X + 1] == ' ')
@@ -719,6 +718,7 @@ void moveCharacter()
 		{
 			levels[0] = false;
 			inven = false;
+			g_eGameState = S_WINSCREEN;
 		}
 	}
 
