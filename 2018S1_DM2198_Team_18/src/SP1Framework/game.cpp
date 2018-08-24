@@ -26,7 +26,7 @@ int a = 0, aaa = 0;
 
 bool inven = true;
 bool shop = false;
-int coins = 500;
+int coins = 40;
 int lives = 7;
 
 int shootdirection[128] = { 0, };
