@@ -10,6 +10,7 @@
 #include <sstream>
 #include <fstream>
 #include <string>
+#include <time.h>
 
 //using namespace irrklang;
 using namespace std;
@@ -92,7 +93,7 @@ void init( void )
 		g_sGunner[i].m_cLocation.Y = 0;
 	}
 	for (int ps = 0; ps < 64; ps++) {
-		g_sPlayershots[ps].m_cLocation.X = 0;
+		g_sPlayershots[ps].m_cLocation.X = 1;
 		g_sPlayershots[ps].m_cLocation.Y = 0;
 	}
 	for (int i = 0; i < 128; i++) {
@@ -175,6 +176,10 @@ void update(double dt)
 			break;
         case S_GAME: gameplay(); // gameplay logic when we are in the game
             break;
+		case S_WINSCREEN: processUserInput();
+			break;
+		case S_LOSESCREEN: processUserInput();
+			break;
     }
 }
 //--------------------------------------------------------------
@@ -201,6 +206,10 @@ void render()
 			break;
         case S_GAME: renderGame();
             break;
+		case S_WINSCREEN: renderWin();
+			break;
+		//case S_LOSESCREEN: renderLose();
+			//break;
     }
     renderFramerate();  // renders debug information, frame rate, elapsed time, etc
     renderToScreen();   // dump the contents of the buffer to the screen, one frame worth of game
@@ -270,28 +279,15 @@ void huggerdata() {
 		if (map[g_sHugger[h].m_cLocation.Y][g_sHugger[h].m_cLocation.X + 1] == ' ' && x[h] != 2) {
 			right = sqrt(pow(g_sChar.m_cLocation.X - (g_sHugger[h].m_cLocation.X + 1), 2) + pow(g_sChar.m_cLocation.Y - (g_sHugger[h].m_cLocation.Y), 2));
 		}
-
 		//Hugger collision with player
 		if (levels[1] == true || levels[2] == true || levels[3] == true || levels[4] == true)
 		{
-			if ((g_sHugger[h].m_cLocation.Y - 1 == g_sChar.m_cLocation.Y) && (g_sHugger[h].m_cLocation.X == g_sChar.m_cLocation.X)) {
-				spawns[0] = true;
-				lives--;
-			}
-			if ((g_sHugger[h].m_cLocation.Y == g_sChar.m_cLocation.Y) && (g_sHugger[h].m_cLocation.X - 1 == g_sChar.m_cLocation.X)) {
-				spawns[0] = true;
-				lives--;
-			}
-			if ((g_sHugger[h].m_cLocation.Y + 1 == g_sChar.m_cLocation.Y) && (g_sHugger[h].m_cLocation.X == g_sChar.m_cLocation.X)) {
-				spawns[0] = true;
-				lives--;
-			}
-			if ((g_sHugger[h].m_cLocation.Y == g_sChar.m_cLocation.Y) && (g_sHugger[h].m_cLocation.X + 1 == g_sChar.m_cLocation.X)) {
+			if ((g_sHugger[h].m_cLocation.Y == g_sChar.m_cLocation.Y) && (g_sHugger[h].m_cLocation.X == g_sChar.m_cLocation.X))
+			{
 				spawns[0] = true;
 				lives--;
 			}
 		}
-
 		min_double = min(min(up, down), min(left, right));
 		if (min_double == 99.0) { // don't move if not possible, and reset no reverse rule
 			x[h] = 0;
@@ -316,15 +312,6 @@ void huggerdata() {
 			g_sHugger[h].m_cLocation.X++;
 			x[h] = 4;
 		}
-		//Hugger collision with player
-		if (levels[1] == true || levels[2] == true || levels[3] == true || levels[4] == true)
-		{
-			if ((g_sHugger[h].m_cLocation.Y == g_sChar.m_cLocation.Y) && (g_sHugger[h].m_cLocation.X == g_sChar.m_cLocation.X)) 
-			{
-				spawns[0] = true;
-				lives--;
-			}
-		}
 		bhugger[h]++;
 	}
 
@@ -344,7 +331,7 @@ void gunnerdata() {
 		if (g_sGunner[g].m_cLocation.X == 0 && g_sGunner[g].m_cLocation.Y == 0) {
 			continue;
 		}
-		if (sqrt(pow((g_sGunner[g].m_cLocation.X - g_sChar.m_cLocation.X), 2)) <= 8 && sqrt(pow((g_sGunner[g].m_cLocation.Y - g_sChar.m_cLocation.Y), 2)) <= 8) {
+		if (sqrt(pow((g_sGunner[g].m_cLocation.X - g_sChar.m_cLocation.X), 2)) <= 8 && sqrt(pow((g_sGunner[g].m_cLocation.Y - g_sChar.m_cLocation.Y), 2)) <= 4) {
 			if (g_sGunner[g].m_cLocation.Y < g_sChar.m_cLocation.Y && map[g_sGunner[g].m_cLocation.Y - 1][g_sGunner[g].m_cLocation.X] == ' ' && bhugger[g] >= 2) {
 				g_sGunner[g].m_cLocation.Y--;
 				bhugger[g] = 0;
@@ -376,17 +363,15 @@ void gunnerdata() {
 				g_sGunner[g].m_cLocation.X--;
 			}
 		}
-
 		//Gunner body collision with player
 		if (levels[1] == true || levels[2] == true || levels[3] == true || levels[4] == true)
 		{
-			if ((g_sGunner[g].m_cLocation.Y  == g_sChar.m_cLocation.Y) && (g_sGunner[g].m_cLocation.X == g_sChar.m_cLocation.X))
+			if ((g_sGunner[g].m_cLocation.Y == g_sChar.m_cLocation.Y) && (g_sGunner[g].m_cLocation.X == g_sChar.m_cLocation.X))
 			{
 				spawns[0] = true;
 				lives--;
 			}
 		}
-
 		if (g_sGunner[g].m_cLocation.X == g_sChar.m_cLocation.X) {
 			i++;
 			g_sBullets[i].m_cLocation.X = g_sGunner[g].m_cLocation.X;
@@ -448,7 +433,7 @@ void enemybullet() {
 				g_sBullets[i].m_cLocation.Y = 0;
 				shootdirection[i] = 0;
 			}
-			if (g_sBullets[i].m_cLocation.X >= 110 || g_sBullets[i].m_cLocation.X <= 0 || g_sBullets[i].m_cLocation.Y >= 30 || g_sBullets[i].m_cLocation.Y <= 0) {
+			if (g_sBullets[i].m_cLocation.X >= 108 || g_sBullets[i].m_cLocation.X <= 1 || g_sBullets[i].m_cLocation.Y >= 28 || g_sBullets[i].m_cLocation.Y <= 1 || map[g_sBullets[i].m_cLocation.Y][g_sBullets[i].m_cLocation.X] != ' ') {
 				g_sBullets[i].m_cLocation.X = 0;
 				g_sBullets[i].m_cLocation.Y = 0;
 				shootdirection[i] = 0;
@@ -487,11 +472,13 @@ void playershoot()
 	}
 
 	if (g_abKeyPressed[K_SPACE] && playerdirection[ps] != 0) {
-		if (equipWeapons[0] && b >= 8 || equipWeapons[1] && b >= 4 || equipWeapons[2] && b >= 6 || equipWeapons[3] && b >= 91 || equipWeapons[4] && b >= 1) { // Pistol fires around 3 times per second, Smg fires around 7 times per second, Assault rifle fires around 5 times per second, Sniper fires around once every 2 seconds, Minigun fires around 20 times per second
+		if (equipWeapons[0] && b >= 8 || equipWeapons[1] && b >= 4 || equipWeapons[2] && b >= 6 || equipWeapons[3] && b >= 91 || equipWeapons[4] && b >= 2) { // Pistol fires around 3 times per second, Smg fires around 7 times per second, Assault rifle fires around 4 times per second, Sniper fires around once every 2 seconds, Minigun fires around 20 times per second
 			g_sPlayershots[ps].m_cLocation.X = g_sChar.m_cLocation.X;
 			g_sPlayershots[ps].m_cLocation.Y = g_sChar.m_cLocation.Y;
 			ps++;
 			if (ps >= 64) { ps = 0; }
+			g_sPlayershots[ps].m_cLocation.X = 1;
+			g_sPlayershots[ps].m_cLocation.Y = 0; // this fixes a bug
 			playerdirection[ps] = 0;
 			b = 0;
 		}
@@ -540,22 +527,38 @@ void playershoot()
 
 	p = ps;
 	for (ps = 0; ps < 64; ps++) {
-		if (playerdirection[ps] == 1 && bplayershoot[ps] >= 2) { // move up
-			g_sPlayershots[ps].m_cLocation.Y--;
-			bplayershoot[ps] = 0;
+		if (g_sPlayershots[ps].m_cLocation.X != 1 || g_sPlayershots[ps].m_cLocation.Y != 0) {
+			if (playerdirection[ps] == 1 && bplayershoot[ps] >= 2) { // move up
+				g_sPlayershots[ps].m_cLocation.Y--;
+				bplayershoot[ps] = 0;
+			}
+			if (playerdirection[ps] == 2 && bplayershoot[ps] >= 2) { // move down
+				g_sPlayershots[ps].m_cLocation.Y++;
+				bplayershoot[ps] = 0;
+			}
+			if (playerdirection[ps] == 3) { // move left
+				g_sPlayershots[ps].m_cLocation.X--;
+			}
+			if (playerdirection[ps] == 4) { // move right
+				g_sPlayershots[ps].m_cLocation.X++;
+			}
 		}
-		if (playerdirection[ps] == 2 && bplayershoot[ps] >= 2) { // move down
-			g_sPlayershots[ps].m_cLocation.Y++;
-			bplayershoot[ps] = 0;
+		//Player's bullet collision with enemies
+		if (levels[1] == true || levels[2] == true || levels[3] == true || levels[4] == true)
+		{
+			if ((g_sPlayershots[ps].m_cLocation.Y == g_sHugger[h].m_cLocation.Y) && (g_sPlayershots[ps].m_cLocation.X == g_sHugger[h].m_cLocation.X)) {
+				g_sPlayershots[ps].m_cLocation.X = 1;
+				g_sPlayershots[ps].m_cLocation.Y = 0;
+			}
+
+			if ((g_sPlayershots[ps].m_cLocation.Y == g_sGunner[g].m_cLocation.Y) && (g_sPlayershots[ps].m_cLocation.X == g_sGunner[g].m_cLocation.X)) {
+				g_sPlayershots[ps].m_cLocation.X = 1;
+				g_sPlayershots[ps].m_cLocation.Y = 0;
+			}
+
 		}
-		if (playerdirection[ps] == 3) { // move left
-			g_sPlayershots[ps].m_cLocation.X--;
-		}
-		if (playerdirection[ps] == 4) { // move right
-			g_sPlayershots[ps].m_cLocation.X++;
-		}
-		if (g_sPlayershots[ps].m_cLocation.X >= 110 || g_sPlayershots[ps].m_cLocation.X <= 0 || g_sPlayershots[ps].m_cLocation.Y >= 30 || g_sPlayershots[ps].m_cLocation.Y <= 0) {
-			g_sPlayershots[ps].m_cLocation.X = 0;
+		if (g_sPlayershots[ps].m_cLocation.X >= 108 || g_sPlayershots[ps].m_cLocation.X <= 1 || g_sPlayershots[ps].m_cLocation.Y >= 28 || g_sPlayershots[ps].m_cLocation.Y <= 1 || map[g_sPlayershots[ps].m_cLocation.Y][g_sPlayershots[ps].m_cLocation.X] != ' ') { // player bullets near leaving the console window or player bullets' collision with walls
+			g_sPlayershots[ps].m_cLocation.X = 1;
 			g_sPlayershots[ps].m_cLocation.Y = 0;
 		}
 		bplayershoot[ps]++;
@@ -571,19 +574,6 @@ void playershoot()
 	else if (playershot) {
 		b++;
 		playerbulletshot = g_dElapsedTime + 0.05; // player bullets fly as fast as enemy bullets for now
-	}
-
-	////Player's bullet collision with walls
-	//if ((g_sPlayershots[ps].m_cLocation.Y == ) && (g_sPlayershots[ps].m_cLocation.X == )) {
-	//	lives--;
-	//}
-
-	//Player's bullet collision with enemies
-	if (levels[1] == true || levels[2] == true || levels[3] == true || levels[4] == true)
-	{
-		if ((g_sPlayershots[ps].m_cLocation.Y == g_sHugger[h].m_cLocation.Y) && (g_sPlayershots[ps].m_cLocation.X == g_sHugger[h].m_cLocation.X)) {
-			coins += 10;
-		}
 	}
 }
 
@@ -633,7 +623,6 @@ void gameplay()            // gameplay logic
 	enemybullet();
 	respawn();
 }
-
 void moveCharacter()
 {
 	bool bSomethingHappened = false;
@@ -805,78 +794,73 @@ void moveCharacter()
 void processUserInput()
 {
     // quits the game if player hits the escape key
-    if (g_abKeyPressed[K_ESCAPE])
-        g_bQuitGame = true;
-
-	if (g_eGameState == S_STARTMENU)
-	{
-		if (g_abKeyPressed[K_1])
-		{
+	if (g_abKeyPressed[K_ESCAPE]){
+		g_bQuitGame = true;
+	}
+	if (g_eGameState == S_STARTMENU){
+		if (g_abKeyPressed[K_1]){
 			g_eGameState = S_CHARACTERCREATION;
 		}
-
-		if (g_abKeyPressed[K_2])
-		{
+		if (g_abKeyPressed[K_2]){
 			g_eGameState = S_INSTRUCTIONS;
 		}
-
-		if (g_abKeyPressed[K_3])
-		{
+		if (g_abKeyPressed[K_3]){
 			g_bQuitGame = true;
 		}
 	}
-	if (g_eGameState == S_INSTRUCTIONS)
-	{
-		if (g_abKeyPressed[K_RETURN])
-		{
+	if (g_eGameState == S_INSTRUCTIONS){
+		if (g_abKeyPressed[K_RETURN]){
 			g_eGameState = S_CHARACTERCREATION;
 		}
 	}
-	if (g_eGameState == S_CHARACTERCREATION)
-	{
-		if (g_abKeyPressed[K_1])
-		{
+	if (g_eGameState == S_CHARACTERCREATION){
+		if (g_abKeyPressed[K_1]){
 			charArray[0] = true;
 			charArray[1] = false;
 			charArray[2] = false;
 			charArray[3] = false;
 			charArray[4] = false;
 		}
-		if (g_abKeyPressed[K_2])
-		{
+		if (g_abKeyPressed[K_2]){
 			charArray[1] = true;
 			charArray[0] = false;
 			charArray[2] = false;
 			charArray[3] = false;
 			charArray[4] = false;
 		}
-		if (g_abKeyPressed[K_3])
-		{
+		if (g_abKeyPressed[K_3]){
 			charArray[2] = true;
 			charArray[0] = false;
 			charArray[1] = false;
 			charArray[3] = false;
 			charArray[4] = false;
 		}
-		if (g_abKeyPressed[K_4])
-		{
+		if (g_abKeyPressed[K_4]){
 			charArray[3] = true;
 			charArray[0] = false;
 			charArray[1] = false;
 			charArray[2] = false;
 			charArray[4] = false;
 		}
-		if (g_abKeyPressed[K_5])
-		{
+		if (g_abKeyPressed[K_5]){
 			charArray[4] = true;
 			charArray[0] = false;
 			charArray[1] = false;
 			charArray[2] = false;
 			charArray[3] = false;
 		}
-		if (g_abKeyPressed[K_SPACE] && (charArray[0] == true || charArray[1] == true || charArray[2] == true || charArray[3] == true || charArray[4] == true))
-		{
+		if (g_abKeyPressed[K_SPACE] && (charArray[0] == true || charArray[1] == true || charArray[2] == true || charArray[3] == true || charArray[4] == true)){
 			g_eGameState = S_GAME;
+		}
+	}
+	if (g_eGameState == S_WINSCREEN) {
+		if (g_abKeyPressed[K_RETURN]){
+			g_eGameState = S_STARTMENU;
+		}
+	}
+	if (g_eGameState == S_LOSESCREEN) {
+		if (g_abKeyPressed[K_RETURN]) {
+			g_eGameState = S_STARTMENU;
 		}
 	}
 }
@@ -895,7 +879,7 @@ void renderSplashScreen()
 	ifstream splashscreenFile;
 	int i = 0;
 
-	splashscreenFile.open("Splashscreen.txt");
+	splashscreenFile.open("SplashScreen.txt");
 	if (splashscreenFile.is_open())
 	{
 		while (getline(splashscreenFile, splashscreen))
@@ -1080,7 +1064,39 @@ void renderGame()
 	renderEntities();
 	playershoot();
 }
+void renderWin()
+{
+	//Render Win Screen
+	COORD c;
+	string winScreen;
+	ifstream winFile;
+	int i = 0;
 
+	winFile.open("WinScreen.txt");
+	if (winFile.is_open())
+	{
+		while (getline(winFile, winScreen))
+		{
+			for (a = 0; a < winScreen.length(); a++)
+			{
+				if (winScreen[a] == 'w')
+				{
+					winScreen[a] = 223;
+				}
+				map[i][a] = winScreen[a];
+			}
+			c.X = 0;
+			c.Y = i;
+			i++;
+			g_Console.writeToBuffer(c, winScreen, 0x0A);
+		}
+	}
+	winFile.close();
+
+	c.X = 20;
+	c.Y = 24;
+	g_Console.writeToBuffer(c, "Press return to proceed, Press escape to quit the game", 0x08);
+}
 void renderMap()
 {
 	COORD c;
@@ -1663,7 +1679,6 @@ bool collision(char collider)
 	}
 	return collided;
 }
-
 void renderFramerate()
 {
     COORD c;
