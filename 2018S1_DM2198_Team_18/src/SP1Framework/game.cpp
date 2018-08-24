@@ -496,11 +496,13 @@ void playershoot()
 	}
 
 	if (g_abKeyPressed[K_SPACE] && playerdirection[ps] != 0) {
-		if (equipWeapons[0] && b >= 8 || equipWeapons[1] && b >= 4 || equipWeapons[2] && b >= 6 || equipWeapons[3] && b >= 91 || equipWeapons[4] && b >= 1) { // Pistol fires around 3 times per second, Smg fires around 7 times per second, Assault rifle fires around 5 times per second, Sniper fires around once every 2 seconds, Minigun fires around 20 times per second
+		if (equipWeapons[0] && b >= 8 || equipWeapons[1] && b >= 4 || equipWeapons[2] && b >= 6 || equipWeapons[3] && b >= 91 || equipWeapons[4] && b >= 2) { // Pistol fires around 3 times per second, Smg fires around 7 times per second, Assault rifle fires around 5 times per second, Sniper fires around once every 2 seconds, Minigun fires around 20 times per second
 			g_sPlayershots[ps].m_cLocation.X = g_sChar.m_cLocation.X;
 			g_sPlayershots[ps].m_cLocation.Y = g_sChar.m_cLocation.Y;
 			ps++;
 			if (ps >= 64) { ps = 0; }
+			g_sPlayershots[ps].m_cLocation.X = 1;
+			g_sPlayershots[ps].m_cLocation.Y = 0; // this fixes a bug
 			playerdirection[ps] = 0;
 			b = 0;
 		}
@@ -549,19 +551,21 @@ void playershoot()
 
 	p = ps;
 	for (ps = 0; ps < 64; ps++) {
-		if (playerdirection[ps] == 1 && bplayershoot[ps] >= 2) { // move up
-			g_sPlayershots[ps].m_cLocation.Y--;
-			bplayershoot[ps] = 0;
-		}
-		if (playerdirection[ps] == 2 && bplayershoot[ps] >= 2) { // move down
-			g_sPlayershots[ps].m_cLocation.Y++;
-			bplayershoot[ps] = 0;
-		}
-		if (playerdirection[ps] == 3) { // move left
-			g_sPlayershots[ps].m_cLocation.X--;
-		}
-		if (playerdirection[ps] == 4) { // move right
-			g_sPlayershots[ps].m_cLocation.X++;
+		if (g_sPlayershots[ps].m_cLocation.X != 1 || g_sPlayershots[ps].m_cLocation.Y != 0) {
+			if (playerdirection[ps] == 1 && bplayershoot[ps] >= 2) { // move up
+				g_sPlayershots[ps].m_cLocation.Y--;
+				bplayershoot[ps] = 0;
+			}
+			if (playerdirection[ps] == 2 && bplayershoot[ps] >= 2) { // move down
+				g_sPlayershots[ps].m_cLocation.Y++;
+				bplayershoot[ps] = 0;
+			}
+			if (playerdirection[ps] == 3) { // move left
+				g_sPlayershots[ps].m_cLocation.X--;
+			}
+			if (playerdirection[ps] == 4) { // move right
+				g_sPlayershots[ps].m_cLocation.X++;
+			}
 		}
 		//Player's bullet collision with enemies
 		if (levels[1] == true || levels[2] == true || levels[3] == true || levels[4] == true)
@@ -577,7 +581,7 @@ void playershoot()
 			}
 
 		}
-		if (g_sPlayershots[ps].m_cLocation.X >= 108 || g_sPlayershots[ps].m_cLocation.X <= 1 || g_sPlayershots[ps].m_cLocation.Y >= 28 || g_sPlayershots[ps].m_cLocation.Y <= 1 || map[g_sPlayershots[ps].m_cLocation.Y][g_sPlayershots[ps].m_cLocation.X] != ' ') {
+		if (g_sPlayershots[ps].m_cLocation.X >= 108 || g_sPlayershots[ps].m_cLocation.X <= 1 || g_sPlayershots[ps].m_cLocation.Y >= 28 || g_sPlayershots[ps].m_cLocation.Y <= 1 || map[g_sPlayershots[ps].m_cLocation.Y][g_sPlayershots[ps].m_cLocation.X] != ' ') { // player bullets near leaving the console window or player bullets' collision with walls
 			g_sPlayershots[ps].m_cLocation.X = 1;
 			g_sPlayershots[ps].m_cLocation.Y = 0;
 		}
