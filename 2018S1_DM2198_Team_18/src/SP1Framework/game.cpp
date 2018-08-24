@@ -22,7 +22,7 @@ bool spawns[5] = { false };
 bool gems[4] = { false };
 bool equipWeapons[5] = { false };
 bool boughtWeapons[5] = { false };
-int a = 0;
+int a = 0, aaa = 0;
 
 bool inven = true;
 bool shop = false;
@@ -208,8 +208,8 @@ void render()
             break;
 		case S_WINSCREEN: renderWin();
 			break;
-		//case S_LOSESCREEN: renderLose();
-			//break;
+		/*case S_LOSESCREEN: renderLose();
+			break;*/
     }
     renderFramerate();  // renders debug information, frame rate, elapsed time, etc
     renderToScreen();   // dump the contents of the buffer to the screen, one frame worth of game
@@ -279,6 +279,7 @@ void huggerdata() {
 		if (map[g_sHugger[h].m_cLocation.Y][g_sHugger[h].m_cLocation.X + 1] == ' ' && x[h] != 2) {
 			right = sqrt(pow(g_sChar.m_cLocation.X - (g_sHugger[h].m_cLocation.X + 1), 2) + pow(g_sChar.m_cLocation.Y - (g_sHugger[h].m_cLocation.Y), 2));
 		}
+
 		//Hugger collision with player
 		if (levels[1] == true || levels[2] == true || levels[3] == true || levels[4] == true)
 		{
@@ -331,7 +332,7 @@ void gunnerdata() {
 		if (g_sGunner[g].m_cLocation.X == 0 && g_sGunner[g].m_cLocation.Y == 0) {
 			continue;
 		}
-		if (sqrt(pow((g_sGunner[g].m_cLocation.X - g_sChar.m_cLocation.X), 2)) <= 8 && sqrt(pow((g_sGunner[g].m_cLocation.Y - g_sChar.m_cLocation.Y), 2)) <= 4) {
+		if (sqrt(pow((g_sGunner[g].m_cLocation.X - g_sChar.m_cLocation.X), 2)) <= 10 && sqrt(pow((g_sGunner[g].m_cLocation.Y - g_sChar.m_cLocation.Y), 2)) <= 5) {
 			if (g_sGunner[g].m_cLocation.Y < g_sChar.m_cLocation.Y && map[g_sGunner[g].m_cLocation.Y - 1][g_sGunner[g].m_cLocation.X] == ' ' && bhugger[g] >= 2) {
 				g_sGunner[g].m_cLocation.Y--;
 				bhugger[g] = 0;
@@ -472,7 +473,7 @@ void playershoot()
 	}
 
 	if (g_abKeyPressed[K_SPACE] && playerdirection[ps] != 0) {
-		if (equipWeapons[0] && b >= 8 || equipWeapons[1] && b >= 4 || equipWeapons[2] && b >= 6 || equipWeapons[3] && b >= 91 || equipWeapons[4] && b >= 2) { // Pistol fires around 3 times per second, Smg fires around 7 times per second, Assault rifle fires around 4 times per second, Sniper fires around once every 2 seconds, Minigun fires around 20 times per second
+		if (equipWeapons[0] && b >= 9 || equipWeapons[1] && b >= 4 || equipWeapons[2] && b >= 6 || equipWeapons[3] && b >= 91 || equipWeapons[4] && b >= 2) { // Pistol fires around 2 times per second, Smg fires around 7 times per second, Assault rifle fires around 4 times per second, Sniper fires around once every 2 seconds, Minigun fires around 20 times per second
 			g_sPlayershots[ps].m_cLocation.X = g_sChar.m_cLocation.X;
 			g_sPlayershots[ps].m_cLocation.Y = g_sChar.m_cLocation.Y;
 			ps++;
@@ -546,16 +547,22 @@ void playershoot()
 		//Player's bullet collision with enemies
 		if (levels[1] == true || levels[2] == true || levels[3] == true || levels[4] == true)
 		{
-			if ((g_sPlayershots[ps].m_cLocation.Y == g_sHugger[h].m_cLocation.Y) && (g_sPlayershots[ps].m_cLocation.X == g_sHugger[h].m_cLocation.X)) {
-				g_sPlayershots[ps].m_cLocation.X = 1;
-				g_sPlayershots[ps].m_cLocation.Y = 0;
+			for (h = 0; h < 4; h++) {
+				if ((g_sPlayershots[ps].m_cLocation.Y == g_sHugger[h].m_cLocation.Y) && (g_sPlayershots[ps].m_cLocation.X == g_sHugger[h].m_cLocation.X)) {
+					g_sPlayershots[ps].m_cLocation.X = 1;
+					g_sPlayershots[ps].m_cLocation.Y = 0;
+					coins += 10;
+					g_sHugger[h].m_cLocation.X = 0;
+					g_sHugger[h].m_cLocation.Y = 0;
+				} // g_sGunner[h] imstead of [g] because h and g serve the same purpose
+				if ((g_sPlayershots[ps].m_cLocation.Y == g_sGunner[h].m_cLocation.Y) && (g_sPlayershots[ps].m_cLocation.X == g_sGunner[h].m_cLocation.X)) {
+					g_sPlayershots[ps].m_cLocation.X = 1;
+					g_sPlayershots[ps].m_cLocation.Y = 0;
+					coins += 10;
+					g_sGunner[h].m_cLocation.X = 0;
+					g_sGunner[h].m_cLocation.Y = 0;
+				}
 			}
-
-			if ((g_sPlayershots[ps].m_cLocation.Y == g_sGunner[g].m_cLocation.Y) && (g_sPlayershots[ps].m_cLocation.X == g_sGunner[g].m_cLocation.X)) {
-				g_sPlayershots[ps].m_cLocation.X = 1;
-				g_sPlayershots[ps].m_cLocation.Y = 0;
-			}
-
 		}
 		if (g_sPlayershots[ps].m_cLocation.X >= 108 || g_sPlayershots[ps].m_cLocation.X <= 1 || g_sPlayershots[ps].m_cLocation.Y >= 28 || g_sPlayershots[ps].m_cLocation.Y <= 1 || map[g_sPlayershots[ps].m_cLocation.Y][g_sPlayershots[ps].m_cLocation.X] != ' ') { // player bullets near leaving the console window or player bullets' collision with walls
 			g_sPlayershots[ps].m_cLocation.X = 1;
@@ -581,7 +588,7 @@ void respawn()
 {
 	if (lives == 0)
 	{
-
+		g_eGameState = S_LOSESCREEN;
 	}
 
 	if (spawns[0] == true)
@@ -645,7 +652,7 @@ void moveCharacter()
 	if (g_abKeyPressed[K_DOWN] && map[g_sChar.m_cLocation.Y + 1][g_sChar.m_cLocation.X] == ' ' && bplayer >= 2)
 	{
 		//Beep(1440, 30);
-		g_sChar.m_cLocation.Y++; 
+		g_sChar.m_cLocation.Y++; loadProgression();
 		bplayer = 0;
 	}
 	if (g_abKeyPressed[K_RIGHT] && map[g_sChar.m_cLocation.Y][g_sChar.m_cLocation.X + 1] == ' ')
@@ -680,6 +687,18 @@ void moveCharacter()
 
 	if (levels[0] == true)
 	{
+		for (aaa = 0; aaa < 4; aaa++) {
+			g_sHugger[aaa].m_cLocation.X = 0;
+			g_sHugger[aaa].m_cLocation.Y = 0;
+			g_sGunner[aaa].m_cLocation.X = 0;
+			g_sGunner[aaa].m_cLocation.Y = 0;
+		}
+		for (aaa = 0; aaa < 128; aaa++) {
+			g_sBullets[aaa].m_cLocation.X = 0;
+			g_sBullets[aaa].m_cLocation.Y = 0;
+		}
+		aaa = 0;
+
 		spawns[1] = false;
 		spawns[2] = false;
 		spawns[3] = false;
@@ -713,12 +732,21 @@ void moveCharacter()
 		{
 			levels[0] = false;
 			inven = false;
+			g_eGameState = S_WINSCREEN;
 		}
 	}
 
 	else if (levels[1] == true)
 	{
 		spawns[0] = false;
+		while (aaa <= 0) {
+			g_sHugger[0].m_cLocation.X = 6; g_sHugger[0].m_cLocation.Y = 16;
+			g_sHugger[1].m_cLocation.X = 94; g_sHugger[1].m_cLocation.Y = 4;
+			g_sHugger[2].m_cLocation.X = 84; g_sHugger[2].m_cLocation.Y = 17;
+			g_sGunner[0].m_cLocation.X = 54; g_sGunner[0].m_cLocation.Y = 4;
+			g_sGunner[1].m_cLocation.X = 54; g_sGunner[1].m_cLocation.Y = 16;
+			aaa++;
+		}
 
 		if (collision('%'))
 		{
@@ -734,6 +762,14 @@ void moveCharacter()
 	else if (levels[2] == true)
 	{
 		spawns[0] = false;
+		while (aaa <= 0) {
+			g_sHugger[0].m_cLocation.X = 5; g_sHugger[0].m_cLocation.Y = 12;
+			g_sHugger[1].m_cLocation.X = 17; g_sHugger[1].m_cLocation.Y = 3;
+			g_sHugger[2].m_cLocation.X = 34; g_sHugger[2].m_cLocation.Y = 11;
+			g_sHugger[3].m_cLocation.X = 54; g_sHugger[3].m_cLocation.Y = 16;
+			g_sGunner[0].m_cLocation.X = 18; g_sGunner[0].m_cLocation.Y = 14;
+			aaa++;
+		}
 
 		if (collision('%'))
 		{
@@ -745,6 +781,13 @@ void moveCharacter()
 		{
 			g_sChar.m_cLocation.X = 64;
 			g_sChar.m_cLocation.Y = 2;
+			g_sHugger[0].m_cLocation.X = 79; g_sHugger[0].m_cLocation.Y = 6;
+			g_sHugger[1].m_cLocation.X = 69; g_sHugger[1].m_cLocation.Y = 10;
+			g_sHugger[2].m_cLocation.X = 90; g_sHugger[2].m_cLocation.Y = 16;
+			g_sHugger[3].m_cLocation.X = 90; g_sHugger[3].m_cLocation.Y = 19;
+			g_sGunner[0].m_cLocation.X = 77; g_sGunner[0].m_cLocation.Y = 3;
+			g_sGunner[1].m_cLocation.X = 70; g_sGunner[1].m_cLocation.Y = 15;
+			g_sGunner[2].m_cLocation.X = 85; g_sGunner[2].m_cLocation.Y = 16;
 		}
 		if (collision('*'))
 		{
@@ -1102,6 +1145,11 @@ void renderWin()
 	c.Y = 24;
 	g_Console.writeToBuffer(c, "Press return to proceed, Press escape to quit the game", 0x08);
 }
+
+void renderLose()
+{
+
+}
 void renderMap()
 {
 	COORD c;
@@ -1365,21 +1413,25 @@ void renderMap()
 		}
 		shopFile.close();
 
+		//Buying Smg
 		if (g_abKeyPressed[K_2] && boughtWeapons[1] == false && (coins >= 40))
 		{
 			coins -= 40;
 			boughtWeapons[1] = true;
 		}
-		 if (g_abKeyPressed[K_3] && boughtWeapons[2] == false && (coins >= 70))
+		//Buying Rifle
+		if (g_abKeyPressed[K_3] && boughtWeapons[2] == false && (coins >= 70))
 		{
 			 coins -= 70;
 			 boughtWeapons[2] = true;
 		}
+		//Buying Sniper
 		if (g_abKeyPressed[K_4] && boughtWeapons[3] == false && (coins >= 100))
 		{
 			coins -= 100;
 			boughtWeapons[3] = true;
 		}
+		//Buying Minigun
 		if (g_abKeyPressed[K_5] && boughtWeapons[4] == false && (coins >= 150))
 		{
 			coins -= 150;
