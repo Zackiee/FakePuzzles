@@ -380,7 +380,7 @@ void gunnerdata() {
 		//Gunner body collision with player
 		if (levels[1] == true || levels[2] == true || levels[3] == true || levels[4] == true)
 		{
-			if ((g_sGunner[g].m_cLocation.Y  == g_sChar.m_cLocation.Y) && (g_sGunner[g].m_cLocation.X == g_sChar.m_cLocation.X))
+			if ((g_sGunner[g].m_cLocation.Y == g_sChar.m_cLocation.Y) && (g_sGunner[g].m_cLocation.X == g_sChar.m_cLocation.X))
 			{
 				spawns[0] = true;
 				lives--;
@@ -554,6 +554,23 @@ void playershoot()
 		if (playerdirection[ps] == 4) { // move right
 			g_sPlayershots[ps].m_cLocation.X++;
 		}
+		//Player's bullet collision with enemies
+		if (levels[1] == true || levels[2] == true || levels[3] == true || levels[4] == true)
+		{
+			if ((g_sPlayershots[ps].m_cLocation.Y == g_sHugger[h].m_cLocation.Y) && (g_sPlayershots[ps].m_cLocation.X == g_sHugger[h].m_cLocation.X)) {
+				coins += 10;
+				g_sPlayershots[ps].m_cLocation.X = 1;
+				g_sPlayershots[ps].m_cLocation.Y = 0;
+			}
+
+			if ((g_sPlayershots[ps].m_cLocation.Y == g_sGunner[g].m_cLocation.Y) && (g_sPlayershots[ps].m_cLocation.X == g_sGunner[g].m_cLocation.X)) {
+				coins += 10;
+				g_sPlayershots[ps].m_cLocation.X = 1;
+				g_sPlayershots[ps].m_cLocation.Y = 0;
+			}
+
+		}
+		if (g_sPlayershots[ps].m_cLocation.X >= 110 || g_sPlayershots[ps].m_cLocation.X <= 0 || g_sPlayershots[ps].m_cLocation.Y >= 30 || g_sPlayershots[ps].m_cLocation.Y <= 0) {
 		if (g_sPlayershots[ps].m_cLocation.X >= 108 || g_sPlayershots[ps].m_cLocation.X <= 1 || g_sPlayershots[ps].m_cLocation.Y >= 28 || g_sPlayershots[ps].m_cLocation.Y <= 1 || map[g_sPlayershots[ps].m_cLocation.Y][g_sPlayershots[ps].m_cLocation.X] != ' ') {
 			g_sPlayershots[ps].m_cLocation.X = 1;
 			g_sPlayershots[ps].m_cLocation.Y = 0;
@@ -571,19 +588,6 @@ void playershoot()
 	else if (playershot) {
 		b++;
 		playerbulletshot = g_dElapsedTime + 0.05; // player bullets fly as fast as enemy bullets for now
-	}
-
-	////Player's bullet collision with walls
-	//if ((g_sPlayershots[ps].m_cLocation.Y == ) && (g_sPlayershots[ps].m_cLocation.X == )) {
-	//	lives--;
-	//}
-
-	//Player's bullet collision with enemies
-	if (levels[1] == true || levels[2] == true || levels[3] == true || levels[4] == true)
-	{
-		if ((g_sPlayershots[ps].m_cLocation.Y == g_sHugger[h].m_cLocation.Y) && (g_sPlayershots[ps].m_cLocation.X == g_sHugger[h].m_cLocation.X)) {
-			coins += 10;
-		}
 	}
 }
 
