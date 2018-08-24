@@ -46,9 +46,6 @@ SGameChar	g_sGunner[4];
 SGameChar	g_sBullets[128]; // consider enemy bullets as characters in the code
 SGameChar	g_sPlayershots[64]; // consider player bullets as characters as well
 
-
-
-
 EGAMESTATES g_eGameState = S_SPLASHSCREEN;
 double  g_dBounceTime; // this is to prevent key bouncing, so we won't trigger keypresses more than once
 
@@ -545,6 +542,11 @@ void playershoot()
 
 void respawn()
 {
+	if (lives == 0)
+	{
+
+	}
+
 	if (spawns[0] == true)
 	{
 		g_sChar.m_cLocation.X = 5;
