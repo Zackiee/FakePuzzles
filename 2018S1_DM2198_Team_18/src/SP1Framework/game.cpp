@@ -652,7 +652,7 @@ void moveCharacter()
 	if (g_abKeyPressed[K_DOWN] && map[g_sChar.m_cLocation.Y + 1][g_sChar.m_cLocation.X] == ' ' && bplayer >= 2)
 	{
 		//Beep(1440, 30);
-		g_sChar.m_cLocation.Y++; loadProgression();
+		g_sChar.m_cLocation.Y++; 
 		bplayer = 0;
 	}
 	if (g_abKeyPressed[K_RIGHT] && map[g_sChar.m_cLocation.Y][g_sChar.m_cLocation.X + 1] == ' ')
@@ -1813,15 +1813,4 @@ void loadProgression()
 	{
 		boughtWeapons[a] = loadGameFile[a] == '1' ? true : false;
 	}
-	
-	
-	/*for (int a = 0; a < 4; a++)
-	{
-		loadGame >> gems[a];
-	}
-
-	for (int a = 0; a < 5; a++)
-	{
-		loadGame >> boughtWeapons[a];
-	}*/
 }
