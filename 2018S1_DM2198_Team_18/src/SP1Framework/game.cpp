@@ -46,9 +46,6 @@ SGameChar	g_sGunner[4];
 SGameChar	g_sBullets[128]; // consider enemy bullets as characters in the code
 SGameChar	g_sPlayershots[64]; // consider player bullets as characters as well
 
-
-
-
 EGAMESTATES g_eGameState = S_SPLASHSCREEN;
 double  g_dBounceTime; // this is to prevent key bouncing, so we won't trigger keypresses more than once
 
@@ -274,7 +271,19 @@ void huggerdata() {
 		//Hugger collision with player
 		if (levels[1] == true || levels[2] == true || levels[3] == true || levels[4] == true)
 		{
-			if ((g_sHugger[h].m_cLocation.Y == g_sChar.m_cLocation.Y) && (g_sHugger[h].m_cLocation.X == g_sChar.m_cLocation.X)) {
+			if ((g_sHugger[h].m_cLocation.Y - 1 == g_sChar.m_cLocation.Y) && (g_sHugger[h].m_cLocation.X == g_sChar.m_cLocation.X)) {
+				spawns[0] = true;
+				lives--;
+			}
+			if ((g_sHugger[h].m_cLocation.Y == g_sChar.m_cLocation.Y) && (g_sHugger[h].m_cLocation.X - 1 == g_sChar.m_cLocation.X)) {
+				spawns[0] = true;
+				lives--;
+			}
+			if ((g_sHugger[h].m_cLocation.Y + 1 == g_sChar.m_cLocation.Y) && (g_sHugger[h].m_cLocation.X == g_sChar.m_cLocation.X)) {
+				spawns[0] = true;
+				lives--;
+			}
+			if ((g_sHugger[h].m_cLocation.Y == g_sChar.m_cLocation.Y) && (g_sHugger[h].m_cLocation.X + 1 == g_sChar.m_cLocation.X)) {
 				spawns[0] = true;
 				lives--;
 			}
@@ -303,6 +312,26 @@ void huggerdata() {
 		else if (min_double == right && x[h] != 2) { // move right
 			g_sHugger[h].m_cLocation.X++;
 			x[h] = 4;
+		}
+		//Hugger collision with player
+		if (levels[1] == true || levels[2] == true || levels[3] == true || levels[4] == true)
+		{
+			if ((g_sHugger[h].m_cLocation.Y - 1 == g_sChar.m_cLocation.Y) && (g_sHugger[h].m_cLocation.X == g_sChar.m_cLocation.X)) {
+				spawns[0] = true;
+				lives--;
+			}
+			if ((g_sHugger[h].m_cLocation.Y == g_sChar.m_cLocation.Y) && (g_sHugger[h].m_cLocation.X - 1 == g_sChar.m_cLocation.X)) {
+				spawns[0] = true;
+				lives--;
+			}
+			if ((g_sHugger[h].m_cLocation.Y + 1 == g_sChar.m_cLocation.Y) && (g_sHugger[h].m_cLocation.X == g_sChar.m_cLocation.X)) {
+				spawns[0] = true;
+				lives--;
+			}
+			if ((g_sHugger[h].m_cLocation.Y == g_sChar.m_cLocation.Y) && (g_sHugger[h].m_cLocation.X + 1 == g_sChar.m_cLocation.X)) {
+				spawns[0] = true;
+				lives--;
+			}
 		}
 		bhugger[h]++;
 	}
@@ -417,6 +446,15 @@ void enemybullet() {
 		}
 		if (shootdirection[i] == 4) { // move right
 			g_sBullets[i].m_cLocation.X++;
+		}
+		if (levels[1] == true || levels[2] == true || levels[3] == true || levels[4] == true) {
+			if ((g_sBullets[i].m_cLocation.Y == g_sChar.m_cLocation.Y) && (g_sBullets[i].m_cLocation.X == g_sChar.m_cLocation.X)) {
+				spawns[0] = true;
+				lives--;
+				g_sBullets[i].m_cLocation.X = 0;
+				g_sBullets[i].m_cLocation.Y = 0;
+				shootdirection[i] = 0;
+			}
 		}
 		if (g_sBullets[i].m_cLocation.X >= 110 || g_sBullets[i].m_cLocation.X <= 0 || g_sBullets[i].m_cLocation.Y >= 30 || g_sBullets[i].m_cLocation.Y <= 0) {
 			g_sBullets[i].m_cLocation.X = 0;
@@ -545,6 +583,11 @@ void playershoot()
 
 void respawn()
 {
+	if (lives == 0)
+	{
+
+	}
+
 	if (spawns[0] == true)
 	{
 		g_sChar.m_cLocation.X = 5;
