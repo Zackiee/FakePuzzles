@@ -473,7 +473,7 @@ void playershoot()
 	}
 
 	if (g_abKeyPressed[K_SPACE] && playerdirection[ps] != 0) {
-		if (equipWeapons[0] && b >= 8 || equipWeapons[1] && b >= 4 || equipWeapons[2] && b >= 6 || equipWeapons[3] && b >= 91 || equipWeapons[4] && b >= 2) { // Pistol fires around 2 times per second, Smg fires around 7 times per second, Assault rifle fires around 4 times per second, Sniper fires around once every 2 seconds, Minigun fires around 20 times per second
+		if (equipWeapons[0] && b >= 8 || equipWeapons[1] && b >= 4 || equipWeapons[2] && b >= 6 || equipWeapons[3] && b >= 70 || equipWeapons[4] && b >= 2) { // Pistol fires around 2 times per second, Smg fires around 7 times per second, Assault rifle fires around 4 times per second, Sniper fires around once every 1.5 seconds, Minigun fires around 20 times per second
 			g_sPlayershots[ps].m_cLocation.X = g_sChar.m_cLocation.X;
 			g_sPlayershots[ps].m_cLocation.Y = g_sChar.m_cLocation.Y;
 			ps++;
@@ -565,10 +565,10 @@ void playershoot()
 				if ((g_sPlayershots[ps].m_cLocation.Y == g_sHugger[h].m_cLocation.Y) && (g_sPlayershots[ps].m_cLocation.X == g_sHugger[h].m_cLocation.X)) {
 					g_sPlayershots[ps].m_cLocation.X = 1;
 					g_sPlayershots[ps].m_cLocation.Y = 0;
-					if (equipWeapons[0] || equipWeapons[1]) { // Pistol and Smg deal 1 damage
+					if (equipWeapons[0] || equipWeapons[1] || equipWeapons[4]) { // Pisto, Smg and Minigun deals 1 damage per shot
 						h_hit[h]++;
 					}
-					if (equipWeapons[2] || equipWeapons[4]) { // Assault rifle and Minigun deal 2 damage
+					if (equipWeapons[2]) { // Assault rifle deal 2 damage per shot
 						h_hit[h] += 2;
 					}
 					if (equipWeapons[3]) { // Sniper deals 5 damage
@@ -1474,13 +1474,13 @@ void renderMap()
 			 boughtWeapons[2] = true;
 		}
 		//Buying Sniper
-		if (g_abKeyPressed[K_4] && boughtWeapons[3] == false && (coins >= 100)){
-			coins -= 100;
+		if (g_abKeyPressed[K_4] && boughtWeapons[3] == false && (coins >= 85)){
+			coins -= 85;
 			boughtWeapons[3] = true;
 		}
 		//Buying Minigun
-		if (g_abKeyPressed[K_5] && boughtWeapons[4] == false && (coins >= 150)){
-			coins -= 150;
+		if (g_abKeyPressed[K_5] && boughtWeapons[4] == false && (coins >= 200)){
+			coins -= 200;
 			boughtWeapons[4] = true;
 		}
 	}
