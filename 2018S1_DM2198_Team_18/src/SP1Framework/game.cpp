@@ -22,12 +22,11 @@ bool spawns[5] = { false };
 bool gems[4] = { false };
 bool equipWeapons[5] = { false };
 bool boughtWeapons[5] = { false };
-int a = 0, aaa = 0;
-
 bool inven = true;
 bool shop = false;
-int coins = 40;
-int lives = 7;
+int lives = 0;
+int coins = 0;
+int a = 0, aaa = 0;
 
 int shootdirection[128] = { 0, };
 int playerdirection[64] = { 0, };
@@ -840,6 +839,8 @@ void processUserInput()
 			charArray[2] = false;
 			charArray[3] = false;
 			charArray[4] = false;
+			lives = 7;
+			coins = 0;
 		}
 		if (g_abKeyPressed[K_2]){
 			charArray[1] = true;
@@ -847,6 +848,8 @@ void processUserInput()
 			charArray[2] = false;
 			charArray[3] = false;
 			charArray[4] = false;
+			lives = 5;
+			coins = 40;
 		}
 		if (g_abKeyPressed[K_3]){
 			charArray[2] = true;
@@ -854,6 +857,8 @@ void processUserInput()
 			charArray[1] = false;
 			charArray[3] = false;
 			charArray[4] = false;
+			lives = 5;
+			coins = 40;
 		}
 		if (g_abKeyPressed[K_4]){
 			charArray[3] = true;
@@ -861,6 +866,8 @@ void processUserInput()
 			charArray[1] = false;
 			charArray[2] = false;
 			charArray[4] = false;
+			lives = 4;
+			coins = 70;
 		}
 		if (g_abKeyPressed[K_5]){
 			charArray[4] = true;
@@ -868,6 +875,8 @@ void processUserInput()
 			charArray[1] = false;
 			charArray[2] = false;
 			charArray[3] = false;
+			lives = 3;
+			coins = 100;
 		}
 		if (g_abKeyPressed[K_SPACE] && (charArray[0] == true || charArray[1] == true || charArray[2] == true || charArray[3] == true || charArray[4] == true)){
 			g_eGameState = S_GAME;
