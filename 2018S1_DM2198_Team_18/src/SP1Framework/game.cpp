@@ -473,7 +473,7 @@ void playershoot()
 	}
 
 	if (g_abKeyPressed[K_SPACE] && playerdirection[ps] != 0) {
-		if (equipWeapons[0] && b >= 9 || equipWeapons[1] && b >= 4 || equipWeapons[2] && b >= 6 || equipWeapons[3] && b >= 91 || equipWeapons[4] && b >= 2) { // Pistol fires around 2 times per second, Smg fires around 7 times per second, Assault rifle fires around 4 times per second, Sniper fires around once every 2 seconds, Minigun fires around 20 times per second
+		if (equipWeapons[0] && b >= 8 || equipWeapons[1] && b >= 4 || equipWeapons[2] && b >= 6 || equipWeapons[3] && b >= 91 || equipWeapons[4] && b >= 2) { // Pistol fires around 2 times per second, Smg fires around 7 times per second, Assault rifle fires around 4 times per second, Sniper fires around once every 2 seconds, Minigun fires around 20 times per second
 			g_sPlayershots[ps].m_cLocation.X = g_sChar.m_cLocation.X;
 			g_sPlayershots[ps].m_cLocation.Y = g_sChar.m_cLocation.Y;
 			ps++;
@@ -840,12 +840,12 @@ void moveCharacter()
 			g_sChar.m_cLocation.Y = 2;
 			for (h = 0; h < 8; h++) { h_hit[h] = 0; }
 			g_sHugger[0].m_cLocation.X = 79; g_sHugger[0].m_cLocation.Y = 6;
-			g_sHugger[1].m_cLocation.X = 69; g_sHugger[1].m_cLocation.Y = 10;
+			g_sHugger[1].m_cLocation.X = 69; g_sHugger[1].m_cLocation.Y = 12;
 			g_sHugger[2].m_cLocation.X = 90; g_sHugger[2].m_cLocation.Y = 16;
 			g_sHugger[3].m_cLocation.X = 90; g_sHugger[3].m_cLocation.Y = 19;
-			g_sGunner[0].m_cLocation.X = 77; g_sGunner[0].m_cLocation.Y = 3;
-			g_sGunner[1].m_cLocation.X = 70; g_sGunner[1].m_cLocation.Y = 15;
-			g_sGunner[2].m_cLocation.X = 85; g_sGunner[2].m_cLocation.Y = 16;
+			g_sGunner[0].m_cLocation.X = 81; g_sGunner[0].m_cLocation.Y = 4;
+			g_sGunner[1].m_cLocation.X = 71; g_sGunner[1].m_cLocation.Y = 15;
+			g_sGunner[2].m_cLocation.X = 86; g_sGunner[2].m_cLocation.Y = 16;
 		}
 		if (collision('*')){
 			gems[1] = true;
