@@ -22,12 +22,12 @@ bool spawns[5] = { false };
 bool gems[4] = { false };
 bool equipWeapons[5] = { false };
 bool boughtWeapons[5] = { false };
-int a = 0;
+int a = 0, aaa = 0;
 
 bool inven = true;
 bool shop = false;
-int coins = 0;
-int lives = 3;
+int coins = 40;
+int lives = 7;
 
 int shootdirection[128] = { 0, };
 int playerdirection[64] = { 0, };
@@ -42,7 +42,7 @@ bool    g_abKeyPressed[K_COUNT];
 
 // Game specific variables here
 SGameChar   g_sChar;
-SGameChar   g_sHugger[4];
+SGameChar   g_sHugger[8];
 SGameChar	g_sGunner[4];
 SGameChar	g_sBullets[128]; // consider enemy bullets as characters in the code
 SGameChar	g_sPlayershots[64]; // consider player bullets as characters as well
@@ -86,9 +86,11 @@ void init( void )
 	equipWeapons[0] = true;
 	boughtWeapons[0] = true;
 
-	for (int i = 0; i < 4; i++) {
+	for (int i = 0; i < 8; i++) {
 		g_sHugger[i].m_cLocation.X = 0;
 		g_sHugger[i].m_cLocation.Y = 0;
+	}
+	for (int i = 0; i < 4; i++) {
 		g_sGunner[i].m_cLocation.X = 0;
 		g_sGunner[i].m_cLocation.Y = 0;
 	}
@@ -176,6 +178,10 @@ void update(double dt)
 			break;
         case S_GAME: gameplay(); // gameplay logic when we are in the game
             break;
+		case S_WINSCREEN: processUserInput();
+			break;
+		case S_LOSESCREEN: processUserInput();
+			break;
     }
 }
 //--------------------------------------------------------------
@@ -204,8 +210,8 @@ void render()
             break;
 		case S_WINSCREEN: renderWin();
 			break;
-		//case S_LOSESCREEN: renderLose();
-			//break;
+		/*case S_LOSESCREEN: renderLose();
+			break;*/
     }
     renderFramerate();  // renders debug information, frame rate, elapsed time, etc
     renderToScreen();   // dump the contents of the buffer to the screen, one frame worth of game
@@ -231,7 +237,7 @@ void renderEntities()
 	
 	if (levels[0] == false)
 	{
-		for (int h = 0; h < 4; h++) {
+		for (int h = 0; h < 8; h++) {
 			g_Console.writeToBuffer(g_sHugger[h].m_cLocation, (char)128, charE_Color);
 		}
 		for (int g = 0; g < 4; g++) {
@@ -247,8 +253,8 @@ void renderEntities()
 		g_Console.writeToBuffer(g_sPlayershots[ps].m_cLocation, (char)7, 0x06);
 	}
 }
-int b = 0, i = 0, n = 0, g = 0, h = 0, p = 0, ps = 0, bhugger[4] = { 0, }, bgunner[4] = { 0, }, bbullet[128] = { 0, }, bplayer = 0, bplayershoot[64] = { 0, }; // variables starting with b is used for buffer, others are used for array and stuff
-int x[4] = { 0, };
+int b = 0, i = 0, n = 0, g = 0, h = 0, p = 0, ps = 0, bhugger[8] = { 0, }, bgunner[4] = { 0, }, bbullet[128] = { 0, }, bplayer = 0, bplayershoot[64] = { 0, }; // variables starting with b is used for buffer, others are used for array and stuff
+int x[8] = { 0, };
 bool fooeyhappened1, fooeyhappened2, fooeyhappened3, playershot;
 void huggerdata() {
 	double up, left, down, right, min_double;
@@ -258,7 +264,7 @@ void huggerdata() {
 	if (huggerbouncetime > g_dElapsedTime)
 		return;
 
-	for (h = 0; h < 4; h++) { // x[h] in this case is used for a "no reverse rule". Example, if one enemy is moving up, he's not allowed to move down immediately after moving up
+	for (h = 0; h < 8; h++) { // x[h] in this case is used for a "no reverse rule". Example, if one enemy is moving up, he's not allowed to move down immediately after moving up
 		if (g_sHugger[h].m_cLocation.X == 0 && g_sHugger[h].m_cLocation.Y == 0) {
 			continue;
 		}
@@ -275,28 +281,6 @@ void huggerdata() {
 		if (map[g_sHugger[h].m_cLocation.Y][g_sHugger[h].m_cLocation.X + 1] == ' ' && x[h] != 2) {
 			right = sqrt(pow(g_sChar.m_cLocation.X - (g_sHugger[h].m_cLocation.X + 1), 2) + pow(g_sChar.m_cLocation.Y - (g_sHugger[h].m_cLocation.Y), 2));
 		}
-
-		//Hugger collision with player
-		if (levels[1] == true || levels[2] == true || levels[3] == true || levels[4] == true)
-		{
-			if ((g_sHugger[h].m_cLocation.Y - 1 == g_sChar.m_cLocation.Y) && (g_sHugger[h].m_cLocation.X == g_sChar.m_cLocation.X)) {
-				spawns[0] = true;
-				lives--;
-			}
-			if ((g_sHugger[h].m_cLocation.Y == g_sChar.m_cLocation.Y) && (g_sHugger[h].m_cLocation.X - 1 == g_sChar.m_cLocation.X)) {
-				spawns[0] = true;
-				lives--;
-			}
-			if ((g_sHugger[h].m_cLocation.Y + 1 == g_sChar.m_cLocation.Y) && (g_sHugger[h].m_cLocation.X == g_sChar.m_cLocation.X)) {
-				spawns[0] = true;
-				lives--;
-			}
-			if ((g_sHugger[h].m_cLocation.Y == g_sChar.m_cLocation.Y) && (g_sHugger[h].m_cLocation.X + 1 == g_sChar.m_cLocation.X)) {
-				spawns[0] = true;
-				lives--;
-			}
-		}
-
 		min_double = min(min(up, down), min(left, right));
 		if (min_double == 99.0) { // don't move if not possible, and reset no reverse rule
 			x[h] = 0;
@@ -321,10 +305,10 @@ void huggerdata() {
 			g_sHugger[h].m_cLocation.X++;
 			x[h] = 4;
 		}
-		//Hugger collision with player
+		//Hugger collision with player and player bullets
 		if (levels[1] == true || levels[2] == true || levels[3] == true || levels[4] == true)
 		{
-			if ((g_sHugger[h].m_cLocation.Y == g_sChar.m_cLocation.Y) && (g_sHugger[h].m_cLocation.X == g_sChar.m_cLocation.X)) 
+			if ((g_sHugger[h].m_cLocation.Y == g_sChar.m_cLocation.Y) && (g_sHugger[h].m_cLocation.X == g_sChar.m_cLocation.X))
 			{
 				spawns[0] = true;
 				lives--;
@@ -349,7 +333,7 @@ void gunnerdata() {
 		if (g_sGunner[g].m_cLocation.X == 0 && g_sGunner[g].m_cLocation.Y == 0) {
 			continue;
 		}
-		if (sqrt(pow((g_sGunner[g].m_cLocation.X - g_sChar.m_cLocation.X), 2)) <= 8 && sqrt(pow((g_sGunner[g].m_cLocation.Y - g_sChar.m_cLocation.Y), 2)) <= 4) {
+		if (sqrt(pow((g_sGunner[g].m_cLocation.X - g_sChar.m_cLocation.X), 2)) <= 10 && sqrt(pow((g_sGunner[g].m_cLocation.Y - g_sChar.m_cLocation.Y), 2)) <= 5) {
 			if (g_sGunner[g].m_cLocation.Y < g_sChar.m_cLocation.Y && map[g_sGunner[g].m_cLocation.Y - 1][g_sGunner[g].m_cLocation.X] == ' ' && bhugger[g] >= 2) {
 				g_sGunner[g].m_cLocation.Y--;
 				bhugger[g] = 0;
@@ -381,7 +365,6 @@ void gunnerdata() {
 				g_sGunner[g].m_cLocation.X--;
 			}
 		}
-
 		//Gunner body collision with player
 		if (levels[1] == true || levels[2] == true || levels[3] == true || levels[4] == true)
 		{
@@ -391,7 +374,6 @@ void gunnerdata() {
 				lives--;
 			}
 		}
-
 		if (g_sGunner[g].m_cLocation.X == g_sChar.m_cLocation.X) {
 			i++;
 			g_sBullets[i].m_cLocation.X = g_sGunner[g].m_cLocation.X;
@@ -492,11 +474,13 @@ void playershoot()
 	}
 
 	if (g_abKeyPressed[K_SPACE] && playerdirection[ps] != 0) {
-		if (equipWeapons[0] && b >= 8 || equipWeapons[1] && b >= 4 || equipWeapons[2] && b >= 6 || equipWeapons[3] && b >= 91 || equipWeapons[4] && b >= 1) { // Pistol fires around 3 times per second, Smg fires around 7 times per second, Assault rifle fires around 5 times per second, Sniper fires around once every 2 seconds, Minigun fires around 20 times per second
+		if (equipWeapons[0] && b >= 9 || equipWeapons[1] && b >= 4 || equipWeapons[2] && b >= 6 || equipWeapons[3] && b >= 91 || equipWeapons[4] && b >= 2) { // Pistol fires around 2 times per second, Smg fires around 7 times per second, Assault rifle fires around 4 times per second, Sniper fires around once every 2 seconds, Minigun fires around 20 times per second
 			g_sPlayershots[ps].m_cLocation.X = g_sChar.m_cLocation.X;
 			g_sPlayershots[ps].m_cLocation.Y = g_sChar.m_cLocation.Y;
 			ps++;
 			if (ps >= 64) { ps = 0; }
+			g_sPlayershots[ps].m_cLocation.X = 1;
+			g_sPlayershots[ps].m_cLocation.Y = 0; // this fixes a bug
 			playerdirection[ps] = 0;
 			b = 0;
 		}
@@ -545,37 +529,45 @@ void playershoot()
 
 	p = ps;
 	for (ps = 0; ps < 64; ps++) {
-		if (playerdirection[ps] == 1 && bplayershoot[ps] >= 2) { // move up
-			g_sPlayershots[ps].m_cLocation.Y--;
-			bplayershoot[ps] = 0;
-		}
-		if (playerdirection[ps] == 2 && bplayershoot[ps] >= 2) { // move down
-			g_sPlayershots[ps].m_cLocation.Y++;
-			bplayershoot[ps] = 0;
-		}
-		if (playerdirection[ps] == 3) { // move left
-			g_sPlayershots[ps].m_cLocation.X--;
-		}
-		if (playerdirection[ps] == 4) { // move right
-			g_sPlayershots[ps].m_cLocation.X++;
+		if (g_sPlayershots[ps].m_cLocation.X != 1 || g_sPlayershots[ps].m_cLocation.Y != 0) {
+			if (playerdirection[ps] == 1 && bplayershoot[ps] >= 2) { // move up
+				g_sPlayershots[ps].m_cLocation.Y--;
+				bplayershoot[ps] = 0;
+			}
+			if (playerdirection[ps] == 2 && bplayershoot[ps] >= 2) { // move down
+				g_sPlayershots[ps].m_cLocation.Y++;
+				bplayershoot[ps] = 0;
+			}
+			if (playerdirection[ps] == 3) { // move left
+				g_sPlayershots[ps].m_cLocation.X--;
+			}
+			if (playerdirection[ps] == 4) { // move right
+				g_sPlayershots[ps].m_cLocation.X++;
+			}
 		}
 		//Player's bullet collision with enemies
 		if (levels[1] == true || levels[2] == true || levels[3] == true || levels[4] == true)
 		{
-			if ((g_sPlayershots[ps].m_cLocation.Y == g_sHugger[h].m_cLocation.Y) && (g_sPlayershots[ps].m_cLocation.X == g_sHugger[h].m_cLocation.X)) {
-				coins += 10;
-				g_sPlayershots[ps].m_cLocation.X = 1;
-				g_sPlayershots[ps].m_cLocation.Y = 0;
+			for (h = 0; h < 8; h++) {
+				if ((g_sPlayershots[ps].m_cLocation.Y == g_sHugger[h].m_cLocation.Y) && (g_sPlayershots[ps].m_cLocation.X == g_sHugger[h].m_cLocation.X)) {
+					g_sPlayershots[ps].m_cLocation.X = 1;
+					g_sPlayershots[ps].m_cLocation.Y = 0;
+					coins += 5;
+					g_sHugger[h].m_cLocation.X = 0;
+					g_sHugger[h].m_cLocation.Y = 0;
+				}
 			}
-
-			if ((g_sPlayershots[ps].m_cLocation.Y == g_sGunner[g].m_cLocation.Y) && (g_sPlayershots[ps].m_cLocation.X == g_sGunner[g].m_cLocation.X)) {
-				coins += 10;
-				g_sPlayershots[ps].m_cLocation.X = 1;
-				g_sPlayershots[ps].m_cLocation.Y = 0;
+			for (g = 0; g < 4; g++) {
+				if ((g_sPlayershots[ps].m_cLocation.Y == g_sGunner[g].m_cLocation.Y) && (g_sPlayershots[ps].m_cLocation.X == g_sGunner[g].m_cLocation.X)) {
+					g_sPlayershots[ps].m_cLocation.X = 1;
+					g_sPlayershots[ps].m_cLocation.Y = 0;
+					coins += 5;
+					g_sGunner[g].m_cLocation.X = 0;
+					g_sGunner[g].m_cLocation.Y = 0;
+				}
 			}
-
 		}
-		if (g_sPlayershots[ps].m_cLocation.X >= 108 || g_sPlayershots[ps].m_cLocation.X <= 1 || g_sPlayershots[ps].m_cLocation.Y >= 28 || g_sPlayershots[ps].m_cLocation.Y <= 1 || map[g_sPlayershots[ps].m_cLocation.Y][g_sPlayershots[ps].m_cLocation.X] != ' ') {
+		if (g_sPlayershots[ps].m_cLocation.X >= 108 || g_sPlayershots[ps].m_cLocation.X <= 1 || g_sPlayershots[ps].m_cLocation.Y >= 28 || g_sPlayershots[ps].m_cLocation.Y <= 1 || map[g_sPlayershots[ps].m_cLocation.Y][g_sPlayershots[ps].m_cLocation.X] != ' ') { // player bullets near leaving the console window or player bullets' collision with walls
 			g_sPlayershots[ps].m_cLocation.X = 1;
 			g_sPlayershots[ps].m_cLocation.Y = 0;
 		}
@@ -599,7 +591,7 @@ void respawn()
 {
 	if (lives == 0)
 	{
-
+		g_eGameState = S_LOSESCREEN;
 	}
 
 	if (spawns[0] == true)
@@ -663,7 +655,7 @@ void moveCharacter()
 	if (g_abKeyPressed[K_DOWN] && map[g_sChar.m_cLocation.Y + 1][g_sChar.m_cLocation.X] == ' ' && bplayer >= 2)
 	{
 		//Beep(1440, 30);
-		g_sChar.m_cLocation.Y++;
+		g_sChar.m_cLocation.Y++; 
 		bplayer = 0;
 	}
 	if (g_abKeyPressed[K_RIGHT] && map[g_sChar.m_cLocation.Y][g_sChar.m_cLocation.X + 1] == ' ')
@@ -691,11 +683,26 @@ void moveCharacter()
 
 	if (collision('Q') || collision('U') || collision('I') || collision('T'))
 	{
+		saveProgression();
 		g_bQuitGame = true;
 	}
 
 	if (levels[0] == true)
 	{
+		for (aaa = 0; aaa < 8; aaa++) {
+			g_sHugger[aaa].m_cLocation.X = 0;
+			g_sHugger[aaa].m_cLocation.Y = 0;
+		}
+		for (aaa = 0; aaa < 4; aaa++) {
+			g_sGunner[aaa].m_cLocation.X = 0;
+			g_sGunner[aaa].m_cLocation.Y = 0;
+		}
+		for (aaa = 0; aaa < 128; aaa++) {
+			g_sBullets[aaa].m_cLocation.X = 0;
+			g_sBullets[aaa].m_cLocation.Y = 0;
+		}
+		aaa = 0;
+
 		spawns[1] = false;
 		spawns[2] = false;
 		spawns[3] = false;
@@ -727,19 +734,30 @@ void moveCharacter()
 		}
 		else if (collision('%'))
 		{
-			g_eGameState = S_WINSCREEN;
 			levels[0] = false;
 			inven = false;
+			g_eGameState = S_WINSCREEN;
 		}
 	}
 
 	else if (levels[1] == true)
 	{
 		spawns[0] = false;
+		while (aaa <= 0) {
+			g_sHugger[0].m_cLocation.X = 6; g_sHugger[0].m_cLocation.Y = 16;
+			g_sHugger[1].m_cLocation.X = 94; g_sHugger[1].m_cLocation.Y = 4;
+			g_sHugger[2].m_cLocation.X = 84; g_sHugger[2].m_cLocation.Y = 17;
+			g_sHugger[3].m_cLocation.X = 78; g_sHugger[3].m_cLocation.Y = 11;
+			g_sHugger[4].m_cLocation.X = 35; g_sHugger[4].m_cLocation.Y = 12;
+			g_sHugger[5].m_cLocation.X = 29; g_sHugger[5].m_cLocation.Y = 16;
+			g_sGunner[0].m_cLocation.X = 54; g_sGunner[0].m_cLocation.Y = 4;
+			g_sGunner[1].m_cLocation.X = 54; g_sGunner[1].m_cLocation.Y = 16;
+			g_sGunner[2].m_cLocation.X = 40; g_sGunner[2].m_cLocation.Y = 8;
+			aaa++;
+		}
 
 		if (collision('%'))
 		{
-			g_eGameState = S_WINSCREEN;
 			levels[1] = false;
 			levels[0] = true;
 			spawns[1] = true;
@@ -752,10 +770,18 @@ void moveCharacter()
 	else if (levels[2] == true)
 	{
 		spawns[0] = false;
+		while (aaa <= 0) {
+			g_sHugger[0].m_cLocation.X = 5; g_sHugger[0].m_cLocation.Y = 12;
+			g_sHugger[1].m_cLocation.X = 17; g_sHugger[1].m_cLocation.Y = 3;
+			g_sHugger[2].m_cLocation.X = 34; g_sHugger[2].m_cLocation.Y = 11;
+			g_sHugger[3].m_cLocation.X = 54; g_sHugger[3].m_cLocation.Y = 14;
+			g_sHugger[4].m_cLocation.X = 39; g_sHugger[4].m_cLocation.Y = 13;
+			g_sGunner[0].m_cLocation.X = 18; g_sGunner[0].m_cLocation.Y = 14;
+			aaa++;
+		}
 
 		if (collision('%'))
 		{
-			g_eGameState = S_WINSCREEN;
 			levels[2] = false;
 			levels[0] = true;
 			spawns[2] = true;
@@ -764,6 +790,13 @@ void moveCharacter()
 		{
 			g_sChar.m_cLocation.X = 64;
 			g_sChar.m_cLocation.Y = 2;
+			g_sHugger[0].m_cLocation.X = 79; g_sHugger[0].m_cLocation.Y = 6;
+			g_sHugger[1].m_cLocation.X = 69; g_sHugger[1].m_cLocation.Y = 10;
+			g_sHugger[2].m_cLocation.X = 90; g_sHugger[2].m_cLocation.Y = 16;
+			g_sHugger[3].m_cLocation.X = 90; g_sHugger[3].m_cLocation.Y = 19;
+			g_sGunner[0].m_cLocation.X = 77; g_sGunner[0].m_cLocation.Y = 3;
+			g_sGunner[1].m_cLocation.X = 70; g_sGunner[1].m_cLocation.Y = 15;
+			g_sGunner[2].m_cLocation.X = 85; g_sGunner[2].m_cLocation.Y = 16;
 		}
 		if (collision('*'))
 		{
@@ -776,7 +809,6 @@ void moveCharacter()
 
 		if (collision('%'))
 		{
-			g_eGameState = S_WINSCREEN;
 			levels[3] = false;
 			levels[0] = true;
 			spawns[3] = true;
@@ -797,7 +829,6 @@ void moveCharacter()
 
 		if (collision('%'))
 		{
-			g_eGameState = S_WINSCREEN;
 			levels[4] = false;
 			levels[0] = true;
 			spawns[4] = true;
@@ -815,79 +846,78 @@ void moveCharacter()
 }
 void processUserInput()
 {
-    // quits the game if player hits the escape key
-    if (g_abKeyPressed[K_ESCAPE])
-        g_bQuitGame = true;
-
-	if (g_eGameState == S_STARTMENU)
-	{
-		if (g_abKeyPressed[K_1])
-		{
+	// quits the game if player hits the escape key
+	if (g_abKeyPressed[K_ESCAPE]) {
+		g_bQuitGame = true;
+	}
+	if (g_eGameState == S_STARTMENU) {
+		if (g_abKeyPressed[K_1]) {
 			g_eGameState = S_CHARACTERCREATION;
 		}
-
-		if (g_abKeyPressed[K_2])
-		{
+		if (g_abKeyPressed[K_2]) {
+			loadProgression();
+			g_eGameState = S_GAME;
+		}
+		if (g_abKeyPressed[K_3]) {
 			g_eGameState = S_INSTRUCTIONS;
 		}
-
-		if (g_abKeyPressed[K_3])
-		{
+		if (g_abKeyPressed[K_4]){
 			g_bQuitGame = true;
 		}
 	}
-	if (g_eGameState == S_INSTRUCTIONS)
-	{
-		if (g_abKeyPressed[K_RETURN])
-		{
+	if (g_eGameState == S_INSTRUCTIONS){
+		if (g_abKeyPressed[K_RETURN]){
 			g_eGameState = S_CHARACTERCREATION;
 		}
 	}
-	if (g_eGameState == S_CHARACTERCREATION)
-	{
-		if (g_abKeyPressed[K_1])
-		{
+	if (g_eGameState == S_CHARACTERCREATION){
+		if (g_abKeyPressed[K_1]){
 			charArray[0] = true;
 			charArray[1] = false;
 			charArray[2] = false;
 			charArray[3] = false;
 			charArray[4] = false;
 		}
-		if (g_abKeyPressed[K_2])
-		{
+		if (g_abKeyPressed[K_2]){
 			charArray[1] = true;
 			charArray[0] = false;
 			charArray[2] = false;
 			charArray[3] = false;
 			charArray[4] = false;
 		}
-		if (g_abKeyPressed[K_3])
-		{
+		if (g_abKeyPressed[K_3]){
 			charArray[2] = true;
 			charArray[0] = false;
 			charArray[1] = false;
 			charArray[3] = false;
 			charArray[4] = false;
 		}
-		if (g_abKeyPressed[K_4])
-		{
+		if (g_abKeyPressed[K_4]){
 			charArray[3] = true;
 			charArray[0] = false;
 			charArray[1] = false;
 			charArray[2] = false;
 			charArray[4] = false;
 		}
-		if (g_abKeyPressed[K_5])
-		{
+		if (g_abKeyPressed[K_5]){
 			charArray[4] = true;
 			charArray[0] = false;
 			charArray[1] = false;
 			charArray[2] = false;
 			charArray[3] = false;
 		}
-		if (g_abKeyPressed[K_SPACE] && (charArray[0] == true || charArray[1] == true || charArray[2] == true || charArray[3] == true || charArray[4] == true))
-		{
+		if (g_abKeyPressed[K_SPACE] && (charArray[0] == true || charArray[1] == true || charArray[2] == true || charArray[3] == true || charArray[4] == true)){
 			g_eGameState = S_GAME;
+		}
+	}
+	if (g_eGameState == S_WINSCREEN) {
+		if (g_abKeyPressed[K_RETURN]){
+			g_eGameState = S_STARTMENU;
+		}
+	}
+	if (g_eGameState == S_LOSESCREEN) {
+		if (g_abKeyPressed[K_RETURN]) {
+			g_eGameState = S_STARTMENU;
 		}
 	}
 }
@@ -906,7 +936,7 @@ void renderSplashScreen()
 	ifstream splashscreenFile;
 	int i = 0;
 
-	splashscreenFile.open("Splashscreen.txt");
+	splashscreenFile.open("SplashScreen.txt");
 	if (splashscreenFile.is_open())
 	{
 		while (getline(splashscreenFile, splashscreen))
@@ -1093,47 +1123,41 @@ void renderGame()
 }
 void renderWin()
 {
+	//Render Win Screen
 	COORD c;
+	string winScreen;
+	ifstream winFile;
 	int i = 0;
-	if (1==1)
-	{
-		string winScreen;
-		ifstream winFile;
-		c.X = 20;
-		c.Y = 24;
-		g_Console.writeToBuffer(c, "Press 1 to proceed, Press 5 to quit the game", 0x08);
 
-		winFile.open("winscreen.txt");
-		if (winFile.is_open())
+	winFile.open("WinScreen.txt");
+	if (winFile.is_open())
+	{
+		while (getline(winFile, winScreen))
 		{
-			while (getline(winFile, winScreen))
+			for (a = 0; a < winScreen.length(); a++)
 			{
-				for (b = 0; b < winScreen.length(); b++)
+				if (winScreen[a] == 'w')
 				{
-					switch (winScreen[b])
-					{
-					case 'w':
-						winScreen[b] = 223;
-						break;
-					}
-					map[i][b] = winScreen[b];
+					winScreen[a] = 223;
 				}
-				c.X = 0;
-				c.Y = i;
-				i++;
-				g_Console.writeToBuffer(c, winScreen, 0x0A);
+				map[i][a] = winScreen[a];
 			}
-		}
-		winFile.close();
-		if (g_abKeyPressed[K_1])
-		{
-			g_eGameState = S_GAME;
-		}
-		else if (g_abKeyPressed[K_5])
-		{
-			g_bQuitGame = true;
+			c.X = 0;
+			c.Y = i;
+			i++;
+			g_Console.writeToBuffer(c, winScreen, 0x0A);
 		}
 	}
+	winFile.close();
+
+	c.X = 20;
+	c.Y = 24;
+	g_Console.writeToBuffer(c, "Press return to proceed, Press escape to quit the game", 0x08);
+}
+
+void renderLose()
+{
+
 }
 void renderMap()
 {
@@ -1149,6 +1173,7 @@ void renderMap()
 			headquartersFile.open("Headquarters.txt");
 			if (headquartersFile.is_open())
 			{
+
 				while (getline(headquartersFile, headquarters))
 				{
 					for (a = 0; a < headquarters.length(); a++)
@@ -1397,21 +1422,25 @@ void renderMap()
 		}
 		shopFile.close();
 
+		//Buying Smg
 		if (g_abKeyPressed[K_2] && boughtWeapons[1] == false && (coins >= 40))
 		{
 			coins -= 40;
 			boughtWeapons[1] = true;
 		}
-		 if (g_abKeyPressed[K_3] && boughtWeapons[2] == false && (coins >= 70))
+		//Buying Rifle
+		if (g_abKeyPressed[K_3] && boughtWeapons[2] == false && (coins >= 70))
 		{
 			 coins -= 70;
 			 boughtWeapons[2] = true;
 		}
+		//Buying Sniper
 		if (g_abKeyPressed[K_4] && boughtWeapons[3] == false && (coins >= 100))
 		{
 			coins -= 100;
 			boughtWeapons[3] = true;
 		}
+		//Buying Minigun
 		if (g_abKeyPressed[K_5] && boughtWeapons[4] == false && (coins >= 150))
 		{
 			coins -= 150;
@@ -1717,7 +1746,6 @@ bool collision(char collider)
 	}
 	return collided;
 }
-
 void renderFramerate()
 {
     COORD c;
@@ -1740,4 +1768,57 @@ void renderToScreen()
 {
     // Writes the buffer to the console, hence you will see what you have written
     g_Console.flushBufferToConsole();
+}
+
+void saveProgression()
+{
+	ofstream saveGame("saveGame.txt");
+	saveGame << coins << endl;
+	saveGame << lives << endl;
+	for (int a = 0; a < 5; a++)
+	{
+		saveGame << charArray[a] ? '1' : '0';
+	}
+	saveGame << endl;
+	for (int a = 0; a < 4; a++)
+	{
+		saveGame << gems[a] ? '1' : '0';
+		
+	}
+	saveGame << endl;
+	for (int a = 0; a < 5; a++)
+	{
+		saveGame << boughtWeapons[a] ? '1' : '0';
+	}
+	saveGame << endl;
+}
+
+void loadProgression()
+{
+	string loadGameFile = "";
+	ifstream loadGame("saveGame.txt");
+
+	getline(loadGame, loadGameFile);
+	coins = stoi(loadGameFile);
+	getline(loadGame, loadGameFile);
+	lives = stoi(loadGameFile);
+
+	getline(loadGame, loadGameFile);
+	for (int a = 0; a < loadGameFile.length(); a++)
+	{
+		charArray[a] = loadGameFile[a] == '1' ? true : false;
+		if (charArray[a]) break;
+	}
+
+	getline(loadGame, loadGameFile);
+	for (int a = 0; a < loadGameFile.length(); a++)
+	{
+		gems[a] = loadGameFile[a] == '1' ? true : false;
+	}
+
+	getline(loadGame, loadGameFile);
+	for (int a = 0; a < loadGameFile.length(); a++)
+	{
+		boughtWeapons[a] = loadGameFile[a] == '1' ? true : false;
+	}
 }

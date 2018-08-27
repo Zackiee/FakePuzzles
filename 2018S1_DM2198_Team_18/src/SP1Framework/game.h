@@ -66,20 +66,14 @@ void renderMap();           // renders the map to the buffer first
 void renderCharacter();     // renders the character into the buffer
 void renderFramerate();     // renders debug information, frame rate, elapsed time, etc
 void renderToScreen();      // dump the contents of the buffer to the screen, one frame worth of game
-void enemydata();
-void renderWin();
-//void renderLose();
+void renderWin();           // renders the win screen
+//void renderLose();          // renders the lose screen
 bool collision(char collider);
+void saveProgression();
+void loadProgression();
 
 // define variables
-struct pistol
-{
-	int id = 1;
-};
-struct smg
-{
-	int id = 2;
-};
+
 struct melee {
 	int hp = 3;
 };
