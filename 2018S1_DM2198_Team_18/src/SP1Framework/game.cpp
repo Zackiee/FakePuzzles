@@ -1276,7 +1276,7 @@ void renderLose()
 	int i = 0;
 
 	PlaySound(TEXT("lose_Audio.wav"), NULL, SND_ASYNC | SND_FILENAME);
-	loseFile.open("LoseScreen.txt");
+	loseFile.open("TextFiles/LoseScreen.txt");
 	if (loseFile.is_open())
 	{
 		while (getline(loseFile, loseScreen))
