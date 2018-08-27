@@ -1044,7 +1044,7 @@ void renderSplashScreen()
 	ifstream splashscreenFile;
 	int i = 0;
 
-	splashscreenFile.open("SplashScreen.txt");
+	splashscreenFile.open("TextFiles/SplashScreen.txt");
 	if (splashscreenFile.is_open()){
 		while (getline(splashscreenFile, splashscreen)){
 			for (a = 0; a < splashscreen.length(); a++){
@@ -1083,7 +1083,7 @@ void renderStartMenu()
 	ifstream menuFile;
 	int i = 0;
 	
-	menuFile.open("StartMenu.txt");
+	menuFile.open("Textfiles/StartMenu.txt");
 	if (menuFile.is_open()){
 		while (getline(menuFile, menu)){
 			for (a = 0; a < menu.length(); a++){
@@ -1109,7 +1109,7 @@ void renderInstructions()
 	ifstream instructionFile;
 	int i = 0;
 
-	instructionFile.open("Instructions.txt");
+	instructionFile.open("Textfiles/Instructions.txt");
 	if (instructionFile.is_open()){
 		while (getline(instructionFile, instructions)){
 			c.X = 0;
@@ -1129,7 +1129,7 @@ void renderCharacterCreation()
 	ifstream creationFile;
 	int i = 0;
 	
-	creationFile.open("CharacterCreation.txt");
+	creationFile.open("Textfiles/CharacterCreation.txt");
 	if (creationFile.is_open()){
 		while (getline(creationFile, creation)){
 			for (a = 0; a < creation.length(); a++){
@@ -1216,7 +1216,7 @@ void renderWin()
 	ifstream winFile;
 	int i = 0;
 
-	winFile.open("WinScreen.txt");
+	winFile.open("Textfiles/WinScreen.txt");
 	if (winFile.is_open()){
 		while (getline(winFile, winScreen)){
 			for (a = 0; a < winScreen.length(); a++){
@@ -1252,7 +1252,7 @@ void renderMap()
 			string headquarters;
 			ifstream headquartersFile;
 
-			headquartersFile.open("Headquarters.txt");
+			headquartersFile.open("Textfiles/Headquarters.txt");
 			if (headquartersFile.is_open()){
 				while (getline(headquartersFile, headquarters)){
 					for (a = 0; a < headquarters.length(); a++){
@@ -1314,7 +1314,7 @@ void renderMap()
 		ifstream level1File;
 		i = 0;
 
-		level1File.open("LevelA.txt");
+		level1File.open("Textfiles/LevelA.txt");
 		if (level1File.is_open()){
 			while (getline(level1File, level1)){
 				for (a = 0; a < level1.length(); a++){
@@ -1346,7 +1346,7 @@ void renderMap()
 		ifstream level2File;
 		i = 0;
 
-		level2File.open("LevelB.txt");
+		level2File.open("Textfiles/LevelB.txt");
 		if (level2File.is_open()){
 			while (getline(level2File, level2)){
 				for (a = 0; a < level2.length(); a++){
@@ -1378,7 +1378,7 @@ void renderMap()
 		ifstream level3File;
 		i = 0;
 
-		level3File.open("LevelC.txt");
+		level3File.open("Textfiles/LevelC.txt");
 		if (level3File.is_open()){
 			while (getline(level3File, level3)){
 				for (a = 0; a < level3.length(); a++){
@@ -1410,7 +1410,7 @@ void renderMap()
 		ifstream level4File;
 		i = 0;
 
-		level4File.open("LevelD.txt");
+		level4File.open("Textfiles/LevelD.txt");
 		if (level4File.is_open()){
 			while (getline(level4File, level4)){
 				for (a = 0; a < level4.length(); a++){
@@ -1442,7 +1442,7 @@ void renderMap()
 		ifstream shopFile;
 		i = 0;
 
-		shopFile.open("Shop.txt");
+		shopFile.open("Textfiles/Shop.txt");
 		if (shopFile.is_open()){
 			while (getline(shopFile, shop)){
 				for (a = 0; a < shop.length(); a++){
@@ -1490,7 +1490,7 @@ void renderMap()
 		ifstream inventoryFile;
 		i = 0;
 
-		inventoryFile.open("Inventory.txt");
+		inventoryFile.open("Textfiles/Inventory.txt");
 		if (inventoryFile.is_open()){
 			while (getline(inventoryFile, inventory)){
 				for (a = 0; a < inventory.length(); a++){
@@ -1750,7 +1750,7 @@ void renderToScreen()
 
 void saveProgression()
 {
-	ofstream saveGame("SaveGame.txt");
+	ofstream saveGame("Textfiles/SaveGame.txt");
 	saveGame << coins << endl;
 	saveGame << lives << endl;
 	for (int a = 0; a < 5; a++)
@@ -1774,7 +1774,7 @@ void saveProgression()
 void loadProgression()
 {
 	string loadGameFile = "";
-	ifstream loadGame("SaveGame.txt");
+	ifstream loadGame("Textfiles/SaveGame.txt");
 
 	getline(loadGame, loadGameFile);
 	coins = stoi(loadGameFile);
