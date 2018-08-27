@@ -26,8 +26,8 @@ int a = 0, aaa = 0;
 
 bool inven = true;
 bool shop = false;
-int coins = 40;
-int lives = 7;
+int coins = 0;
+int lives = 0;
 
 int shootdirection[128] = { 0, };
 int playerdirection[64] = { 0, };
@@ -806,8 +806,10 @@ void moveCharacter()
 }
 void processUserInput()
 {
+	COORD c;
 	// quits the game if player hits the escape key
 	if (g_abKeyPressed[K_ESCAPE]) {
+		saveProgression();
 		g_bQuitGame = true;
 	}
 	//Start menu key presses
@@ -816,8 +818,8 @@ void processUserInput()
 			g_eGameState = S_CHARACTERCREATION;
 		}
 		if (g_abKeyPressed[K_2]) {
-			loadProgression();
-			g_eGameState = S_GAME;
+				loadProgression();
+				g_eGameState = S_GAME;
 		}
 		if (g_abKeyPressed[K_3]) {
 			g_eGameState = S_INSTRUCTIONS;
@@ -840,6 +842,8 @@ void processUserInput()
 			charArray[2] = false;
 			charArray[3] = false;
 			charArray[4] = false;
+			lives = 7;
+			coins = 0;
 		}
 		if (g_abKeyPressed[K_2]){
 			charArray[1] = true;
