@@ -22,12 +22,11 @@ bool spawns[5] = { false };
 bool gems[4] = { false };
 bool equipWeapons[5] = { false };
 bool boughtWeapons[5] = { false };
-int a = 0, aaa = 0;
-
 bool inven = true;
 bool shop = false;
-int coins = 40;
-int lives = 7;
+int lives = 0;
+int coins = 0;
+int a = 0, aaa = 0;
 
 int shootdirection[128] = { 0, };
 int playerdirection[64] = { 0, };
@@ -667,34 +666,27 @@ void playershoot()
 
 void respawn()
 {
-	if (lives == 0)
-	{
+	if (lives == 0){
 		g_eGameState = S_LOSESCREEN;
 	}
-
-	if (spawns[0] == true)
-	{
+	if (spawns[0] == true){
 		g_sChar.m_cLocation.X = 5;
 		g_sChar.m_cLocation.Y = 2;
 	}
-	if (spawns[1] == true)
-	{
+	if (spawns[1] == true){
 		g_sChar.m_cLocation.X = 12;
 		g_sChar.m_cLocation.Y = 6;
 	}
-	if (spawns[2] == true)
-	{
+	if (spawns[2] == true){
 		g_sChar.m_cLocation.X = 29;
 		g_sChar.m_cLocation.Y = 6;
 	}
-	if (spawns[3] == true)
-	{
+	if (spawns[3] == true){
 		g_sChar.m_cLocation.X = 46;
 		g_sChar.m_cLocation.Y = 6;
 
 	}
-	if (spawns[4] == true)
-	{
+	if (spawns[4] == true){
 		g_sChar.m_cLocation.X = 63;
 		g_sChar.m_cLocation.Y = 6;
 	}
@@ -718,56 +710,47 @@ void moveCharacter()
 		return;
 
 	// Updating the location of the character based on the key press
-	// providing a beep sound whenver we shift the character
-	if (g_abKeyPressed[K_UP] && map[g_sChar.m_cLocation.Y - 1][g_sChar.m_cLocation.X] == ' ' && bplayer >= 2)
-	{
-		//Beep(1440, 30);
+	if (g_abKeyPressed[K_UP] && map[g_sChar.m_cLocation.Y - 1][g_sChar.m_cLocation.X] == ' ' && bplayer >= 2){
 		g_sChar.m_cLocation.Y--;
 		bplayer = 0;
 	}
-	if (g_abKeyPressed[K_LEFT] && map[g_sChar.m_cLocation.Y][g_sChar.m_cLocation.X - 1] == ' ')
-	{
-		//Beep(1440, 30);
+	if (g_abKeyPressed[K_LEFT] && map[g_sChar.m_cLocation.Y][g_sChar.m_cLocation.X - 1] == ' '){
 		g_sChar.m_cLocation.X--;
 	}
-	if (g_abKeyPressed[K_DOWN] && map[g_sChar.m_cLocation.Y + 1][g_sChar.m_cLocation.X] == ' ' && bplayer >= 2)
-	{
-		//Beep(1440, 30);
+	if (g_abKeyPressed[K_DOWN] && map[g_sChar.m_cLocation.Y + 1][g_sChar.m_cLocation.X] == ' ' && bplayer >= 2){
 		g_sChar.m_cLocation.Y++; 
 		bplayer = 0;
 	}
-	if (g_abKeyPressed[K_RIGHT] && map[g_sChar.m_cLocation.Y][g_sChar.m_cLocation.X + 1] == ' ')
-	{
-		//Beep(1440, 30);
+	if (g_abKeyPressed[K_RIGHT] && map[g_sChar.m_cLocation.Y][g_sChar.m_cLocation.X + 1] == ' '){
 		g_sChar.m_cLocation.X++;
 	}
 	bplayer++;
 	bSomethingHappened = true;
 
-	if (bSomethingHappened)
-	{
+	if (bSomethingHappened){
 		// set the bounce time to some time in the future to prevent accidental triggers
 		g_dBounceTime = g_dElapsedTime + 0.111; // 111ms should be enough
 	}
 
-	if (collision('S') || collision('H') || collision('O') || collision('P'))
-	{
+	if (collision('S') || collision('H') || collision('O') || collision('P')){
 		shop = true;
 		
-	}
-	else
-	{
+	} else {
 		shop = false;
 	}
 
-	if (collision('Q') || collision('U') || collision('I') || collision('T'))
-	{
+	if (collision('Q') || collision('U') || collision('I') || collision('T')){
 		saveProgression();
 		g_bQuitGame = true;
 	}
 
 	if (levels[0] == true)
 	{
+		spawns[1] = false;
+		spawns[2] = false;
+		spawns[3] = false;
+		spawns[4] = false;
+
 		for (aaa = 0; aaa < 8; aaa++) {
 			g_sHugger[aaa].m_cLocation.X = 0;
 			g_sHugger[aaa].m_cLocation.Y = 0;
@@ -782,46 +765,36 @@ void moveCharacter()
 		}
 		aaa = 0;
 
-		spawns[1] = false;
-		spawns[2] = false;
-		spawns[3] = false;
-		spawns[4] = false;
-
-		if (collision('a'))
-		{
+		if (collision('a')){
 			levels[0] = false;
 			levels[1] = true;
 			spawns[0] = true;
 		}
-		else if (collision('b'))
-		{
+		else if (collision('b')){
 			levels[0] = false;
 			levels[2] = true;
 			spawns[0] = true;
 		}
-		else if (collision('c'))
-		{
+		else if (collision('c')){
 			levels[0] = false;
 			levels[3] = true;
 			spawns[0] = true;
 		}
-		else if (collision('d'))
-		{
+		else if (collision('d')){
 			levels[0] = false;
 			levels[4] = true;
 			spawns[0] = true;
 		}
-		else if (collision('%'))
-		{
+		else if (collision('%')){
 			levels[0] = false;
 			inven = false;
 			g_eGameState = S_WINSCREEN;
 		}
 	}
 
-	else if (levels[1] == true)
-	{
+	else if (levels[1] == true){
 		spawns[0] = false;
+
 		while (aaa <= 0) {
 			for (h = 0; h < 8; h++) { h_hit[h] = 0; }
 			g_sHugger[0].m_cLocation.X = 6; g_sHugger[0].m_cLocation.Y = 16;
@@ -835,21 +808,18 @@ void moveCharacter()
 			g_sGunner[2].m_cLocation.X = 40; g_sGunner[2].m_cLocation.Y = 8;
 			aaa++;
 		}
-
-		if (collision('%'))
-		{
+		if (collision('%')){
 			levels[1] = false;
 			levels[0] = true;
 			spawns[1] = true;
 		}
-		if (collision('*'))
-		{
+		if (collision('*')){
 			gems[0] = true;
 		}
 	}
-	else if (levels[2] == true)
-	{
+	else if (levels[2] == true){
 		spawns[0] = false;
+
 		while (aaa <= 0) {
 			for (h = 0; h < 8; h++) { h_hit[h] = 0; }
 			g_sHugger[0].m_cLocation.X = 5; g_sHugger[0].m_cLocation.Y = 12;
@@ -860,15 +830,12 @@ void moveCharacter()
 			g_sGunner[0].m_cLocation.X = 18; g_sGunner[0].m_cLocation.Y = 14;
 			aaa++;
 		}
-
-		if (collision('%'))
-		{
+		if (collision('%')){
 			levels[2] = false;
 			levels[0] = true;
 			spawns[2] = true;
 		}
-		if (collision('&'))
-		{
+		if (collision('&')){
 			g_sChar.m_cLocation.X = 64;
 			g_sChar.m_cLocation.Y = 2;
 			for (h = 0; h < 8; h++) { h_hit[h] = 0; }
@@ -880,48 +847,39 @@ void moveCharacter()
 			g_sGunner[1].m_cLocation.X = 70; g_sGunner[1].m_cLocation.Y = 15;
 			g_sGunner[2].m_cLocation.X = 85; g_sGunner[2].m_cLocation.Y = 16;
 		}
-		if (collision('*'))
-		{
+		if (collision('*')){
 			gems[1] = true;
 		}
 	}
-	else if (levels[3] == true)
-	{
+	else if (levels[3] == true) {
 		spawns[0] = false;
 
-		if (collision('%'))
-		{
+		if (collision('%')){
 			levels[3] = false;
 			levels[0] = true;
 			spawns[3] = true;
 		}
-		if (collision('&'))
-		{
+		if (collision('&')){
 			g_sChar.m_cLocation.X = 59;
 			g_sChar.m_cLocation.Y = 2;
 		}
-		if (collision('*'))
-		{
+		if (collision('*')){
 			gems[2] = true;
 		}
 	}
-	else if (levels[4] == true)
-	{
+	else if (levels[4] == true){
 		spawns[0] = false;
 
-		if (collision('%'))
-		{
+		if (collision('%')){
 			levels[4] = false;
 			levels[0] = true;
 			spawns[4] = true;
 		}
-		if (collision('&'))
-		{
+		if (collision('&')){
 			g_sChar.m_cLocation.X = 60;
 			g_sChar.m_cLocation.Y = 2;
 		}
-		if (collision('*'))
-		{
+		if (collision('*')){
 			gems[3] = true;
 		}
 	}
@@ -932,6 +890,7 @@ void processUserInput()
 	if (g_abKeyPressed[K_ESCAPE]) {
 		g_bQuitGame = true;
 	}
+	//Start menu key presses
 	if (g_eGameState == S_STARTMENU) {
 		if (g_abKeyPressed[K_1]) {
 			g_eGameState = S_CHARACTERCREATION;
@@ -943,15 +902,14 @@ void processUserInput()
 		if (g_abKeyPressed[K_3]) {
 			g_eGameState = S_INSTRUCTIONS;
 		}
-		if (g_abKeyPressed[K_4]){
-			g_bQuitGame = true;
-		}
 	}
+	//Instructions key presses
 	if (g_eGameState == S_INSTRUCTIONS){
 		if (g_abKeyPressed[K_RETURN]){
 			g_eGameState = S_CHARACTERCREATION;
 		}
 	}
+	//Character creation key presses
 	if (g_eGameState == S_CHARACTERCREATION){
 		if (g_abKeyPressed[K_1]){
 			charArray[0] = true;
@@ -959,6 +917,8 @@ void processUserInput()
 			charArray[2] = false;
 			charArray[3] = false;
 			charArray[4] = false;
+			lives = 7;
+			coins = 0;
 		}
 		if (g_abKeyPressed[K_2]){
 			charArray[1] = true;
@@ -966,6 +926,8 @@ void processUserInput()
 			charArray[2] = false;
 			charArray[3] = false;
 			charArray[4] = false;
+			lives = 5;
+			coins = 40;
 		}
 		if (g_abKeyPressed[K_3]){
 			charArray[2] = true;
@@ -973,6 +935,8 @@ void processUserInput()
 			charArray[1] = false;
 			charArray[3] = false;
 			charArray[4] = false;
+			lives = 5;
+			coins = 40;
 		}
 		if (g_abKeyPressed[K_4]){
 			charArray[3] = true;
@@ -980,6 +944,8 @@ void processUserInput()
 			charArray[1] = false;
 			charArray[2] = false;
 			charArray[4] = false;
+			lives = 4;
+			coins = 70;
 		}
 		if (g_abKeyPressed[K_5]){
 			charArray[4] = true;
@@ -987,11 +953,14 @@ void processUserInput()
 			charArray[1] = false;
 			charArray[2] = false;
 			charArray[3] = false;
+			lives = 3;
+			coins = 100;
 		}
 		if (g_abKeyPressed[K_SPACE] && (charArray[0] == true || charArray[1] == true || charArray[2] == true || charArray[3] == true || charArray[4] == true)){
 			g_eGameState = S_GAME;
 		}
 	}
+	//Win and Lose screen key presses
 	if (g_eGameState == S_WINSCREEN) {
 		if (g_abKeyPressed[K_RETURN]){
 			g_eGameState = S_STARTMENU;
@@ -1019,14 +988,10 @@ void renderSplashScreen()
 	int i = 0;
 
 	splashscreenFile.open("SplashScreen.txt");
-	if (splashscreenFile.is_open())
-	{
-		while (getline(splashscreenFile, splashscreen))
-		{
-			for (a = 0; a < splashscreen.length(); a++)
-			{
-				if (splashscreen[a] == 'F')
-				{
+	if (splashscreenFile.is_open()){
+		while (getline(splashscreenFile, splashscreen)){
+			for (a = 0; a < splashscreen.length(); a++){
+				if (splashscreen[a] == 'F'){
 					splashscreen[a] = 178;
 				}
 				map[i][a] = splashscreen[a];
@@ -1036,18 +1001,15 @@ void renderSplashScreen()
 			i++;
 			g_Console.writeToBuffer(c, splashscreen, 0x0B);
 
-			if (g_dElapsedTime > 0.5)
-			{
+			if (g_dElapsedTime > 0.5){
 				c.X++;
 				g_Console.writeToBuffer(c, splashscreen, 0x0C);
 			}
-			if (g_dElapsedTime > 1)
-			{
+			if (g_dElapsedTime > 1){
 				c.X++;
 				g_Console.writeToBuffer(c, splashscreen, 0x0A);
 			}
-			if (g_dElapsedTime > 1.5)
-			{
+			if (g_dElapsedTime > 1.5){
 				c.X++;
 				g_Console.writeToBuffer(c, splashscreen, 0x09);
 			}
@@ -1064,15 +1026,11 @@ void renderStartMenu()
 	ifstream menuFile;
 	int i = 0;
 	
-	menuFile.open("MainMenu.txt");
-	if (menuFile.is_open())
-	{
-		while (getline(menuFile, menu))
-		{
-			for (a = 0; a < menu.length(); a++)
-			{
-				if (menu[a] == 'F')
-				{
+	menuFile.open("StartMenu.txt");
+	if (menuFile.is_open()){
+		while (getline(menuFile, menu)){
+			for (a = 0; a < menu.length(); a++){
+				if (menu[a] == 'F'){
 					menu[a] = 178;
 				}
 				map[i][a] = menu[a];
@@ -1095,10 +1053,8 @@ void renderInstructions()
 	int i = 0;
 
 	instructionFile.open("Instructions.txt");
-	if (instructionFile.is_open())
-	{
-		while (getline(instructionFile, instructions))
-		{
+	if (instructionFile.is_open()){
+		while (getline(instructionFile, instructions)){
 			c.X = 0;
 			c.Y = i;
 			i++;
@@ -1117,12 +1073,9 @@ void renderCharacterCreation()
 	int i = 0;
 	
 	creationFile.open("CharacterCreation.txt");
-	if (creationFile.is_open())
-	{
-		while (getline(creationFile, creation))
-		{
-			for (a = 0; a < creation.length(); a++)
-			{
+	if (creationFile.is_open()){
+		while (getline(creationFile, creation)){
+			for (a = 0; a < creation.length(); a++){
 				switch (creation[a]) {
 				case '6':
 					creation[a] = (char)2;
@@ -1149,8 +1102,7 @@ void renderCharacterCreation()
 	}
 	creationFile.close();
 
-	if (charArray[0] == true)
-	{
+	if (charArray[0] == true){
 		c.X = 54;
 		c.Y = 11;
 		g_Console.writeToBuffer(c, names[0], 0x0B);
@@ -1158,8 +1110,7 @@ void renderCharacterCreation()
 		c.Y = 19;
 		g_Console.writeToBuffer(c, (char)2, 0x0F);
 	}
-	if (charArray[1] == true)
-	{
+	if (charArray[1] == true){
 		c.X = 54;
 		c.Y = 11;
 		g_Console.writeToBuffer(c, names[1], 0x0B);
@@ -1167,8 +1118,7 @@ void renderCharacterCreation()
 		c.Y = 19;
 		g_Console.writeToBuffer(c, (char)3, 0x0C);
 	}
-	if (charArray[2] == true)
-	{
+	if (charArray[2] == true){
 		c.X = 54;
 		c.Y = 11;
 		g_Console.writeToBuffer(c, names[2], 0x0B);
@@ -1176,8 +1126,7 @@ void renderCharacterCreation()
 		c.Y = 19;
 		g_Console.writeToBuffer(c, (char)4, 0x09);
 	}
-	if (charArray[3] == true)
-	{
+	if (charArray[3] == true){
 		c.X = 54;
 		c.Y = 11;
 		g_Console.writeToBuffer(c, names[3], 0x0B);
@@ -1185,8 +1134,7 @@ void renderCharacterCreation()
 		c.Y = 19;
 		g_Console.writeToBuffer(c, (char)5, 0x0A);
 	}
-	if (charArray[4] == true)
-	{
+	if (charArray[4] == true){
 		c.X = 54;
 		c.Y = 11;
 		g_Console.writeToBuffer(c, names[4], 0x0B);
@@ -1212,14 +1160,10 @@ void renderWin()
 	int i = 0;
 
 	winFile.open("WinScreen.txt");
-	if (winFile.is_open())
-	{
-		while (getline(winFile, winScreen))
-		{
-			for (a = 0; a < winScreen.length(); a++)
-			{
-				if (winScreen[a] == 'w')
-				{
+	if (winFile.is_open()){
+		while (getline(winFile, winScreen)){
+			for (a = 0; a < winScreen.length(); a++){
+				if (winScreen[a] == 'w'){
 					winScreen[a] = 223;
 				}
 				map[i][a] = winScreen[a];
@@ -1247,19 +1191,14 @@ void renderMap()
 	int i = 0;
 
 	//Render Headquarters
-	if (levels[0] == true)
-		{
+	if (levels[0] == true){
 			string headquarters;
 			ifstream headquartersFile;
 
 			headquartersFile.open("Headquarters.txt");
-			if (headquartersFile.is_open())
-			{
-
-				while (getline(headquartersFile, headquarters))
-				{
-					for (a = 0; a < headquarters.length(); a++)
-					{
+			if (headquartersFile.is_open()){
+				while (getline(headquartersFile, headquarters)){
+					for (a = 0; a < headquarters.length(); a++){
 						switch (headquarters[a]) {
 						case '#':
 							headquarters[a] = 223;
@@ -1268,52 +1207,37 @@ void renderMap()
 							headquarters[a] = 219;
 							break;
 						case 'u':
-							if (gems[0] == true)
-							{
+							if (gems[0] == true){
 								headquarters[a] = '*';
-							}
-							else
-							{
+							} else {
 								headquarters[a] = 255;
 							}
 							break;
 						case 'i':
-							if (gems[1] == true)
-							{
+							if (gems[1] == true){
 								headquarters[a] = '*';
-							}
-							else
-							{
+							} else {
 								headquarters[a] = 255;
 							}
 							break;
 						case 'o':
-							if (gems[2] == true)
-							{
+							if (gems[2] == true){
 								headquarters[a] = '*';
-							}
-							else
-							{
+							} else {
 								headquarters[a] = 255;
 							}
 							break;
 						case 'p':
-							if (gems[3] == true)
-							{
+							if (gems[3] == true){
 								headquarters[a] = '*';
-							}
-							else
-							{
+							} else {
 								headquarters[a] = 255;
 							}
 							break;
 						case '%':
-							if (gems[0] == true && gems[1] == true && gems[2] == true && gems[3] == true)
-							{
+							if (gems[0] == true && gems[1] == true && gems[2] == true && gems[3] == true){
 								headquarters[a] = '%';
-							}
-							else
-							{
+							} else {
 								headquarters[a] = 255;
 							}
 						}
@@ -1328,19 +1252,15 @@ void renderMap()
 			headquartersFile.close();
 		}
 	//Render Level A
-     if (levels[1] == true)
-	{
+	else if (levels[1] == true){
 		string level1;
 		ifstream level1File;
 		i = 0;
 
 		level1File.open("LevelA.txt");
-		if (level1File.is_open())
-		{
-			while (getline(level1File, level1))
-			{
-				for (a = 0; a < level1.length(); a++)
-				{
+		if (level1File.is_open()){
+			while (getline(level1File, level1)){
+				for (a = 0; a < level1.length(); a++){
 					switch (level1[a]) {
 					case '#':
 						level1[a] = 223;
@@ -1349,8 +1269,7 @@ void renderMap()
 						level1[a] = 219;
 						break;
 					case '*':
-						if (gems[0] == true)
-						{
+						if (gems[0] == true){
 							level1[a] = 255;
 						}
 					}
@@ -1365,18 +1284,15 @@ void renderMap()
 		level1File.close();
 	}
 	//Render Level B
-	else if (levels[2] == true)
-	{
+	else if (levels[2] == true){
 		string level2;
 		ifstream level2File;
 		i = 0;
+
 		level2File.open("LevelB.txt");
-		if (level2File.is_open())
-		{
-			while (getline(level2File, level2))
-			{
-				for (a = 0; a < level2.length(); a++)
-				{
+		if (level2File.is_open()){
+			while (getline(level2File, level2)){
+				for (a = 0; a < level2.length(); a++){
 					switch (level2[a]) {
 					case '#':
 						level2[a] = 223;
@@ -1385,8 +1301,7 @@ void renderMap()
 						level2[a] = 219;
 						break;
 					case '*':
-						if (gems[1] == true)
-						{
+						if (gems[1] == true){
 							level2[a] = 255;
 						}
 					}
@@ -1401,18 +1316,15 @@ void renderMap()
 		level2File.close();
 	}
 	//Render Level C
-	else if (levels[3] == true)
-	{
+	else if (levels[3] == true){
 		string level3;
 		ifstream level3File;
 		i = 0;
+
 		level3File.open("LevelC.txt");
-		if (level3File.is_open())
-		{
-			while (getline(level3File, level3))
-			{
-				for (a = 0; a < level3.length(); a++)
-				{
+		if (level3File.is_open()){
+			while (getline(level3File, level3)){
+				for (a = 0; a < level3.length(); a++){
 					switch (level3[a]) {
 					case '#':
 						level3[a] = 223;
@@ -1421,8 +1333,7 @@ void renderMap()
 						level3[a] = 219;
 						break;
 					case '*':
-						if (gems[2] == true)
-						{
+						if (gems[2] == true){
 							level3[a] = 255;
 						}
 					}
@@ -1437,18 +1348,15 @@ void renderMap()
 		level3File.close();
 	}
 	//Render Level D
-	else if (levels[4] == true)
-	{
+	else if (levels[4] == true){
 		string level4;
 		ifstream level4File;
 		i = 0;
+
 		level4File.open("LevelD.txt");
-		if (level4File.is_open())
-		{
-			while (getline(level4File, level4))
-			{
-				for (a = 0; a < level4.length(); a++)
-				{
+		if (level4File.is_open()){
+			while (getline(level4File, level4)){
+				for (a = 0; a < level4.length(); a++){
 					switch (level4[a]) {
 					case '#':
 						level4[a] = 223;
@@ -1457,8 +1365,7 @@ void renderMap()
 						level4[a] = 219;
 						break;
 					case '*':
-						if (gems[3] == true)
-						{
+						if (gems[3] == true){
 							level4[a] = 255;
 						}
 					}
@@ -1472,21 +1379,16 @@ void renderMap()
 		}
 		level4File.close();
 	}
-
 	//Render Shop
-	if (shop == true)
-	{
+	if (shop == true){
 		string shop;
 		ifstream shopFile;
 		i = 0;
 
 		shopFile.open("Shop.txt");
-		if (shopFile.is_open())
-		{
-			while (getline(shopFile, shop))
-			{
-				for (a = 0; a < shop.length(); a++)
-				{
+		if (shopFile.is_open()){
+			while (getline(shopFile, shop)){
+				for (a = 0; a < shop.length(); a++){
 					switch (shop[a]) {
 					case '#':
 						shop[a] = 223;
@@ -1505,45 +1407,36 @@ void renderMap()
 		shopFile.close();
 
 		//Buying Smg
-		if (g_abKeyPressed[K_2] && boughtWeapons[1] == false && (coins >= 40))
-		{
+		if (g_abKeyPressed[K_2] && boughtWeapons[1] == false && (coins >= 40)){
 			coins -= 40;
 			boughtWeapons[1] = true;
 		}
 		//Buying Rifle
-		if (g_abKeyPressed[K_3] && boughtWeapons[2] == false && (coins >= 70))
-		{
+		if (g_abKeyPressed[K_3] && boughtWeapons[2] == false && (coins >= 70)){
 			 coins -= 70;
 			 boughtWeapons[2] = true;
 		}
 		//Buying Sniper
-		if (g_abKeyPressed[K_4] && boughtWeapons[3] == false && (coins >= 100))
-		{
+		if (g_abKeyPressed[K_4] && boughtWeapons[3] == false && (coins >= 100)){
 			coins -= 100;
 			boughtWeapons[3] = true;
 		}
 		//Buying Minigun
-		if (g_abKeyPressed[K_5] && boughtWeapons[4] == false && (coins >= 150))
-		{
+		if (g_abKeyPressed[K_5] && boughtWeapons[4] == false && (coins >= 150)){
 			coins -= 150;
 			boughtWeapons[4] = true;
 		}
 	}
-
 	//Render Inventory
-	if (inven == true)
-	{
+	if (inven == true){
 		string inventory;
 		ifstream inventoryFile;
 		i = 0;
 
 		inventoryFile.open("Inventory.txt");
-		if (inventoryFile.is_open())
-		{
-			while (getline(inventoryFile, inventory))
-			{
-				for (a = 0; a < inventory.length(); a++)
-				{
+		if (inventoryFile.is_open()){
+			while (getline(inventoryFile, inventory)){
+				for (a = 0; a < inventory.length(); a++){
 					switch (inventory[a]) {
 					case '#':
 						inventory[a] = 223;
@@ -1555,116 +1448,85 @@ void renderMap()
 						inventory[a] = ' ';
 						break;
 					case '1':
-						if (boughtWeapons[0] == true)
-						{
+						if (boughtWeapons[0] == true){
 							inventory[a] = '1';
-						}
-						else
-						{
+						} else {
 							inventory[a] = 'x';
 						}
 						break;
 					case '2':
-						if (boughtWeapons[1] == true)
-						{
-							if (shop == true)
-							{
+						if (boughtWeapons[1] == true){
+							if (shop == true){
 								c.X = 52;
 								c.Y = 22;
 								g_Console.writeToBuffer(c, "Sold Out ", 0x06);
 							}
 							inventory[a] = '2';
-						}
-						else
-						{
+						} else {
 							inventory[a] = 'x';
 						}
 						break;
 					case '3':
-						if (boughtWeapons[2] == true)
-						{
-							if (shop == true)
-							{
+						if (boughtWeapons[2] == true){
+							if (shop == true){
 								c.X = 52;
 								c.Y = 23;
 								g_Console.writeToBuffer(c, "Sold Out ", 0x07);
 							}
 							inventory[a] = '3';
-						}
-						else
-						{
+						} else {
 							inventory[a] = 'x';
 						}
 						break;
 					case '4':
-						if (boughtWeapons[3] == true)
-						{
-							if (shop == true)
-							{
+						if (boughtWeapons[3] == true){
+							if (shop == true){
 								c.X = 52;
 								c.Y = 24;
 								g_Console.writeToBuffer(c, "Sold Out ", 0x08);
 							}
 							inventory[a] = '4';
-						}
-						else
-						{
+						} else {
 							inventory[a] = 'x';
 						}
 						break;
 					case '5':
-						if (boughtWeapons[4] == true)
-						{
-							if (shop == true)
-							{
+						if (boughtWeapons[4] == true){
+							if (shop == true){
 								c.X = 52;
 								c.Y = 25;
 								g_Console.writeToBuffer(c, "Sold Out ", 0x09);
 							}
 							inventory[a] = '5';
-						}
-						else
-						{
+						} else {
 							inventory[a] = 'x';
 						}
 						break;
 					case '6':
-						if (gems[0] == true)
-						{
+						if (gems[0] == true){
 							inventory[a] = '*';
-						}
-						else
-						{
+						} else {
 							inventory[a] = 'x';
 						}
 						break;
 					case '7':
-						if (gems[1] == true)
-						{
+						if (gems[1] == true){
 							inventory[a] = '*';
-						}
-						else
-						{
+						} else {
 							inventory[a] = 'x';
 						}
 						break;
 					case '8':
-						if (gems[2] == true)
-						{
+						if (gems[2] == true){
 							inventory[a] = '*';
-						}
-						else
-						{
+						} else {
 							inventory[a] = 'x';
 						}
 						break;
 					case '9':
-						if (gems[3] == true)
-						{
+						if (gems[3] == true){
 							inventory[a] = '*';
-						}
-						else
-						{
+						} else {
 							inventory[a] = 'x';
 						}
 						break;
@@ -1687,32 +1549,27 @@ void renderMap()
 		c.Y = 21;
 		g_Console.writeToBuffer(c, to_string(coins), 0x0F);
 		//Render Current Gun
-		if (equipWeapons[0] == true)
-		{
+		if (equipWeapons[0] == true){
 			c.X = 4;
 			c.Y = 24;
 			g_Console.writeToBuffer(c, "Pistol", 0x08);
 		}
-		if (equipWeapons[1] == true)
-		{
+		if (equipWeapons[1] == true){
 			c.X = 4;
 			c.Y = 24;
 			g_Console.writeToBuffer(c, "Smg", 0x08);
 		}
-		if (equipWeapons[2] == true)
-		{
+		if (equipWeapons[2] == true){
 			c.X = 4;
 			c.Y = 24;
 			g_Console.writeToBuffer(c, "Rifle", 0x08);
 		}
-		if (equipWeapons[3] == true)
-		{
+		if (equipWeapons[3] == true){
 			c.X = 4;
 			c.Y = 24;
 			g_Console.writeToBuffer(c, "Sniper", 0x08);
 		}
-		if (equipWeapons[4] == true)
-		{
+		if (equipWeapons[4] == true){
 			c.X = 4;
 			c.Y = 24;
 			g_Console.writeToBuffer(c, "Minigun", 0x08);
@@ -1722,95 +1579,78 @@ void renderMap()
 
 void renderCharacter()
 {
-    // Draw the location of the character
 	COORD c;
 
-	if (collision('q'))
-	{
+	if (collision('q')){
 		charArray[0] = true;
 		charArray[1] = false;
 		charArray[2] = false;
 		charArray[3] = false;
 		charArray[4] = false;
 	}
-	if (collision('w'))
-	{
+	if (collision('w')){
 		charArray[1] = true;
 		charArray[0] = false;
 		charArray[2] = false;
 		charArray[3] = false;
 		charArray[4] = false;
 	}
-	if (collision('e'))
-	{
+	if (collision('e')){
 		charArray[2] = true;
 		charArray[0] = false;
 		charArray[1] = false;
 		charArray[3] = false;
 		charArray[4] = false;
 	}
-	if (collision('r'))
-	{
+	if (collision('r')){
 		charArray[3] = true;
 		charArray[0] = false;
 		charArray[1] = false;
 		charArray[2] = false;
 		charArray[4] = false;
 	}
-	if (collision('t'))
-	{
+	if (collision('t')){
 		charArray[4] = true;
 		charArray[0] = false;
 		charArray[1] = false;
 		charArray[2] = false;
 		charArray[3] = false;
 	}
-
 	//Characters' rendering
-	if (charArray[0] == true)
-	{
-		if (inven == true)
-		{
+	if (charArray[0] == true){
+		if (inven == true){
 			c.X = 8;
 			c.Y = 20;
 			g_Console.writeToBuffer(c, names[0], 0x0F);
 		}
 		g_Console.writeToBuffer(g_sChar.m_cLocation, (char)2, 0x0F);
 	}
-	else if (charArray[1] == true)
-	{
-		if (inven == true)
-		{
+	else if (charArray[1] == true){
+		if (inven == true){
 			c.X = 8;
 			c.Y = 20;
 			g_Console.writeToBuffer(c, names[1], 0x0F);
 		}
 		g_Console.writeToBuffer(g_sChar.m_cLocation, (char)3, 0x0C);
 	}
-	else if (charArray[2] == true)
-	{
-		if (inven == true)
-		{
+	else if (charArray[2] == true){
+		if (inven == true){
 			c.X = 8;
 			c.Y = 20;
 			g_Console.writeToBuffer(c, names[2], 0x0F);
 		}
 		g_Console.writeToBuffer(g_sChar.m_cLocation, (char)4, 0x09);
 	}
-	else if (charArray[3] == true)
-	{
-		if (inven == true)
-		{
+	else if (charArray[3] == true){
+		if (inven == true){
 			c.X = 8;
 			c.Y = 20;
 			g_Console.writeToBuffer(c, names[3], 0x0F);
 		}
 		g_Console.writeToBuffer(g_sChar.m_cLocation, (char)5, 0x0A);
 	}
-	else if (charArray[4] == true)
-	{
-		if (inven == true)
-		{
+	else if (charArray[4] == true){
+		if (inven == true){
 			c.X = 8;
 			c.Y = 20;
 			g_Console.writeToBuffer(c, names[4], 0x0F);
@@ -1822,8 +1662,7 @@ bool collision(char collider)
 {
 	bool collided = false;
 
-	if (map[g_sChar.m_cLocation.Y - 1][g_sChar.m_cLocation.X] == collider || map[g_sChar.m_cLocation.Y][g_sChar.m_cLocation.X - 1] == collider || map[g_sChar.m_cLocation.Y + 1][g_sChar.m_cLocation.X] == collider || map[g_sChar.m_cLocation.Y][g_sChar.m_cLocation.X + 1] == collider)
-	{
+	if (map[g_sChar.m_cLocation.Y - 1][g_sChar.m_cLocation.X] == collider || map[g_sChar.m_cLocation.Y][g_sChar.m_cLocation.X - 1] == collider || map[g_sChar.m_cLocation.Y + 1][g_sChar.m_cLocation.X] == collider || map[g_sChar.m_cLocation.Y][g_sChar.m_cLocation.X + 1] == collider){
 		collided = true;
 	}
 	return collided;
@@ -1854,7 +1693,7 @@ void renderToScreen()
 
 void saveProgression()
 {
-	ofstream saveGame("saveGame.txt");
+	ofstream saveGame("SaveGame.txt");
 	saveGame << coins << endl;
 	saveGame << lives << endl;
 	for (int a = 0; a < 5; a++)
@@ -1878,7 +1717,7 @@ void saveProgression()
 void loadProgression()
 {
 	string loadGameFile = "";
-	ifstream loadGame("saveGame.txt");
+	ifstream loadGame("SaveGame.txt");
 
 	getline(loadGame, loadGameFile);
 	coins = stoi(loadGameFile);

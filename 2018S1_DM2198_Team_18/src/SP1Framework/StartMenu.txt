@@ -23,4 +23,3 @@
                                               [1] Start!
                                               [2] Load Game!
                                               [3] Instructions
-                                              [4] Exit
