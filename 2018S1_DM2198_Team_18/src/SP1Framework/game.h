@@ -23,7 +23,7 @@ enum EKEYS
 	K_3,
 	K_4,
 	K_5,
-	//K_A,
+	K_A,
 	K_COUNT
 };
 
@@ -67,10 +67,12 @@ void renderCharacter();     // renders the character into the buffer
 void renderFramerate();     // renders debug information, frame rate, elapsed time, etc
 void renderToScreen();      // dump the contents of the buffer to the screen, one frame worth of game
 void renderWin();           // renders the win screen
-//void renderLose();          // renders the lose screen
+void renderLose();          // renders the lose screen
 bool collision(char collider);
 void saveProgression();
 void loadProgression();
+void loseAuto(int argc, char** argv);
+int PlayAudio(int argc, char* argv[]);
 
 // define variables
 
