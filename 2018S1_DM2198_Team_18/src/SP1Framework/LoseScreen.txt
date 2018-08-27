@@ -1,0 +1,22 @@
+    DDDDDDD  DDDDDDDDDDDDDDD DDDDDDDDDDD DDDDDDD    DDDDDDDDDDD DDDDDDD
+    D      D        D        D           D      D   D           D      D
+    D       D       D        D           D       D  D           D       D
+    D        D      D        D           D        D D           D        D
+    D        D      D        DDDDDDDDDDD D        D DDDDDDDDDDD D        D
+    D       D       D        D           D       D  D           D       D
+    D      D        D        D           D      D   D           D      D   
+    D     D         D        D           D     D    D           D     D   
+    DDDDDD   DDDDDDDDDDDDDDD DDDDDDDDDDD DDDDDD     DDDDDDDDDDD DDDDDD  
+                                                                       
+                                                                      D                       D
+                                                                        D                   D
+                                                                          D               D
+                                                                            D           D
+                                                                              D       D
+                                                                                D   D
+                                                                                  D
+                                                                                D   D 
+                                                                              D       D     
+                                                                            D           D
+                                                                          D               D  
+                                                                        D                   D

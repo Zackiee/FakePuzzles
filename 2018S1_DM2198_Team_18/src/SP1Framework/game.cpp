@@ -5,13 +5,15 @@
 #include "game.h"
 #include "Framework\console.h"
 #include <iostream>
+#include <windows.h>
+#include <mmsystem.h>
 //#include <irrKlang.h>
 #include <iomanip>
 #include <sstream>
 #include <fstream>
 #include <string>
 #include <time.h>
-
+#pragma comment(lib,"winmm.lib")
 //using namespace irrklang;
 using namespace std;
 
@@ -22,6 +24,7 @@ bool spawns[5] = { false };
 bool gems[4] = { false };
 bool equipWeapons[5] = { false };
 bool boughtWeapons[5] = { false };
+bool lost = false;
 int a = 0, aaa = 0;
 
 bool inven = true;
@@ -192,7 +195,6 @@ void update(double dt)
 // Input    : void
 // Output   : void
 //--------------------------------------------------------------
-
 void render()
 {
     clearScreen();      // clears the current screen and draw from scratch 
@@ -210,8 +212,8 @@ void render()
             break;
 		case S_WINSCREEN: renderWin();
 			break;
-		/*case S_LOSESCREEN: renderLose();
-			break;*/
+		case S_LOSESCREEN: renderLose();
+			break;
     }
     renderFramerate();  // renders debug information, frame rate, elapsed time, etc
     renderToScreen();   // dump the contents of the buffer to the screen, one frame worth of game
@@ -229,6 +231,12 @@ void splashScreenWait()    // waits for time to pass in splash screen
 //	if (!sound)
 //		return 0;
 //}
+
+int PlayAudio(int argc, char* argv[])
+{
+	PlaySound(TEXT("game_muse.wav"),NULL, SND_LOOP | SND_ASYNC | SND_FILENAME);
+	return 0;
+}
 
 void renderEntities()
 {
@@ -589,7 +597,7 @@ void playershoot()
 
 void respawn()
 {
-	if (lives == 0)
+	if (lives <= 0)
 	{
 		g_eGameState = S_LOSESCREEN;
 	}
@@ -916,6 +924,17 @@ void processUserInput()
 		}
 	}
 	if (g_eGameState == S_LOSESCREEN) {
+			/*DWORD now = timeGetTime();
+			DWORD nextEndGame = now + 5000;
+			while (g_eGameState==S_LOSESCREEN)
+			{
+				now = timeGetTime();
+				if (now >= nextEndGame)
+				{
+					g_eGameState = S_CHARACTERCREATION;
+					nextEndGame += 5000;
+				}
+			}*/
 		if (g_abKeyPressed[K_RETURN]) {
 			g_eGameState = S_STARTMENU;
 		}
@@ -982,6 +1001,7 @@ void renderStartMenu()
 	ifstream menuFile;
 	int i = 0;
 	
+	PlaySound(TEXT("game_music.wav"), NULL, SND_LOOP | SND_ASYNC | SND_FILENAME);
 	menuFile.open("MainMenu.txt");
 	if (menuFile.is_open())
 	{
@@ -1128,7 +1148,8 @@ void renderWin()
 	string winScreen;
 	ifstream winFile;
 	int i = 0;
-
+	PlaySound(NULL, NULL, 0);
+	PlaySound(TEXT("miiWin.wav"), NULL, SND_LOOP | SND_ASYNC | SND_FILENAME);
 	winFile.open("WinScreen.txt");
 	if (winFile.is_open())
 	{
@@ -1157,7 +1178,36 @@ void renderWin()
 
 void renderLose()
 {
+	COORD c;
+	string loseScreen;
+	ifstream loseFile;
+	int i = 0;
 
+	PlaySound(TEXT("lose_Audio.wav"), NULL, SND_ASYNC | SND_FILENAME);
+	loseFile.open("LoseScreen.txt");
+	if (loseFile.is_open())
+	{
+		while (getline(loseFile, loseScreen))
+		{
+			for (a = 0; a < loseScreen.length(); a++)
+			{
+				if (loseScreen[a] == 'D')
+				{
+					loseScreen[a] = 219;
+				}
+				map[i][a] = loseScreen[a];
+			}
+			c.X = 0;
+			c.Y = i;
+			i++;
+			g_Console.writeToBuffer(c, loseScreen, 0x0C);
+		}
+	}
+	loseFile.close();
+
+	c.X = 7;
+	c.Y = 24;
+	g_Console.writeToBuffer(c, "This is so sad, Alexa play Despacinno", 0x0C);
 }
 void renderMap()
 {
