@@ -235,10 +235,14 @@ void renderEntities()
 	// Draw the location of the enemies
 	WORD charE_Color = 0x0C;
 	
+	// For player bullets
+	for (int ps = 0; ps < 64; ps++) {
+		g_Console.writeToBuffer(g_sPlayershots[ps].m_cLocation, (char)249, 0x06);
+	}
 	if (levels[0] == false)
 	{
 		for (int h = 0; h < 8; h++) {
-			g_Console.writeToBuffer(g_sHugger[h].m_cLocation, (char)128, charE_Color);
+			g_Console.writeToBuffer(g_sHugger[h].m_cLocation, (char)72, charE_Color);
 		}
 		for (int g = 0; g < 4; g++) {
 			g_Console.writeToBuffer(g_sGunner[g].m_cLocation, (char)83, charE_Color);
@@ -248,13 +252,9 @@ void renderEntities()
 			g_Console.writeToBuffer(g_sBullets[i].m_cLocation, (char)7, charE_Color);
 		}
 	}
-	// For player bullets
-	for (int ps = 0; ps < 64; ps++) {
-		g_Console.writeToBuffer(g_sPlayershots[ps].m_cLocation, (char)7, 0x06);
-	}
 }
 int b = 0, i = 0, n = 0, g = 0, h = 0, p = 0, ps = 0, bhugger[8] = { 0, }, bgunner[4] = { 0, }, bbullet[128] = { 0, }, bplayer = 0, bplayershoot[64] = { 0, }; // variables starting with b is used for buffer, others are used for array and stuff
-int x[8] = { 0, };
+int x[8] = { 0, }, h_hit[8] = { 0, };
 bool fooeyhappened1, fooeyhappened2, fooeyhappened3, playershot;
 void huggerdata() {
 	double up, left, down, right, min_double;
@@ -287,7 +287,7 @@ void huggerdata() {
 			bhugger[h]++;
 			continue;
 		}
-		else if (min_double == up && x[h] != 3 && bhugger[h] >= 3) { // move up
+		else if (min_double == up && x[h] != 3 && bhugger[h] >= 2) { // move up
 			g_sHugger[h].m_cLocation.Y--;
 			x[h] = 1;
 			bhugger[h] = 0;
@@ -296,7 +296,7 @@ void huggerdata() {
 			g_sHugger[h].m_cLocation.X--;
 			x[h] = 2;
 		}
-		else if (min_double == down && x[h] != 1 && bhugger[h] >= 3) { // move down
+		else if (min_double == down && x[h] != 1 && bhugger[h] >= 2) { // move down
 			g_sHugger[h].m_cLocation.Y++;
 			x[h] = 3;
 			bhugger[h] = 0;
@@ -492,6 +492,12 @@ void playershoot()
 		equipWeapons[2] = false;
 		equipWeapons[3] = false;
 		equipWeapons[4] = false;
+		p = ps;
+		for (ps = 0; ps < 64; ps++) {
+			g_sPlayershots[ps].m_cLocation.X = 1;
+			g_sPlayershots[ps].m_cLocation.Y = 0;
+		}
+		ps = p;
 	}
 	if (g_abKeyPressed[K_2] && boughtWeapons[1] == true) {
 		equipWeapons[0] = false;
@@ -499,6 +505,12 @@ void playershoot()
 		equipWeapons[2] = false;
 		equipWeapons[3] = false;
 		equipWeapons[4] = false;
+		p = ps;
+		for (ps = 0; ps < 64; ps++) {
+			g_sPlayershots[ps].m_cLocation.X = 1;
+			g_sPlayershots[ps].m_cLocation.Y = 0;
+		}
+		ps = p;
 	}
 	if (g_abKeyPressed[K_3] && boughtWeapons[2] == true) {
 		equipWeapons[0] = false;
@@ -506,6 +518,12 @@ void playershoot()
 		equipWeapons[2] = true;
 		equipWeapons[3] = false;
 		equipWeapons[4] = false;
+		p = ps;
+		for (ps = 0; ps < 64; ps++) {
+			g_sPlayershots[ps].m_cLocation.X = 1;
+			g_sPlayershots[ps].m_cLocation.Y = 0;
+		}
+		ps = p;
 	}
 	if (g_abKeyPressed[K_4] && boughtWeapons[3] == true) {
 		equipWeapons[0] = false;
@@ -513,6 +531,12 @@ void playershoot()
 		equipWeapons[2] = false;
 		equipWeapons[3] = true;
 		equipWeapons[4] = false;
+		p = ps;
+		for (ps = 0; ps < 64; ps++) {
+			g_sPlayershots[ps].m_cLocation.X = 1;
+			g_sPlayershots[ps].m_cLocation.Y = 0;
+		}
+		ps = p;
 	}
 	if (g_abKeyPressed[K_5] && boughtWeapons[4] == true) {
 		equipWeapons[0] = false;
@@ -520,6 +544,12 @@ void playershoot()
 		equipWeapons[2] = false;
 		equipWeapons[3] = false;
 		equipWeapons[4] = true;
+		p = ps;
+		for (ps = 0; ps < 64; ps++) {
+			g_sPlayershots[ps].m_cLocation.X = 1;
+			g_sPlayershots[ps].m_cLocation.Y = 0;
+		}
+		ps = p;
 	}
 
 	playershot = false;
@@ -529,6 +559,41 @@ void playershoot()
 
 	p = ps;
 	for (ps = 0; ps < 64; ps++) {
+		//Player's bullet collision with enemies before moving player bullet
+		if (levels[1] == true || levels[2] == true || levels[3] == true || levels[4] == true)
+		{
+			for (h = 0; h < 8; h++) {
+				if ((g_sPlayershots[ps].m_cLocation.Y == g_sHugger[h].m_cLocation.Y) && (g_sPlayershots[ps].m_cLocation.X == g_sHugger[h].m_cLocation.X)) {
+					g_sPlayershots[ps].m_cLocation.X = 1;
+					g_sPlayershots[ps].m_cLocation.Y = 0;
+					if (equipWeapons[0] || equipWeapons[1]) { // Pistol and Smg deal 1 damage
+						h_hit[h]++;
+					}
+					if (equipWeapons[2] || equipWeapons[4]) { // Assault rifle and Minigun deal 2 damage
+						h_hit[h] += 2;
+					}
+					if (equipWeapons[3]) { // Sniper deals 5 damage
+						h_hit[h] += 5;
+					}
+					if (h_hit[h] >= 3) { // representing that huggers have 3 HP
+						coins += 5;
+						g_sHugger[h].m_cLocation.X = 0;
+						g_sHugger[h].m_cLocation.Y = 0;
+					}
+					continue;
+				}
+			}
+			for (g = 0; g < 4; g++) {
+				if ((g_sPlayershots[ps].m_cLocation.Y == g_sGunner[g].m_cLocation.Y) && (g_sPlayershots[ps].m_cLocation.X == g_sGunner[g].m_cLocation.X)) {
+					g_sPlayershots[ps].m_cLocation.X = 1;
+					g_sPlayershots[ps].m_cLocation.Y = 0;
+					coins += 5;
+					g_sGunner[g].m_cLocation.X = 0;
+					g_sGunner[g].m_cLocation.Y = 0;
+					continue;
+				}
+			}
+		}
 		if (g_sPlayershots[ps].m_cLocation.X != 1 || g_sPlayershots[ps].m_cLocation.Y != 0) {
 			if (playerdirection[ps] == 1 && bplayershoot[ps] >= 2) { // move up
 				g_sPlayershots[ps].m_cLocation.Y--;
@@ -545,16 +610,29 @@ void playershoot()
 				g_sPlayershots[ps].m_cLocation.X++;
 			}
 		}
-		//Player's bullet collision with enemies
+		//Player's bullet collision with enemies after moving player bullet
+		//Checking for collision before and afer moving player bullets ensure that enemies don't move through player bullets anymore
 		if (levels[1] == true || levels[2] == true || levels[3] == true || levels[4] == true)
 		{
 			for (h = 0; h < 8; h++) {
 				if ((g_sPlayershots[ps].m_cLocation.Y == g_sHugger[h].m_cLocation.Y) && (g_sPlayershots[ps].m_cLocation.X == g_sHugger[h].m_cLocation.X)) {
 					g_sPlayershots[ps].m_cLocation.X = 1;
 					g_sPlayershots[ps].m_cLocation.Y = 0;
-					coins += 5;
-					g_sHugger[h].m_cLocation.X = 0;
-					g_sHugger[h].m_cLocation.Y = 0;
+					if (equipWeapons[0] || equipWeapons[1]) { // Pistol and Smg deal 1 damage
+						h_hit[h]++;
+					}
+					if (equipWeapons[2] || equipWeapons[4]) { // Assault rifle and Minigun deal 2 damage
+						h_hit[h] += 2;
+					}
+					if (equipWeapons[3]) { // Sniper deals 5 damage
+						h_hit[h] += 5;
+					}
+					if (h_hit[h] >= 3) { // representing that huggers have 3 HP
+						h_hit[h] = 0;
+						coins += 5;
+						g_sHugger[h].m_cLocation.X = 0;
+						g_sHugger[h].m_cLocation.Y = 0;
+					}
 				}
 			}
 			for (g = 0; g < 4; g++) {
@@ -745,6 +823,7 @@ void moveCharacter()
 	{
 		spawns[0] = false;
 		while (aaa <= 0) {
+			for (h = 0; h < 8; h++) { h_hit[h] = 0; }
 			g_sHugger[0].m_cLocation.X = 6; g_sHugger[0].m_cLocation.Y = 16;
 			g_sHugger[1].m_cLocation.X = 94; g_sHugger[1].m_cLocation.Y = 4;
 			g_sHugger[2].m_cLocation.X = 84; g_sHugger[2].m_cLocation.Y = 17;
@@ -772,6 +851,7 @@ void moveCharacter()
 	{
 		spawns[0] = false;
 		while (aaa <= 0) {
+			for (h = 0; h < 8; h++) { h_hit[h] = 0; }
 			g_sHugger[0].m_cLocation.X = 5; g_sHugger[0].m_cLocation.Y = 12;
 			g_sHugger[1].m_cLocation.X = 17; g_sHugger[1].m_cLocation.Y = 3;
 			g_sHugger[2].m_cLocation.X = 34; g_sHugger[2].m_cLocation.Y = 11;
@@ -791,6 +871,7 @@ void moveCharacter()
 		{
 			g_sChar.m_cLocation.X = 64;
 			g_sChar.m_cLocation.Y = 2;
+			for (h = 0; h < 8; h++) { h_hit[h] = 0; }
 			g_sHugger[0].m_cLocation.X = 79; g_sHugger[0].m_cLocation.Y = 6;
 			g_sHugger[1].m_cLocation.X = 69; g_sHugger[1].m_cLocation.Y = 10;
 			g_sHugger[2].m_cLocation.X = 90; g_sHugger[2].m_cLocation.Y = 16;
