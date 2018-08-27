@@ -29,8 +29,9 @@ int a = 0, aaa = 0;
 
 bool inven = true;
 bool shop = false;
-int coins = 40;
-int lives = 7;
+int lives = 0;
+int coins = 0;
+int a = 0, aaa = 0;
 
 int shootdirection[128] = { 0, };
 int playerdirection[64] = { 0, };
@@ -243,10 +244,14 @@ void renderEntities()
 	// Draw the location of the enemies
 	WORD charE_Color = 0x0C;
 	
+	// For player bullets
+	for (int ps = 0; ps < 64; ps++) {
+		g_Console.writeToBuffer(g_sPlayershots[ps].m_cLocation, (char)249, 0x06);
+	}
 	if (levels[0] == false)
 	{
 		for (int h = 0; h < 8; h++) {
-			g_Console.writeToBuffer(g_sHugger[h].m_cLocation, (char)128, charE_Color);
+			g_Console.writeToBuffer(g_sHugger[h].m_cLocation, (char)72, charE_Color);
 		}
 		for (int g = 0; g < 4; g++) {
 			g_Console.writeToBuffer(g_sGunner[g].m_cLocation, (char)83, charE_Color);
@@ -256,13 +261,9 @@ void renderEntities()
 			g_Console.writeToBuffer(g_sBullets[i].m_cLocation, (char)7, charE_Color);
 		}
 	}
-	// For player bullets
-	for (int ps = 0; ps < 64; ps++) {
-		g_Console.writeToBuffer(g_sPlayershots[ps].m_cLocation, (char)7, 0x06);
-	}
 }
 int b = 0, i = 0, n = 0, g = 0, h = 0, p = 0, ps = 0, bhugger[8] = { 0, }, bgunner[4] = { 0, }, bbullet[128] = { 0, }, bplayer = 0, bplayershoot[64] = { 0, }; // variables starting with b is used for buffer, others are used for array and stuff
-int x[8] = { 0, };
+int x[8] = { 0, }, h_hit[8] = { 0, };
 bool fooeyhappened1, fooeyhappened2, fooeyhappened3, playershot;
 void huggerdata() {
 	double up, left, down, right, min_double;
@@ -295,7 +296,7 @@ void huggerdata() {
 			bhugger[h]++;
 			continue;
 		}
-		else if (min_double == up && x[h] != 3 && bhugger[h] >= 3) { // move up
+		else if (min_double == up && x[h] != 3 && bhugger[h] >= 2) { // move up
 			g_sHugger[h].m_cLocation.Y--;
 			x[h] = 1;
 			bhugger[h] = 0;
@@ -304,7 +305,7 @@ void huggerdata() {
 			g_sHugger[h].m_cLocation.X--;
 			x[h] = 2;
 		}
-		else if (min_double == down && x[h] != 1 && bhugger[h] >= 3) { // move down
+		else if (min_double == down && x[h] != 1 && bhugger[h] >= 2) { // move down
 			g_sHugger[h].m_cLocation.Y++;
 			x[h] = 3;
 			bhugger[h] = 0;
@@ -482,7 +483,7 @@ void playershoot()
 	}
 
 	if (g_abKeyPressed[K_SPACE] && playerdirection[ps] != 0) {
-		if (equipWeapons[0] && b >= 9 || equipWeapons[1] && b >= 4 || equipWeapons[2] && b >= 6 || equipWeapons[3] && b >= 91 || equipWeapons[4] && b >= 2) { // Pistol fires around 2 times per second, Smg fires around 7 times per second, Assault rifle fires around 4 times per second, Sniper fires around once every 2 seconds, Minigun fires around 20 times per second
+		if (equipWeapons[0] && b >= 8 || equipWeapons[1] && b >= 4 || equipWeapons[2] && b >= 6 || equipWeapons[3] && b >= 91 || equipWeapons[4] && b >= 2) { // Pistol fires around 2 times per second, Smg fires around 7 times per second, Assault rifle fires around 4 times per second, Sniper fires around once every 2 seconds, Minigun fires around 20 times per second
 			g_sPlayershots[ps].m_cLocation.X = g_sChar.m_cLocation.X;
 			g_sPlayershots[ps].m_cLocation.Y = g_sChar.m_cLocation.Y;
 			ps++;
@@ -500,6 +501,12 @@ void playershoot()
 		equipWeapons[2] = false;
 		equipWeapons[3] = false;
 		equipWeapons[4] = false;
+		p = ps;
+		for (ps = 0; ps < 64; ps++) {
+			g_sPlayershots[ps].m_cLocation.X = 1;
+			g_sPlayershots[ps].m_cLocation.Y = 0;
+		}
+		ps = p;
 	}
 	if (g_abKeyPressed[K_2] && boughtWeapons[1] == true) {
 		equipWeapons[0] = false;
@@ -507,6 +514,12 @@ void playershoot()
 		equipWeapons[2] = false;
 		equipWeapons[3] = false;
 		equipWeapons[4] = false;
+		p = ps;
+		for (ps = 0; ps < 64; ps++) {
+			g_sPlayershots[ps].m_cLocation.X = 1;
+			g_sPlayershots[ps].m_cLocation.Y = 0;
+		}
+		ps = p;
 	}
 	if (g_abKeyPressed[K_3] && boughtWeapons[2] == true) {
 		equipWeapons[0] = false;
@@ -514,6 +527,12 @@ void playershoot()
 		equipWeapons[2] = true;
 		equipWeapons[3] = false;
 		equipWeapons[4] = false;
+		p = ps;
+		for (ps = 0; ps < 64; ps++) {
+			g_sPlayershots[ps].m_cLocation.X = 1;
+			g_sPlayershots[ps].m_cLocation.Y = 0;
+		}
+		ps = p;
 	}
 	if (g_abKeyPressed[K_4] && boughtWeapons[3] == true) {
 		equipWeapons[0] = false;
@@ -521,6 +540,12 @@ void playershoot()
 		equipWeapons[2] = false;
 		equipWeapons[3] = true;
 		equipWeapons[4] = false;
+		p = ps;
+		for (ps = 0; ps < 64; ps++) {
+			g_sPlayershots[ps].m_cLocation.X = 1;
+			g_sPlayershots[ps].m_cLocation.Y = 0;
+		}
+		ps = p;
 	}
 	if (g_abKeyPressed[K_5] && boughtWeapons[4] == true) {
 		equipWeapons[0] = false;
@@ -528,6 +553,12 @@ void playershoot()
 		equipWeapons[2] = false;
 		equipWeapons[3] = false;
 		equipWeapons[4] = true;
+		p = ps;
+		for (ps = 0; ps < 64; ps++) {
+			g_sPlayershots[ps].m_cLocation.X = 1;
+			g_sPlayershots[ps].m_cLocation.Y = 0;
+		}
+		ps = p;
 	}
 
 	playershot = false;
@@ -537,6 +568,41 @@ void playershoot()
 
 	p = ps;
 	for (ps = 0; ps < 64; ps++) {
+		//Player's bullet collision with enemies before moving player bullet
+		if (levels[1] == true || levels[2] == true || levels[3] == true || levels[4] == true)
+		{
+			for (h = 0; h < 8; h++) {
+				if ((g_sPlayershots[ps].m_cLocation.Y == g_sHugger[h].m_cLocation.Y) && (g_sPlayershots[ps].m_cLocation.X == g_sHugger[h].m_cLocation.X)) {
+					g_sPlayershots[ps].m_cLocation.X = 1;
+					g_sPlayershots[ps].m_cLocation.Y = 0;
+					if (equipWeapons[0] || equipWeapons[1]) { // Pistol and Smg deal 1 damage
+						h_hit[h]++;
+					}
+					if (equipWeapons[2] || equipWeapons[4]) { // Assault rifle and Minigun deal 2 damage
+						h_hit[h] += 2;
+					}
+					if (equipWeapons[3]) { // Sniper deals 5 damage
+						h_hit[h] += 5;
+					}
+					if (h_hit[h] >= 3) { // representing that huggers have 3 HP
+						coins += 5;
+						g_sHugger[h].m_cLocation.X = 0;
+						g_sHugger[h].m_cLocation.Y = 0;
+					}
+					continue;
+				}
+			}
+			for (g = 0; g < 4; g++) {
+				if ((g_sPlayershots[ps].m_cLocation.Y == g_sGunner[g].m_cLocation.Y) && (g_sPlayershots[ps].m_cLocation.X == g_sGunner[g].m_cLocation.X)) {
+					g_sPlayershots[ps].m_cLocation.X = 1;
+					g_sPlayershots[ps].m_cLocation.Y = 0;
+					coins += 5;
+					g_sGunner[g].m_cLocation.X = 0;
+					g_sGunner[g].m_cLocation.Y = 0;
+					continue;
+				}
+			}
+		}
 		if (g_sPlayershots[ps].m_cLocation.X != 1 || g_sPlayershots[ps].m_cLocation.Y != 0) {
 			if (playerdirection[ps] == 1 && bplayershoot[ps] >= 2) { // move up
 				g_sPlayershots[ps].m_cLocation.Y--;
@@ -553,16 +619,29 @@ void playershoot()
 				g_sPlayershots[ps].m_cLocation.X++;
 			}
 		}
-		//Player's bullet collision with enemies
+		//Player's bullet collision with enemies after moving player bullet
+		//Checking for collision before and afer moving player bullets ensure that enemies don't move through player bullets anymore
 		if (levels[1] == true || levels[2] == true || levels[3] == true || levels[4] == true)
 		{
 			for (h = 0; h < 8; h++) {
 				if ((g_sPlayershots[ps].m_cLocation.Y == g_sHugger[h].m_cLocation.Y) && (g_sPlayershots[ps].m_cLocation.X == g_sHugger[h].m_cLocation.X)) {
 					g_sPlayershots[ps].m_cLocation.X = 1;
 					g_sPlayershots[ps].m_cLocation.Y = 0;
-					coins += 5;
-					g_sHugger[h].m_cLocation.X = 0;
-					g_sHugger[h].m_cLocation.Y = 0;
+					if (equipWeapons[0] || equipWeapons[1]) { // Pistol and Smg deal 1 damage
+						h_hit[h]++;
+					}
+					if (equipWeapons[2] || equipWeapons[4]) { // Assault rifle and Minigun deal 2 damage
+						h_hit[h] += 2;
+					}
+					if (equipWeapons[3]) { // Sniper deals 5 damage
+						h_hit[h] += 5;
+					}
+					if (h_hit[h] >= 3) { // representing that huggers have 3 HP
+						h_hit[h] = 0;
+						coins += 5;
+						g_sHugger[h].m_cLocation.X = 0;
+						g_sHugger[h].m_cLocation.Y = 0;
+					}
 				}
 			}
 			for (g = 0; g < 4; g++) {
@@ -601,30 +680,24 @@ void respawn()
 	{
 		g_eGameState = S_LOSESCREEN;
 	}
-
-	if (spawns[0] == true)
-	{
+	if (spawns[0] == true){
 		g_sChar.m_cLocation.X = 5;
 		g_sChar.m_cLocation.Y = 2;
 	}
-	if (spawns[1] == true)
-	{
+	if (spawns[1] == true){
 		g_sChar.m_cLocation.X = 12;
 		g_sChar.m_cLocation.Y = 6;
 	}
-	if (spawns[2] == true)
-	{
+	if (spawns[2] == true){
 		g_sChar.m_cLocation.X = 29;
 		g_sChar.m_cLocation.Y = 6;
 	}
-	if (spawns[3] == true)
-	{
+	if (spawns[3] == true){
 		g_sChar.m_cLocation.X = 46;
 		g_sChar.m_cLocation.Y = 6;
 
 	}
-	if (spawns[4] == true)
-	{
+	if (spawns[4] == true){
 		g_sChar.m_cLocation.X = 63;
 		g_sChar.m_cLocation.Y = 6;
 	}
@@ -648,55 +721,47 @@ void moveCharacter()
 		return;
 
 	// Updating the location of the character based on the key press
-	// providing a beep sound whenver we shift the character
-	if (g_abKeyPressed[K_UP] && map[g_sChar.m_cLocation.Y - 1][g_sChar.m_cLocation.X] == ' ' && bplayer >= 2)
-	{
-		//Beep(1440, 30);
+	if (g_abKeyPressed[K_UP] && map[g_sChar.m_cLocation.Y - 1][g_sChar.m_cLocation.X] == ' ' && bplayer >= 2){
 		g_sChar.m_cLocation.Y--;
 		bplayer = 0;
 	}
-	if (g_abKeyPressed[K_LEFT] && map[g_sChar.m_cLocation.Y][g_sChar.m_cLocation.X - 1] == ' ')
-	{
-		//Beep(1440, 30);
+	if (g_abKeyPressed[K_LEFT] && map[g_sChar.m_cLocation.Y][g_sChar.m_cLocation.X - 1] == ' '){
 		g_sChar.m_cLocation.X--;
 	}
-	if (g_abKeyPressed[K_DOWN] && map[g_sChar.m_cLocation.Y + 1][g_sChar.m_cLocation.X] == ' ' && bplayer >= 2)
-	{
-		//Beep(1440, 30);
+	if (g_abKeyPressed[K_DOWN] && map[g_sChar.m_cLocation.Y + 1][g_sChar.m_cLocation.X] == ' ' && bplayer >= 2){
 		g_sChar.m_cLocation.Y++; 
 		bplayer = 0;
 	}
-	if (g_abKeyPressed[K_RIGHT] && map[g_sChar.m_cLocation.Y][g_sChar.m_cLocation.X + 1] == ' ')
-	{
-		//Beep(1440, 30);
+	if (g_abKeyPressed[K_RIGHT] && map[g_sChar.m_cLocation.Y][g_sChar.m_cLocation.X + 1] == ' '){
 		g_sChar.m_cLocation.X++;
 	}
 	bplayer++;
 	bSomethingHappened = true;
 
-	if (bSomethingHappened)
-	{
+	if (bSomethingHappened){
 		// set the bounce time to some time in the future to prevent accidental triggers
 		g_dBounceTime = g_dElapsedTime + 0.111; // 111ms should be enough
 	}
 
-	if (collision('S') || collision('H') || collision('O') || collision('P'))
-	{
+	if (collision('S') || collision('H') || collision('O') || collision('P')){
 		shop = true;
-	}
-	else
-	{
+		
+	} else {
 		shop = false;
 	}
 
-	if (collision('Q') || collision('U') || collision('I') || collision('T'))
-	{
+	if (collision('Q') || collision('U') || collision('I') || collision('T')){
 		saveProgression();
 		g_bQuitGame = true;
 	}
 
 	if (levels[0] == true)
 	{
+		spawns[1] = false;
+		spawns[2] = false;
+		spawns[3] = false;
+		spawns[4] = false;
+
 		for (aaa = 0; aaa < 8; aaa++) {
 			g_sHugger[aaa].m_cLocation.X = 0;
 			g_sHugger[aaa].m_cLocation.Y = 0;
@@ -711,47 +776,38 @@ void moveCharacter()
 		}
 		aaa = 0;
 
-		spawns[1] = false;
-		spawns[2] = false;
-		spawns[3] = false;
-		spawns[4] = false;
-
-		if (collision('a'))
-		{
+		if (collision('a')){
 			levels[0] = false;
 			levels[1] = true;
 			spawns[0] = true;
 		}
-		else if (collision('b'))
-		{
+		else if (collision('b')){
 			levels[0] = false;
 			levels[2] = true;
 			spawns[0] = true;
 		}
-		else if (collision('c'))
-		{
+		else if (collision('c')){
 			levels[0] = false;
 			levels[3] = true;
 			spawns[0] = true;
 		}
-		else if (collision('d'))
-		{
+		else if (collision('d')){
 			levels[0] = false;
 			levels[4] = true;
 			spawns[0] = true;
 		}
-		else if (collision('%'))
-		{
+		else if (collision('%')){
 			levels[0] = false;
 			inven = false;
 			g_eGameState = S_WINSCREEN;
 		}
 	}
 
-	else if (levels[1] == true)
-	{
+	else if (levels[1] == true){
 		spawns[0] = false;
+
 		while (aaa <= 0) {
+			for (h = 0; h < 8; h++) { h_hit[h] = 0; }
 			g_sHugger[0].m_cLocation.X = 6; g_sHugger[0].m_cLocation.Y = 16;
 			g_sHugger[1].m_cLocation.X = 94; g_sHugger[1].m_cLocation.Y = 4;
 			g_sHugger[2].m_cLocation.X = 84; g_sHugger[2].m_cLocation.Y = 17;
@@ -763,121 +819,165 @@ void moveCharacter()
 			g_sGunner[2].m_cLocation.X = 40; g_sGunner[2].m_cLocation.Y = 8;
 			aaa++;
 		}
-
-		if (collision('%'))
-		{
+		if (collision('%')){
 			levels[1] = false;
 			levels[0] = true;
 			spawns[1] = true;
 		}
-		if (collision('*'))
-		{
+		if (collision('*')){
 			gems[0] = true;
 		}
 	}
-	else if (levels[2] == true)
-	{
+	else if (levels[2] == true){
 		spawns[0] = false;
+
 		while (aaa <= 0) {
-			g_sHugger[0].m_cLocation.X = 5; g_sHugger[0].m_cLocation.Y = 12;
-			g_sHugger[1].m_cLocation.X = 17; g_sHugger[1].m_cLocation.Y = 3;
+			for (h = 0; h < 8; h++) { h_hit[h] = 0; }
+			g_sHugger[0].m_cLocation.X = 6; g_sHugger[0].m_cLocation.Y = 10;
+			g_sHugger[1].m_cLocation.X = 19; g_sHugger[1].m_cLocation.Y = 4;
 			g_sHugger[2].m_cLocation.X = 34; g_sHugger[2].m_cLocation.Y = 11;
 			g_sHugger[3].m_cLocation.X = 54; g_sHugger[3].m_cLocation.Y = 14;
 			g_sHugger[4].m_cLocation.X = 39; g_sHugger[4].m_cLocation.Y = 13;
 			g_sGunner[0].m_cLocation.X = 18; g_sGunner[0].m_cLocation.Y = 14;
 			aaa++;
 		}
-
-		if (collision('%'))
-		{
+		if (collision('%')){
 			levels[2] = false;
 			levels[0] = true;
 			spawns[2] = true;
 		}
-		if (collision('&'))
-		{
+		if (collision('&')){
 			g_sChar.m_cLocation.X = 64;
 			g_sChar.m_cLocation.Y = 2;
+			for (h = 0; h < 8; h++) { h_hit[h] = 0; }
 			g_sHugger[0].m_cLocation.X = 79; g_sHugger[0].m_cLocation.Y = 6;
-			g_sHugger[1].m_cLocation.X = 69; g_sHugger[1].m_cLocation.Y = 10;
+			g_sHugger[1].m_cLocation.X = 69; g_sHugger[1].m_cLocation.Y = 12;
 			g_sHugger[2].m_cLocation.X = 90; g_sHugger[2].m_cLocation.Y = 16;
 			g_sHugger[3].m_cLocation.X = 90; g_sHugger[3].m_cLocation.Y = 19;
-			g_sGunner[0].m_cLocation.X = 77; g_sGunner[0].m_cLocation.Y = 3;
-			g_sGunner[1].m_cLocation.X = 70; g_sGunner[1].m_cLocation.Y = 15;
-			g_sGunner[2].m_cLocation.X = 85; g_sGunner[2].m_cLocation.Y = 16;
+			g_sGunner[0].m_cLocation.X = 81; g_sGunner[0].m_cLocation.Y = 4;
+			g_sGunner[1].m_cLocation.X = 71; g_sGunner[1].m_cLocation.Y = 15;
+			g_sGunner[2].m_cLocation.X = 86; g_sGunner[2].m_cLocation.Y = 16;
 		}
-		if (collision('*'))
-		{
+		if (collision('*')){
 			gems[1] = true;
 		}
 	}
-	else if (levels[3] == true)
-	{
+	else if (levels[3] == true) {
 		spawns[0] = false;
 
-		if (collision('%'))
-		{
+		while (aaa <= 0) {
+			for (h = 0; h < 8; h++) { h_hit[h] = 0; }
+			g_sHugger[0].m_cLocation.X = 24; g_sHugger[0].m_cLocation.Y = 7;
+			g_sHugger[1].m_cLocation.X = 44; g_sHugger[1].m_cLocation.Y = 16;
+			g_sHugger[2].m_cLocation.X = 6; g_sHugger[2].m_cLocation.Y = 16;
+			g_sHugger[3].m_cLocation.X = 41; g_sHugger[3].m_cLocation.Y = 8;
+			g_sGunner[0].m_cLocation.X = 10; g_sGunner[0].m_cLocation.Y = 4;
+			g_sGunner[1].m_cLocation.X = 12; g_sGunner[1].m_cLocation.Y = 15;
+			g_sGunner[2].m_cLocation.X = 33; g_sGunner[2].m_cLocation.Y = 4;
+			g_sGunner[3].m_cLocation.X = 20; g_sGunner[3].m_cLocation.Y = 13;
+			aaa++;
+		}
+		if (collision('%')){
 			levels[3] = false;
 			levels[0] = true;
 			spawns[3] = true;
 		}
-		if (collision('&'))
-		{
+		if (collision('&')){
 			g_sChar.m_cLocation.X = 59;
 			g_sChar.m_cLocation.Y = 2;
+			for (h = 0; h < 8; h++) { h_hit[h] = 0; }
+			g_sGunner[0].m_cLocation.X = 0; g_sGunner[0].m_cLocation.Y = 0;
+			g_sGunner[1].m_cLocation.X = 0; g_sGunner[1].m_cLocation.Y = 0;
+			g_sGunner[2].m_cLocation.X = 0; g_sGunner[2].m_cLocation.Y = 0;
+			g_sGunner[3].m_cLocation.X = 0; g_sGunner[3].m_cLocation.Y = 0;
+			g_sHugger[0].m_cLocation.X = 65; g_sHugger[0].m_cLocation.Y = 17;
+			g_sHugger[1].m_cLocation.X = 80; g_sHugger[1].m_cLocation.Y = 17;
+			g_sHugger[2].m_cLocation.X = 96; g_sHugger[2].m_cLocation.Y = 17;
+			g_sHugger[3].m_cLocation.X = 82; g_sHugger[3].m_cLocation.Y = 23;
+			g_sHugger[4].m_cLocation.X = 78; g_sHugger[4].m_cLocation.Y = 23;
+			g_sHugger[5].m_cLocation.X = 80; g_sHugger[5].m_cLocation.Y = 11;
+			g_sHugger[6].m_cLocation.X = 81; g_sHugger[6].m_cLocation.Y = 11;
+			g_sHugger[7].m_cLocation.X = 82; g_sHugger[7].m_cLocation.Y = 11;
 		}
-		if (collision('*'))
-		{
+		if (collision('*')){
 			gems[2] = true;
 		}
 	}
-	else if (levels[4] == true)
-	{
+	else if (levels[4] == true){
 		spawns[0] = false;
 
-		if (collision('%'))
-		{
+		while (aaa <= 0) {
+			for (h = 0; h < 8; h++) { h_hit[h] = 0; }
+			g_sHugger[0].m_cLocation.X = 8; g_sHugger[0].m_cLocation.Y = 12;
+			g_sHugger[1].m_cLocation.X = 8; g_sHugger[1].m_cLocation.Y = 13;
+			g_sHugger[2].m_cLocation.X = 25; g_sHugger[2].m_cLocation.Y = 12;
+			g_sHugger[3].m_cLocation.X = 26; g_sHugger[3].m_cLocation.Y = 12;
+			g_sHugger[4].m_cLocation.X = 39; g_sHugger[4].m_cLocation.Y = 14;
+			g_sHugger[5].m_cLocation.X = 39; g_sHugger[5].m_cLocation.Y = 15;
+			g_sHugger[6].m_cLocation.X = 39; g_sHugger[6].m_cLocation.Y = 6;
+			g_sHugger[7].m_cLocation.X = 40; g_sHugger[7].m_cLocation.Y = 6;
+			g_sGunner[0].m_cLocation.X = 7; g_sGunner[0].m_cLocation.Y = 14;
+			g_sGunner[1].m_cLocation.X = 27; g_sGunner[1].m_cLocation.Y = 12;
+			g_sGunner[2].m_cLocation.X = 39; g_sGunner[2].m_cLocation.Y = 16;
+			g_sGunner[3].m_cLocation.X = 41; g_sGunner[3].m_cLocation.Y = 6;
+			aaa++;
+		}
+		if (collision('%')){
 			levels[4] = false;
 			levels[0] = true;
 			spawns[4] = true;
 		}
-		if (collision('&'))
-		{
+		if (collision('&')){
 			g_sChar.m_cLocation.X = 60;
 			g_sChar.m_cLocation.Y = 2;
+			for (h = 0; h < 8; h++) { h_hit[h] = 0; }
+			g_sHugger[0].m_cLocation.X = 60; g_sHugger[0].m_cLocation.Y = 12;
+			g_sHugger[1].m_cLocation.X = 61; g_sHugger[1].m_cLocation.Y = 12;
+			g_sHugger[2].m_cLocation.X = 84; g_sHugger[2].m_cLocation.Y = 11;
+			g_sHugger[3].m_cLocation.X = 77; g_sHugger[3].m_cLocation.Y = 4;
+			g_sHugger[4].m_cLocation.X = 60; g_sHugger[4].m_cLocation.Y = 15;
+			g_sHugger[5].m_cLocation.X = 70; g_sHugger[5].m_cLocation.Y = 17;
+			g_sHugger[6].m_cLocation.X = 89; g_sHugger[6].m_cLocation.Y = 19;
+			g_sHugger[7].m_cLocation.X = 84; g_sHugger[7].m_cLocation.Y = 21;
+			g_sGunner[0].m_cLocation.X = 62; g_sGunner[0].m_cLocation.Y = 12;
+			g_sGunner[1].m_cLocation.X = 83; g_sGunner[1].m_cLocation.Y = 9;
+			g_sGunner[2].m_cLocation.X = 60; g_sGunner[2].m_cLocation.Y = 18;
+			g_sGunner[3].m_cLocation.X = 45; g_sGunner[3].m_cLocation.Y = 22;
+			aaa++;
 		}
-		if (collision('*'))
-		{
+		if (collision('*')){
 			gems[3] = true;
 		}
 	}
 }
 void processUserInput()
 {
+	COORD c;
 	// quits the game if player hits the escape key
 	if (g_abKeyPressed[K_ESCAPE]) {
+		saveProgression();
 		g_bQuitGame = true;
 	}
+	//Start menu key presses
 	if (g_eGameState == S_STARTMENU) {
 		if (g_abKeyPressed[K_1]) {
 			g_eGameState = S_CHARACTERCREATION;
 		}
 		if (g_abKeyPressed[K_2]) {
-			loadProgression();
-			g_eGameState = S_GAME;
+				loadProgression();
+				g_eGameState = S_GAME;
 		}
 		if (g_abKeyPressed[K_3]) {
 			g_eGameState = S_INSTRUCTIONS;
 		}
-		if (g_abKeyPressed[K_4]){
-			g_bQuitGame = true;
-		}
 	}
+	//Instructions key presses
 	if (g_eGameState == S_INSTRUCTIONS){
 		if (g_abKeyPressed[K_RETURN]){
 			g_eGameState = S_CHARACTERCREATION;
 		}
 	}
+	//Character creation key presses
 	if (g_eGameState == S_CHARACTERCREATION){
 		if (g_abKeyPressed[K_1]){
 			charArray[0] = true;
@@ -885,6 +985,8 @@ void processUserInput()
 			charArray[2] = false;
 			charArray[3] = false;
 			charArray[4] = false;
+			lives = 7;
+			coins = 0;
 		}
 		if (g_abKeyPressed[K_2]){
 			charArray[1] = true;
@@ -892,6 +994,8 @@ void processUserInput()
 			charArray[2] = false;
 			charArray[3] = false;
 			charArray[4] = false;
+			lives = 5;
+			coins = 40;
 		}
 		if (g_abKeyPressed[K_3]){
 			charArray[2] = true;
@@ -899,6 +1003,8 @@ void processUserInput()
 			charArray[1] = false;
 			charArray[3] = false;
 			charArray[4] = false;
+			lives = 5;
+			coins = 40;
 		}
 		if (g_abKeyPressed[K_4]){
 			charArray[3] = true;
@@ -906,6 +1012,8 @@ void processUserInput()
 			charArray[1] = false;
 			charArray[2] = false;
 			charArray[4] = false;
+			lives = 4;
+			coins = 70;
 		}
 		if (g_abKeyPressed[K_5]){
 			charArray[4] = true;
@@ -913,11 +1021,14 @@ void processUserInput()
 			charArray[1] = false;
 			charArray[2] = false;
 			charArray[3] = false;
+			lives = 3;
+			coins = 100;
 		}
 		if (g_abKeyPressed[K_SPACE] && (charArray[0] == true || charArray[1] == true || charArray[2] == true || charArray[3] == true || charArray[4] == true)){
 			g_eGameState = S_GAME;
 		}
 	}
+	//Win and Lose screen key presses
 	if (g_eGameState == S_WINSCREEN) {
 		if (g_abKeyPressed[K_RETURN]){
 			g_eGameState = S_STARTMENU;
@@ -955,15 +1066,11 @@ void renderSplashScreen()
 	ifstream splashscreenFile;
 	int i = 0;
 
-	splashscreenFile.open("SplashScreen.txt");
-	if (splashscreenFile.is_open())
-	{
-		while (getline(splashscreenFile, splashscreen))
-		{
-			for (a = 0; a < splashscreen.length(); a++)
-			{
-				if (splashscreen[a] == 'F')
-				{
+	splashscreenFile.open("TextFiles/SplashScreen.txt");
+	if (splashscreenFile.is_open()){
+		while (getline(splashscreenFile, splashscreen)){
+			for (a = 0; a < splashscreen.length(); a++){
+				if (splashscreen[a] == 'F'){
 					splashscreen[a] = 178;
 				}
 				map[i][a] = splashscreen[a];
@@ -973,18 +1080,15 @@ void renderSplashScreen()
 			i++;
 			g_Console.writeToBuffer(c, splashscreen, 0x0B);
 
-			if (g_dElapsedTime > 0.5)
-			{
+			if (g_dElapsedTime > 0.5){
 				c.X++;
 				g_Console.writeToBuffer(c, splashscreen, 0x0C);
 			}
-			if (g_dElapsedTime > 1)
-			{
+			if (g_dElapsedTime > 1){
 				c.X++;
 				g_Console.writeToBuffer(c, splashscreen, 0x0A);
 			}
-			if (g_dElapsedTime > 1.5)
-			{
+			if (g_dElapsedTime > 1.5){
 				c.X++;
 				g_Console.writeToBuffer(c, splashscreen, 0x09);
 			}
@@ -1032,11 +1136,9 @@ void renderInstructions()
 	ifstream instructionFile;
 	int i = 0;
 
-	instructionFile.open("Instructions.txt");
-	if (instructionFile.is_open())
-	{
-		while (getline(instructionFile, instructions))
-		{
+	instructionFile.open("Textfiles/Instructions.txt");
+	if (instructionFile.is_open()){
+		while (getline(instructionFile, instructions)){
 			c.X = 0;
 			c.Y = i;
 			i++;
@@ -1054,13 +1156,10 @@ void renderCharacterCreation()
 	ifstream creationFile;
 	int i = 0;
 	
-	creationFile.open("CharacterCreation.txt");
-	if (creationFile.is_open())
-	{
-		while (getline(creationFile, creation))
-		{
-			for (a = 0; a < creation.length(); a++)
-			{
+	creationFile.open("Textfiles/CharacterCreation.txt");
+	if (creationFile.is_open()){
+		while (getline(creationFile, creation)){
+			for (a = 0; a < creation.length(); a++){
 				switch (creation[a]) {
 				case '6':
 					creation[a] = (char)2;
@@ -1087,8 +1186,7 @@ void renderCharacterCreation()
 	}
 	creationFile.close();
 
-	if (charArray[0] == true)
-	{
+	if (charArray[0] == true){
 		c.X = 54;
 		c.Y = 11;
 		g_Console.writeToBuffer(c, names[0], 0x0B);
@@ -1096,8 +1194,7 @@ void renderCharacterCreation()
 		c.Y = 19;
 		g_Console.writeToBuffer(c, (char)2, 0x0F);
 	}
-	if (charArray[1] == true)
-	{
+	if (charArray[1] == true){
 		c.X = 54;
 		c.Y = 11;
 		g_Console.writeToBuffer(c, names[1], 0x0B);
@@ -1105,8 +1202,7 @@ void renderCharacterCreation()
 		c.Y = 19;
 		g_Console.writeToBuffer(c, (char)3, 0x0C);
 	}
-	if (charArray[2] == true)
-	{
+	if (charArray[2] == true){
 		c.X = 54;
 		c.Y = 11;
 		g_Console.writeToBuffer(c, names[2], 0x0B);
@@ -1114,8 +1210,7 @@ void renderCharacterCreation()
 		c.Y = 19;
 		g_Console.writeToBuffer(c, (char)4, 0x09);
 	}
-	if (charArray[3] == true)
-	{
+	if (charArray[3] == true){
 		c.X = 54;
 		c.Y = 11;
 		g_Console.writeToBuffer(c, names[3], 0x0B);
@@ -1123,8 +1218,7 @@ void renderCharacterCreation()
 		c.Y = 19;
 		g_Console.writeToBuffer(c, (char)5, 0x0A);
 	}
-	if (charArray[4] == true)
-	{
+	if (charArray[4] == true){
 		c.X = 54;
 		c.Y = 11;
 		g_Console.writeToBuffer(c, names[4], 0x0B);
@@ -1215,19 +1309,14 @@ void renderMap()
 	int i = 0;
 
 	//Render Headquarters
-	if (levels[0] == true)
-		{
+	if (levels[0] == true){
 			string headquarters;
 			ifstream headquartersFile;
 
-			headquartersFile.open("Headquarters.txt");
-			if (headquartersFile.is_open())
-			{
-
-				while (getline(headquartersFile, headquarters))
-				{
-					for (a = 0; a < headquarters.length(); a++)
-					{
+			headquartersFile.open("Textfiles/Headquarters.txt");
+			if (headquartersFile.is_open()){
+				while (getline(headquartersFile, headquarters)){
+					for (a = 0; a < headquarters.length(); a++){
 						switch (headquarters[a]) {
 						case '#':
 							headquarters[a] = 223;
@@ -1236,52 +1325,37 @@ void renderMap()
 							headquarters[a] = 219;
 							break;
 						case 'u':
-							if (gems[0] == true)
-							{
+							if (gems[0] == true){
 								headquarters[a] = '*';
-							}
-							else
-							{
+							} else {
 								headquarters[a] = 255;
 							}
 							break;
 						case 'i':
-							if (gems[1] == true)
-							{
+							if (gems[1] == true){
 								headquarters[a] = '*';
-							}
-							else
-							{
+							} else {
 								headquarters[a] = 255;
 							}
 							break;
 						case 'o':
-							if (gems[2] == true)
-							{
+							if (gems[2] == true){
 								headquarters[a] = '*';
-							}
-							else
-							{
+							} else {
 								headquarters[a] = 255;
 							}
 							break;
 						case 'p':
-							if (gems[3] == true)
-							{
+							if (gems[3] == true){
 								headquarters[a] = '*';
-							}
-							else
-							{
+							} else {
 								headquarters[a] = 255;
 							}
 							break;
 						case '%':
-							if (gems[0] == true && gems[1] == true && gems[2] == true && gems[3] == true)
-							{
+							if (gems[0] == true && gems[1] == true && gems[2] == true && gems[3] == true){
 								headquarters[a] = '%';
-							}
-							else
-							{
+							} else {
 								headquarters[a] = 255;
 							}
 						}
@@ -1296,19 +1370,15 @@ void renderMap()
 			headquartersFile.close();
 		}
 	//Render Level A
-     if (levels[1] == true)
-	{
+	else if (levels[1] == true){
 		string level1;
 		ifstream level1File;
 		i = 0;
 
-		level1File.open("LevelA.txt");
-		if (level1File.is_open())
-		{
-			while (getline(level1File, level1))
-			{
-				for (a = 0; a < level1.length(); a++)
-				{
+		level1File.open("Textfiles/LevelA.txt");
+		if (level1File.is_open()){
+			while (getline(level1File, level1)){
+				for (a = 0; a < level1.length(); a++){
 					switch (level1[a]) {
 					case '#':
 						level1[a] = 223;
@@ -1317,8 +1387,7 @@ void renderMap()
 						level1[a] = 219;
 						break;
 					case '*':
-						if (gems[0] == true)
-						{
+						if (gems[0] == true){
 							level1[a] = 255;
 						}
 					}
@@ -1333,18 +1402,15 @@ void renderMap()
 		level1File.close();
 	}
 	//Render Level B
-	else if (levels[2] == true)
-	{
+	else if (levels[2] == true){
 		string level2;
 		ifstream level2File;
 		i = 0;
-		level2File.open("LevelB.txt");
-		if (level2File.is_open())
-		{
-			while (getline(level2File, level2))
-			{
-				for (a = 0; a < level2.length(); a++)
-				{
+
+		level2File.open("Textfiles/LevelB.txt");
+		if (level2File.is_open()){
+			while (getline(level2File, level2)){
+				for (a = 0; a < level2.length(); a++){
 					switch (level2[a]) {
 					case '#':
 						level2[a] = 223;
@@ -1353,8 +1419,7 @@ void renderMap()
 						level2[a] = 219;
 						break;
 					case '*':
-						if (gems[1] == true)
-						{
+						if (gems[1] == true){
 							level2[a] = 255;
 						}
 					}
@@ -1369,18 +1434,15 @@ void renderMap()
 		level2File.close();
 	}
 	//Render Level C
-	else if (levels[3] == true)
-	{
+	else if (levels[3] == true){
 		string level3;
 		ifstream level3File;
 		i = 0;
-		level3File.open("LevelC.txt");
-		if (level3File.is_open())
-		{
-			while (getline(level3File, level3))
-			{
-				for (a = 0; a < level3.length(); a++)
-				{
+
+		level3File.open("Textfiles/LevelC.txt");
+		if (level3File.is_open()){
+			while (getline(level3File, level3)){
+				for (a = 0; a < level3.length(); a++){
 					switch (level3[a]) {
 					case '#':
 						level3[a] = 223;
@@ -1389,8 +1451,7 @@ void renderMap()
 						level3[a] = 219;
 						break;
 					case '*':
-						if (gems[2] == true)
-						{
+						if (gems[2] == true){
 							level3[a] = 255;
 						}
 					}
@@ -1405,18 +1466,15 @@ void renderMap()
 		level3File.close();
 	}
 	//Render Level D
-	else if (levels[4] == true)
-	{
+	else if (levels[4] == true){
 		string level4;
 		ifstream level4File;
 		i = 0;
-		level4File.open("LevelD.txt");
-		if (level4File.is_open())
-		{
-			while (getline(level4File, level4))
-			{
-				for (a = 0; a < level4.length(); a++)
-				{
+
+		level4File.open("Textfiles/LevelD.txt");
+		if (level4File.is_open()){
+			while (getline(level4File, level4)){
+				for (a = 0; a < level4.length(); a++){
 					switch (level4[a]) {
 					case '#':
 						level4[a] = 223;
@@ -1425,8 +1483,7 @@ void renderMap()
 						level4[a] = 219;
 						break;
 					case '*':
-						if (gems[3] == true)
-						{
+						if (gems[3] == true){
 							level4[a] = 255;
 						}
 					}
@@ -1440,21 +1497,16 @@ void renderMap()
 		}
 		level4File.close();
 	}
-
 	//Render Shop
-	if (shop == true)
-	{
+	if (shop == true){
 		string shop;
 		ifstream shopFile;
 		i = 0;
 
-		shopFile.open("Shop.txt");
-		if (shopFile.is_open())
-		{
-			while (getline(shopFile, shop))
-			{
-				for (a = 0; a < shop.length(); a++)
-				{
+		shopFile.open("Textfiles/Shop.txt");
+		if (shopFile.is_open()){
+			while (getline(shopFile, shop)){
+				for (a = 0; a < shop.length(); a++){
 					switch (shop[a]) {
 					case '#':
 						shop[a] = 223;
@@ -1473,45 +1525,36 @@ void renderMap()
 		shopFile.close();
 
 		//Buying Smg
-		if (g_abKeyPressed[K_2] && boughtWeapons[1] == false && (coins >= 40))
-		{
+		if (g_abKeyPressed[K_2] && boughtWeapons[1] == false && (coins >= 40)){
 			coins -= 40;
 			boughtWeapons[1] = true;
 		}
 		//Buying Rifle
-		if (g_abKeyPressed[K_3] && boughtWeapons[2] == false && (coins >= 70))
-		{
+		if (g_abKeyPressed[K_3] && boughtWeapons[2] == false && (coins >= 70)){
 			 coins -= 70;
 			 boughtWeapons[2] = true;
 		}
 		//Buying Sniper
-		if (g_abKeyPressed[K_4] && boughtWeapons[3] == false && (coins >= 100))
-		{
+		if (g_abKeyPressed[K_4] && boughtWeapons[3] == false && (coins >= 100)){
 			coins -= 100;
 			boughtWeapons[3] = true;
 		}
 		//Buying Minigun
-		if (g_abKeyPressed[K_5] && boughtWeapons[4] == false && (coins >= 150))
-		{
+		if (g_abKeyPressed[K_5] && boughtWeapons[4] == false && (coins >= 150)){
 			coins -= 150;
 			boughtWeapons[4] = true;
 		}
 	}
-
 	//Render Inventory
-	if (inven == true)
-	{
+	if (inven == true){
 		string inventory;
 		ifstream inventoryFile;
 		i = 0;
 
-		inventoryFile.open("Inventory.txt");
-		if (inventoryFile.is_open())
-		{
-			while (getline(inventoryFile, inventory))
-			{
-				for (a = 0; a < inventory.length(); a++)
-				{
+		inventoryFile.open("Textfiles/Inventory.txt");
+		if (inventoryFile.is_open()){
+			while (getline(inventoryFile, inventory)){
+				for (a = 0; a < inventory.length(); a++){
 					switch (inventory[a]) {
 					case '#':
 						inventory[a] = 223;
@@ -1523,116 +1566,85 @@ void renderMap()
 						inventory[a] = ' ';
 						break;
 					case '1':
-						if (boughtWeapons[0] == true)
-						{
+						if (boughtWeapons[0] == true){
 							inventory[a] = '1';
-						}
-						else
-						{
+						} else {
 							inventory[a] = 'x';
 						}
 						break;
 					case '2':
-						if (boughtWeapons[1] == true)
-						{
-							if (shop == true)
-							{
+						if (boughtWeapons[1] == true){
+							if (shop == true){
 								c.X = 52;
 								c.Y = 22;
 								g_Console.writeToBuffer(c, "Sold Out ", 0x06);
 							}
 							inventory[a] = '2';
-						}
-						else
-						{
+						} else {
 							inventory[a] = 'x';
 						}
 						break;
 					case '3':
-						if (boughtWeapons[2] == true)
-						{
-							if (shop == true)
-							{
+						if (boughtWeapons[2] == true){
+							if (shop == true){
 								c.X = 52;
 								c.Y = 23;
 								g_Console.writeToBuffer(c, "Sold Out ", 0x07);
 							}
 							inventory[a] = '3';
-						}
-						else
-						{
+						} else {
 							inventory[a] = 'x';
 						}
 						break;
 					case '4':
-						if (boughtWeapons[3] == true)
-						{
-							if (shop == true)
-							{
+						if (boughtWeapons[3] == true){
+							if (shop == true){
 								c.X = 52;
 								c.Y = 24;
 								g_Console.writeToBuffer(c, "Sold Out ", 0x08);
 							}
 							inventory[a] = '4';
-						}
-						else
-						{
+						} else {
 							inventory[a] = 'x';
 						}
 						break;
 					case '5':
-						if (boughtWeapons[4] == true)
-						{
-							if (shop == true)
-							{
+						if (boughtWeapons[4] == true){
+							if (shop == true){
 								c.X = 52;
 								c.Y = 25;
 								g_Console.writeToBuffer(c, "Sold Out ", 0x09);
 							}
 							inventory[a] = '5';
-						}
-						else
-						{
+						} else {
 							inventory[a] = 'x';
 						}
 						break;
 					case '6':
-						if (gems[0] == true)
-						{
+						if (gems[0] == true){
 							inventory[a] = '*';
-						}
-						else
-						{
+						} else {
 							inventory[a] = 'x';
 						}
 						break;
 					case '7':
-						if (gems[1] == true)
-						{
+						if (gems[1] == true){
 							inventory[a] = '*';
-						}
-						else
-						{
+						} else {
 							inventory[a] = 'x';
 						}
 						break;
 					case '8':
-						if (gems[2] == true)
-						{
+						if (gems[2] == true){
 							inventory[a] = '*';
-						}
-						else
-						{
+						} else {
 							inventory[a] = 'x';
 						}
 						break;
 					case '9':
-						if (gems[3] == true)
-						{
+						if (gems[3] == true){
 							inventory[a] = '*';
-						}
-						else
-						{
+						} else {
 							inventory[a] = 'x';
 						}
 						break;
@@ -1655,32 +1667,27 @@ void renderMap()
 		c.Y = 21;
 		g_Console.writeToBuffer(c, to_string(coins), 0x0F);
 		//Render Current Gun
-		if (equipWeapons[0] == true)
-		{
+		if (equipWeapons[0] == true){
 			c.X = 4;
 			c.Y = 24;
 			g_Console.writeToBuffer(c, "Pistol", 0x08);
 		}
-		if (equipWeapons[1] == true)
-		{
+		if (equipWeapons[1] == true){
 			c.X = 4;
 			c.Y = 24;
 			g_Console.writeToBuffer(c, "Smg", 0x08);
 		}
-		if (equipWeapons[2] == true)
-		{
+		if (equipWeapons[2] == true){
 			c.X = 4;
 			c.Y = 24;
 			g_Console.writeToBuffer(c, "Rifle", 0x08);
 		}
-		if (equipWeapons[3] == true)
-		{
+		if (equipWeapons[3] == true){
 			c.X = 4;
 			c.Y = 24;
 			g_Console.writeToBuffer(c, "Sniper", 0x08);
 		}
-		if (equipWeapons[4] == true)
-		{
+		if (equipWeapons[4] == true){
 			c.X = 4;
 			c.Y = 24;
 			g_Console.writeToBuffer(c, "Minigun", 0x08);
@@ -1690,95 +1697,78 @@ void renderMap()
 
 void renderCharacter()
 {
-    // Draw the location of the character
 	COORD c;
 
-	if (collision('q'))
-	{
+	if (collision('q')){
 		charArray[0] = true;
 		charArray[1] = false;
 		charArray[2] = false;
 		charArray[3] = false;
 		charArray[4] = false;
 	}
-	if (collision('w'))
-	{
+	if (collision('w')){
 		charArray[1] = true;
 		charArray[0] = false;
 		charArray[2] = false;
 		charArray[3] = false;
 		charArray[4] = false;
 	}
-	if (collision('e'))
-	{
+	if (collision('e')){
 		charArray[2] = true;
 		charArray[0] = false;
 		charArray[1] = false;
 		charArray[3] = false;
 		charArray[4] = false;
 	}
-	if (collision('r'))
-	{
+	if (collision('r')){
 		charArray[3] = true;
 		charArray[0] = false;
 		charArray[1] = false;
 		charArray[2] = false;
 		charArray[4] = false;
 	}
-	if (collision('t'))
-	{
+	if (collision('t')){
 		charArray[4] = true;
 		charArray[0] = false;
 		charArray[1] = false;
 		charArray[2] = false;
 		charArray[3] = false;
 	}
-
 	//Characters' rendering
-	if (charArray[0] == true)
-	{
-		if (inven == true)
-		{
+	if (charArray[0] == true){
+		if (inven == true){
 			c.X = 8;
 			c.Y = 20;
 			g_Console.writeToBuffer(c, names[0], 0x0F);
 		}
 		g_Console.writeToBuffer(g_sChar.m_cLocation, (char)2, 0x0F);
 	}
-	else if (charArray[1] == true)
-	{
-		if (inven == true)
-		{
+	else if (charArray[1] == true){
+		if (inven == true){
 			c.X = 8;
 			c.Y = 20;
 			g_Console.writeToBuffer(c, names[1], 0x0F);
 		}
 		g_Console.writeToBuffer(g_sChar.m_cLocation, (char)3, 0x0C);
 	}
-	else if (charArray[2] == true)
-	{
-		if (inven == true)
-		{
+	else if (charArray[2] == true){
+		if (inven == true){
 			c.X = 8;
 			c.Y = 20;
 			g_Console.writeToBuffer(c, names[2], 0x0F);
 		}
 		g_Console.writeToBuffer(g_sChar.m_cLocation, (char)4, 0x09);
 	}
-	else if (charArray[3] == true)
-	{
-		if (inven == true)
-		{
+	else if (charArray[3] == true){
+		if (inven == true){
 			c.X = 8;
 			c.Y = 20;
 			g_Console.writeToBuffer(c, names[3], 0x0F);
 		}
 		g_Console.writeToBuffer(g_sChar.m_cLocation, (char)5, 0x0A);
 	}
-	else if (charArray[4] == true)
-	{
-		if (inven == true)
-		{
+	else if (charArray[4] == true){
+		if (inven == true){
 			c.X = 8;
 			c.Y = 20;
 			g_Console.writeToBuffer(c, names[4], 0x0F);
@@ -1790,8 +1780,7 @@ bool collision(char collider)
 {
 	bool collided = false;
 
-	if (map[g_sChar.m_cLocation.Y - 1][g_sChar.m_cLocation.X] == collider || map[g_sChar.m_cLocation.Y][g_sChar.m_cLocation.X - 1] == collider || map[g_sChar.m_cLocation.Y + 1][g_sChar.m_cLocation.X] == collider || map[g_sChar.m_cLocation.Y][g_sChar.m_cLocation.X + 1] == collider)
-	{
+	if (map[g_sChar.m_cLocation.Y - 1][g_sChar.m_cLocation.X] == collider || map[g_sChar.m_cLocation.Y][g_sChar.m_cLocation.X - 1] == collider || map[g_sChar.m_cLocation.Y + 1][g_sChar.m_cLocation.X] == collider || map[g_sChar.m_cLocation.Y][g_sChar.m_cLocation.X + 1] == collider){
 		collided = true;
 	}
 	return collided;
@@ -1822,7 +1811,7 @@ void renderToScreen()
 
 void saveProgression()
 {
-	ofstream saveGame("saveGame.txt");
+	ofstream saveGame("Textfiles/SaveGame.txt");
 	saveGame << coins << endl;
 	saveGame << lives << endl;
 	for (int a = 0; a < 5; a++)
@@ -1846,7 +1835,7 @@ void saveProgression()
 void loadProgression()
 {
 	string loadGameFile = "";
-	ifstream loadGame("saveGame.txt");
+	ifstream loadGame("Textfiles/SaveGame.txt");
 
 	getline(loadGame, loadGameFile);
 	coins = stoi(loadGameFile);
