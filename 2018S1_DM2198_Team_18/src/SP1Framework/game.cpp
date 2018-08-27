@@ -1242,7 +1242,7 @@ void renderWin()
 	int i = 0;
 	PlaySound(NULL, NULL, 0);
 	PlaySound(TEXT("miiWin.wav"), NULL, SND_LOOP | SND_ASYNC | SND_FILENAME);
-	winFile.open("WinScreen.txt");
+	winFile.open("Textfiles/WinScreen.txt");
 	if (winFile.is_open())
 	{
 		while (getline(winFile, winScreen))
@@ -1276,7 +1276,7 @@ void renderLose()
 	int i = 0;
 
 	PlaySound(TEXT("lose_Audio.wav"), NULL, SND_ASYNC | SND_FILENAME);
-	loseFile.open("TextFiles/LoseScreen.txt");
+	loseFile.open("Textfiles/LoseScreen.txt");
 	if (loseFile.is_open())
 	{
 		while (getline(loseFile, loseScreen))
