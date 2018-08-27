@@ -25,8 +25,6 @@ bool gems[4] = { false };
 bool equipWeapons[5] = { false };
 bool boughtWeapons[5] = { false };
 bool lost = false;
-int a = 0, aaa = 0;
-
 bool inven = true;
 bool shop = false;
 int lives = 0;
@@ -1106,7 +1104,7 @@ void renderStartMenu()
 	int i = 0;
 	
 	PlaySound(TEXT("game_music.wav"), NULL, SND_LOOP | SND_ASYNC | SND_FILENAME);
-	menuFile.open("MainMenu.txt");
+	menuFile.open("TextFiles/StartMenu.txt");
 	if (menuFile.is_open())
 	{
 		while (getline(menuFile, menu))
