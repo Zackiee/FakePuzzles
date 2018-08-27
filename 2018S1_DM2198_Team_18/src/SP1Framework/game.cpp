@@ -854,6 +854,18 @@ void moveCharacter()
 	else if (levels[3] == true) {
 		spawns[0] = false;
 
+		while (aaa <= 0) {
+			for (h = 0; h < 8; h++) { h_hit[h] = 0; }
+			g_sHugger[0].m_cLocation.X = 24; g_sHugger[0].m_cLocation.Y = 7;
+			g_sHugger[1].m_cLocation.X = 44; g_sHugger[1].m_cLocation.Y = 16;
+			g_sHugger[2].m_cLocation.X = 6; g_sHugger[2].m_cLocation.Y = 16;
+			g_sHugger[3].m_cLocation.X = 41; g_sHugger[3].m_cLocation.Y = 8;
+			g_sGunner[0].m_cLocation.X = 10; g_sGunner[0].m_cLocation.Y = 4;
+			g_sGunner[1].m_cLocation.X = 12; g_sGunner[1].m_cLocation.Y = 15;
+			g_sGunner[2].m_cLocation.X = 33; g_sGunner[2].m_cLocation.Y = 4;
+			g_sGunner[3].m_cLocation.X = 20; g_sGunner[3].m_cLocation.Y = 13;
+			aaa++;
+		}
 		if (collision('%')){
 			levels[3] = false;
 			levels[0] = true;
@@ -862,6 +874,19 @@ void moveCharacter()
 		if (collision('&')){
 			g_sChar.m_cLocation.X = 59;
 			g_sChar.m_cLocation.Y = 2;
+			for (h = 0; h < 8; h++) { h_hit[h] = 0; }
+			g_sGunner[0].m_cLocation.X = 0; g_sGunner[0].m_cLocation.Y = 0;
+			g_sGunner[1].m_cLocation.X = 0; g_sGunner[1].m_cLocation.Y = 0;
+			g_sGunner[2].m_cLocation.X = 0; g_sGunner[2].m_cLocation.Y = 0;
+			g_sGunner[3].m_cLocation.X = 0; g_sGunner[3].m_cLocation.Y = 0;
+			g_sHugger[0].m_cLocation.X = 65; g_sHugger[0].m_cLocation.Y = 17;
+			g_sHugger[1].m_cLocation.X = 80; g_sHugger[1].m_cLocation.Y = 17;
+			g_sHugger[2].m_cLocation.X = 96; g_sHugger[2].m_cLocation.Y = 17;
+			g_sHugger[3].m_cLocation.X = 82; g_sHugger[3].m_cLocation.Y = 23;
+			g_sHugger[4].m_cLocation.X = 78; g_sHugger[4].m_cLocation.Y = 23;
+			g_sHugger[5].m_cLocation.X = 80; g_sHugger[5].m_cLocation.Y = 11;
+			g_sHugger[6].m_cLocation.X = 81; g_sHugger[6].m_cLocation.Y = 11;
+			g_sHugger[7].m_cLocation.X = 82; g_sHugger[7].m_cLocation.Y = 11;
 		}
 		if (collision('*')){
 			gems[2] = true;
@@ -870,6 +895,22 @@ void moveCharacter()
 	else if (levels[4] == true){
 		spawns[0] = false;
 
+		while (aaa <= 0) {
+			for (h = 0; h < 8; h++) { h_hit[h] = 0; }
+			g_sHugger[0].m_cLocation.X = 8; g_sHugger[0].m_cLocation.Y = 12;
+			g_sHugger[1].m_cLocation.X = 8; g_sHugger[1].m_cLocation.Y = 13;
+			g_sHugger[2].m_cLocation.X = 25; g_sHugger[2].m_cLocation.Y = 12;
+			g_sHugger[3].m_cLocation.X = 26; g_sHugger[3].m_cLocation.Y = 12;
+			g_sHugger[4].m_cLocation.X = 39; g_sHugger[4].m_cLocation.Y = 14;
+			g_sHugger[5].m_cLocation.X = 39; g_sHugger[5].m_cLocation.Y = 15;
+			g_sHugger[6].m_cLocation.X = 39; g_sHugger[6].m_cLocation.Y = 6;
+			g_sHugger[7].m_cLocation.X = 40; g_sHugger[7].m_cLocation.Y = 6;
+			g_sGunner[0].m_cLocation.X = 7; g_sGunner[0].m_cLocation.Y = 14;
+			g_sGunner[1].m_cLocation.X = 27; g_sGunner[1].m_cLocation.Y = 12;
+			g_sGunner[2].m_cLocation.X = 39; g_sGunner[2].m_cLocation.Y = 16;
+			g_sGunner[3].m_cLocation.X = 41; g_sGunner[3].m_cLocation.Y = 6;
+			aaa++;
+		}
 		if (collision('%')){
 			levels[4] = false;
 			levels[0] = true;
@@ -878,6 +919,20 @@ void moveCharacter()
 		if (collision('&')){
 			g_sChar.m_cLocation.X = 60;
 			g_sChar.m_cLocation.Y = 2;
+			for (h = 0; h < 8; h++) { h_hit[h] = 0; }
+			g_sHugger[0].m_cLocation.X = 60; g_sHugger[0].m_cLocation.Y = 12;
+			g_sHugger[1].m_cLocation.X = 61; g_sHugger[1].m_cLocation.Y = 12;
+			g_sHugger[2].m_cLocation.X = 84; g_sHugger[2].m_cLocation.Y = 11;
+			g_sHugger[3].m_cLocation.X = 77; g_sHugger[3].m_cLocation.Y = 4;
+			g_sHugger[4].m_cLocation.X = 60; g_sHugger[4].m_cLocation.Y = 15;
+			g_sHugger[5].m_cLocation.X = 70; g_sHugger[5].m_cLocation.Y = 17;
+			g_sHugger[6].m_cLocation.X = 89; g_sHugger[6].m_cLocation.Y = 19;
+			g_sHugger[7].m_cLocation.X = 84; g_sHugger[7].m_cLocation.Y = 21;
+			g_sGunner[0].m_cLocation.X = 62; g_sGunner[0].m_cLocation.Y = 12;
+			g_sGunner[1].m_cLocation.X = 83; g_sGunner[1].m_cLocation.Y = 9;
+			g_sGunner[2].m_cLocation.X = 60; g_sGunner[2].m_cLocation.Y = 18;
+			g_sGunner[3].m_cLocation.X = 45; g_sGunner[3].m_cLocation.Y = 22;
+			aaa++;
 		}
 		if (collision('*')){
 			gems[3] = true;
