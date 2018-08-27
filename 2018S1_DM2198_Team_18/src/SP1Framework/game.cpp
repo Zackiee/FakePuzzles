@@ -821,9 +821,6 @@ void processUserInput()
 		if (g_abKeyPressed[K_3]) {
 			g_eGameState = S_INSTRUCTIONS;
 		}
-		if (g_abKeyPressed[K_4]) {
-			g_bQuitGame = true;
-		}
 	}
 	//Instructions key presses
 	if (g_eGameState == S_INSTRUCTIONS){
@@ -948,7 +945,7 @@ void renderStartMenu()
 	ifstream menuFile;
 	int i = 0;
 	
-	menuFile.open("MainMenu.txt");
+	menuFile.open("StartMenu.txt");
 	if (menuFile.is_open()){
 		while (getline(menuFile, menu)){
 			for (a = 0; a < menu.length(); a++){
@@ -1615,7 +1612,7 @@ void renderToScreen()
 
 void saveProgression()
 {
-	ofstream saveGame("saveGame.txt");
+	ofstream saveGame("SaveGame.txt");
 	saveGame << coins << endl;
 	saveGame << lives << endl;
 	for (int a = 0; a < 5; a++)
@@ -1639,7 +1636,7 @@ void saveProgression()
 void loadProgression()
 {
 	string loadGameFile = "";
-	ifstream loadGame("saveGame.txt");
+	ifstream loadGame("SaveGame.txt");
 
 	getline(loadGame, loadGameFile);
 	coins = stoi(loadGameFile);
