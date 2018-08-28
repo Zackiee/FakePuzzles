@@ -755,6 +755,7 @@ void moveCharacter()
 
 	if (levels[0] == true)
 	{
+		saveProgression();
 		spawns[1] = false;
 		spawns[2] = false;
 		spawns[3] = false;
@@ -798,6 +799,7 @@ void moveCharacter()
 			levels[0] = false;
 			inven = false;
 			g_eGameState = S_WINSCREEN;
+			
 		}
 	}
 
@@ -962,7 +964,7 @@ void processUserInput()
 		if (g_abKeyPressed[K_1]) {
 			g_eGameState = S_CHARACTERCREATION;
 		}
-		if (g_abKeyPressed[K_2]) {
+		if (g_abKeyPressed[K_2]) {		
 				loadProgression();
 				g_eGameState = S_GAME;
 		}
@@ -1263,10 +1265,6 @@ void renderWin()
 		}
 	}
 	winFile.close();
-
-	c.X = 20;
-	c.Y = 24;
-	g_Console.writeToBuffer(c, "Press return to proceed, Press escape to quit the game", 0x08);
 }
 
 void renderLose()
@@ -1297,10 +1295,6 @@ void renderLose()
 		}
 	}
 	loseFile.close();
-
-	c.X = 7;
-	c.Y = 24;
-	g_Console.writeToBuffer(c, "This is so sad, Alexa play Despacinno", 0x0C);
 }
 void renderMap()
 {
@@ -1859,4 +1853,14 @@ void loadProgression()
 	{
 		boughtWeapons[a] = loadGameFile[a] == '1' ? true : false;
 	}
+
+	levels[0] = true;
+	levels[1] = false;
+	levels[2] = false;
+	levels[3] = false;
+	levels[4] = false;
+	inven = true;
+
+	g_sChar.m_cLocation.X = 46;
+	g_sChar.m_cLocation.Y = 9;
 }

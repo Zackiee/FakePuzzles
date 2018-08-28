@@ -1,13 +1,23 @@
-               w                     w     wwwwwwwwwwwwwwwww  ww         w      w
-               w                     w            w           w w        w      w
-               w                     w            w           w  w       w      w       
-               w                     w            w           w   w      w      w          
-               w          w          w            w           w    w     w      w        
-               w         w w         w            w           w     w    w      w   
-               w         w w         w            w           w      w   w      w     
-               w        w   w        w            w           w       w  w      w     
-                w       w   w       w             w           w        w w      w
-                 w     w     w     w              w           w         ww      w     
-                   www         www         wwwwwwwwwwwwwwww   w          w     w w
-                                                                              w   w
-                                                                               w w
+
+
+
+                     
+
+                                   W       W    W W W   W        W
+                                   W       W   W     W  W        W
+                                   W       W   W     W  W        W
+                                     W W W     W     W  W        W
+                                       W       W     W  W        W
+                                       W       W     W  W        W
+                                       W        W W W     W W W W
+                                             
+                                W             W   W     W         W
+                                 W           W    W     W       W W
+                                  W         W     W     W     W   W
+                                   W   W   W      W     W   W     W
+                                    W W W W       W     W W       W
+                                     W   W        W     W         W
+                                                 
+
+                                  Press Return to go back to Start Menu
+                                  Press Escape to quit the Game
