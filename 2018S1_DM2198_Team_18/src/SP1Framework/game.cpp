@@ -1070,13 +1070,299 @@ void loadProgression()
 	getline(loadGame, loadGameFile);
 	for (int a = 0; a < loadGameFile.length(); a++)
 	{
-		gems[a] = loadGameFile[a] == '1' ? true : false;
+		spawns[1] = false;
+		spawns[2] = false;
+		spawns[3] = false;
+		spawns[4] = false;
+
+		for (aaa = 0; aaa < 8; aaa++) {
+			g_sHugger[aaa].m_cLocation.X = 0;
+			g_sHugger[aaa].m_cLocation.Y = 0;
+		}
+		for (aaa = 0; aaa < 4; aaa++) {
+			g_sGunner[aaa].m_cLocation.X = 0;
+			g_sGunner[aaa].m_cLocation.Y = 0;
+		}
+		for (aaa = 0; aaa < 128; aaa++) {
+			g_sBullets[aaa].m_cLocation.X = 0;
+			g_sBullets[aaa].m_cLocation.Y = 0;
+		}
+		aaa = 0;
+
+		if (collision('a')){
+			levels[0] = false;
+			levels[1] = true;
+			spawns[0] = true;
+		}
+		else if (collision('b')){
+			levels[0] = false;
+			levels[2] = true;
+			spawns[0] = true;
+		}
+		else if (collision('c')){
+			levels[0] = false;
+			levels[3] = true;
+			spawns[0] = true;
+		}
+		else if (collision('d')){
+			levels[0] = false;
+			levels[4] = true;
+			spawns[0] = true;
+		}
+		else if (collision('%')){
+			levels[0] = false;
+			inven = false;
+			g_eGameState = S_WINSCREEN;
+		}
 	}
 
-	getline(loadGame, loadGameFile);
-	for (int a = 0; a < loadGameFile.length(); a++)
-	{
-		boughtWeapons[a] = loadGameFile[a] == '1' ? true : false;
+	else if (levels[1] == true){
+		spawns[0] = false;
+
+		while (aaa <= 0) {
+			for (h = 0; h < 8; h++) { h_hit[h] = 0; }
+			g_sHugger[0].m_cLocation.X = 6; g_sHugger[0].m_cLocation.Y = 16;
+			g_sHugger[1].m_cLocation.X = 94; g_sHugger[1].m_cLocation.Y = 4;
+			g_sHugger[2].m_cLocation.X = 84; g_sHugger[2].m_cLocation.Y = 17;
+			g_sHugger[3].m_cLocation.X = 78; g_sHugger[3].m_cLocation.Y = 11;
+			g_sHugger[4].m_cLocation.X = 35; g_sHugger[4].m_cLocation.Y = 12;
+			g_sHugger[5].m_cLocation.X = 29; g_sHugger[5].m_cLocation.Y = 16;
+			g_sGunner[0].m_cLocation.X = 54; g_sGunner[0].m_cLocation.Y = 4;
+			g_sGunner[1].m_cLocation.X = 54; g_sGunner[1].m_cLocation.Y = 16;
+			g_sGunner[2].m_cLocation.X = 40; g_sGunner[2].m_cLocation.Y = 8;
+			aaa++;
+		}
+		if (collision('%')){
+			levels[1] = false;
+			levels[0] = true;
+			spawns[1] = true;
+		}
+		if (collision('*')){
+			gems[0] = true;
+		}
+	}
+	else if (levels[2] == true){
+		spawns[0] = false;
+
+		while (aaa <= 0) {
+			for (h = 0; h < 8; h++) { h_hit[h] = 0; }
+			g_sHugger[0].m_cLocation.X = 6; g_sHugger[0].m_cLocation.Y = 10;
+			g_sHugger[1].m_cLocation.X = 19; g_sHugger[1].m_cLocation.Y = 4;
+			g_sHugger[2].m_cLocation.X = 34; g_sHugger[2].m_cLocation.Y = 11;
+			g_sHugger[3].m_cLocation.X = 54; g_sHugger[3].m_cLocation.Y = 14;
+			g_sHugger[4].m_cLocation.X = 39; g_sHugger[4].m_cLocation.Y = 13;
+			g_sGunner[0].m_cLocation.X = 18; g_sGunner[0].m_cLocation.Y = 14;
+			aaa++;
+		}
+		if (collision('%')){
+			levels[2] = false;
+			levels[0] = true;
+			spawns[2] = true;
+		}
+		if (collision('&')){
+			g_sChar.m_cLocation.X = 64;
+			g_sChar.m_cLocation.Y = 2;
+			for (h = 0; h < 8; h++) { h_hit[h] = 0; }
+			g_sHugger[0].m_cLocation.X = 79; g_sHugger[0].m_cLocation.Y = 6;
+			g_sHugger[1].m_cLocation.X = 69; g_sHugger[1].m_cLocation.Y = 12;
+			g_sHugger[2].m_cLocation.X = 90; g_sHugger[2].m_cLocation.Y = 16;
+			g_sHugger[3].m_cLocation.X = 90; g_sHugger[3].m_cLocation.Y = 19;
+			g_sHugger[4].m_cLocation.X = 0; g_sHugger[4].m_cLocation.Y = 0;
+			g_sGunner[0].m_cLocation.X = 81; g_sGunner[0].m_cLocation.Y = 4;
+			g_sGunner[1].m_cLocation.X = 71; g_sGunner[1].m_cLocation.Y = 15;
+			g_sGunner[2].m_cLocation.X = 86; g_sGunner[2].m_cLocation.Y = 16;
+		}
+		if (collision('*')){
+			gems[1] = true;
+		}
+	}
+	else if (levels[3] == true) {
+		spawns[0] = false;
+
+		while (aaa <= 0) {
+			for (h = 0; h < 8; h++) { h_hit[h] = 0; }
+			g_sHugger[0].m_cLocation.X = 24; g_sHugger[0].m_cLocation.Y = 7;
+			g_sHugger[1].m_cLocation.X = 44; g_sHugger[1].m_cLocation.Y = 16;
+			g_sHugger[2].m_cLocation.X = 6; g_sHugger[2].m_cLocation.Y = 16;
+			g_sHugger[3].m_cLocation.X = 41; g_sHugger[3].m_cLocation.Y = 8;
+			g_sGunner[0].m_cLocation.X = 10; g_sGunner[0].m_cLocation.Y = 4;
+			g_sGunner[1].m_cLocation.X = 12; g_sGunner[1].m_cLocation.Y = 15;
+			g_sGunner[2].m_cLocation.X = 33; g_sGunner[2].m_cLocation.Y = 4;
+			g_sGunner[3].m_cLocation.X = 20; g_sGunner[3].m_cLocation.Y = 13;
+			aaa++;
+		}
+		if (collision('%')){
+			levels[3] = false;
+			levels[0] = true;
+			spawns[3] = true;
+		}
+		if (collision('&')){
+			g_sChar.m_cLocation.X = 59;
+			g_sChar.m_cLocation.Y = 2;
+			for (h = 0; h < 8; h++) { h_hit[h] = 0; }
+			g_sGunner[0].m_cLocation.X = 0; g_sGunner[0].m_cLocation.Y = 0;
+			g_sGunner[1].m_cLocation.X = 0; g_sGunner[1].m_cLocation.Y = 0;
+			g_sGunner[2].m_cLocation.X = 0; g_sGunner[2].m_cLocation.Y = 0;
+			g_sGunner[3].m_cLocation.X = 0; g_sGunner[3].m_cLocation.Y = 0;
+			g_sHugger[0].m_cLocation.X = 65; g_sHugger[0].m_cLocation.Y = 17;
+			g_sHugger[1].m_cLocation.X = 80; g_sHugger[1].m_cLocation.Y = 17;
+			g_sHugger[2].m_cLocation.X = 96; g_sHugger[2].m_cLocation.Y = 17;
+			g_sHugger[3].m_cLocation.X = 82; g_sHugger[3].m_cLocation.Y = 23;
+			g_sHugger[4].m_cLocation.X = 78; g_sHugger[4].m_cLocation.Y = 23;
+			g_sHugger[5].m_cLocation.X = 80; g_sHugger[5].m_cLocation.Y = 11;
+			g_sHugger[6].m_cLocation.X = 81; g_sHugger[6].m_cLocation.Y = 11;
+			g_sHugger[7].m_cLocation.X = 82; g_sHugger[7].m_cLocation.Y = 11;
+		}
+		if (collision('*')){
+			gems[2] = true;
+		}
+	}
+	else if (levels[4] == true){
+		spawns[0] = false;
+
+		while (aaa <= 0) {
+			for (h = 0; h < 8; h++) { h_hit[h] = 0; }
+			g_sHugger[0].m_cLocation.X = 8; g_sHugger[0].m_cLocation.Y = 12;
+			g_sHugger[1].m_cLocation.X = 8; g_sHugger[1].m_cLocation.Y = 13;
+			g_sHugger[2].m_cLocation.X = 25; g_sHugger[2].m_cLocation.Y = 12;
+			g_sHugger[3].m_cLocation.X = 26; g_sHugger[3].m_cLocation.Y = 12;
+			g_sHugger[4].m_cLocation.X = 39; g_sHugger[4].m_cLocation.Y = 14;
+			g_sHugger[5].m_cLocation.X = 39; g_sHugger[5].m_cLocation.Y = 15;
+			g_sHugger[6].m_cLocation.X = 39; g_sHugger[6].m_cLocation.Y = 6;
+			g_sHugger[7].m_cLocation.X = 40; g_sHugger[7].m_cLocation.Y = 6;
+			g_sGunner[0].m_cLocation.X = 7; g_sGunner[0].m_cLocation.Y = 14;
+			g_sGunner[1].m_cLocation.X = 27; g_sGunner[1].m_cLocation.Y = 12;
+			g_sGunner[2].m_cLocation.X = 39; g_sGunner[2].m_cLocation.Y = 16;
+			g_sGunner[3].m_cLocation.X = 41; g_sGunner[3].m_cLocation.Y = 6;
+			aaa++;
+		}
+		if (collision('%')){
+			levels[4] = false;
+			levels[0] = true;
+			spawns[4] = true;
+		}
+		if (collision('&')){
+			g_sChar.m_cLocation.X = 60;
+			g_sChar.m_cLocation.Y = 2;
+			for (h = 0; h < 8; h++) { h_hit[h] = 0; }
+			g_sHugger[0].m_cLocation.X = 60; g_sHugger[0].m_cLocation.Y = 12;
+			g_sHugger[1].m_cLocation.X = 61; g_sHugger[1].m_cLocation.Y = 12;
+			g_sHugger[2].m_cLocation.X = 84; g_sHugger[2].m_cLocation.Y = 11;
+			g_sHugger[3].m_cLocation.X = 77; g_sHugger[3].m_cLocation.Y = 4;
+			g_sHugger[4].m_cLocation.X = 60; g_sHugger[4].m_cLocation.Y = 15;
+			g_sHugger[5].m_cLocation.X = 70; g_sHugger[5].m_cLocation.Y = 17;
+			g_sHugger[6].m_cLocation.X = 89; g_sHugger[6].m_cLocation.Y = 19;
+			g_sHugger[7].m_cLocation.X = 84; g_sHugger[7].m_cLocation.Y = 21;
+			g_sGunner[0].m_cLocation.X = 62; g_sGunner[0].m_cLocation.Y = 12;
+			g_sGunner[1].m_cLocation.X = 83; g_sGunner[1].m_cLocation.Y = 9;
+			g_sGunner[2].m_cLocation.X = 60; g_sGunner[2].m_cLocation.Y = 18;
+			g_sGunner[3].m_cLocation.X = 45; g_sGunner[3].m_cLocation.Y = 22;
+			aaa++;
+		}
+		if (collision('*')){
+			gems[3] = true;
+		}
+	}
+}
+void processUserInput()
+{
+	COORD c;
+	// quits the game if player hits the escape key
+	if (g_abKeyPressed[K_ESCAPE]) {
+		saveProgression();
+		g_bQuitGame = true;
+	}
+	//Start menu key presses
+	if (g_eGameState == S_STARTMENU) {
+		if (g_abKeyPressed[K_1]) {
+			g_eGameState = S_CHARACTERCREATION;
+		}
+		if (g_abKeyPressed[K_2]) {
+				loadProgression();
+				g_eGameState = S_GAME;
+		}
+		if (g_abKeyPressed[K_3]) {
+			g_eGameState = S_INSTRUCTIONS;
+		}
+	}
+	//Instructions key presses
+	if (g_eGameState == S_INSTRUCTIONS){
+		if (g_abKeyPressed[K_RETURN]){
+			g_eGameState = S_CHARACTERCREATION;
+		}
+	}
+	//Character creation key presses
+	if (g_eGameState == S_CHARACTERCREATION){
+		if (g_abKeyPressed[K_1]){
+			charArray[0] = true;
+			charArray[1] = false;
+			charArray[2] = false;
+			charArray[3] = false;
+			charArray[4] = false;
+			lives = 7;
+			coins = 0;
+		}
+		if (g_abKeyPressed[K_2]){
+			charArray[1] = true;
+			charArray[0] = false;
+			charArray[2] = false;
+			charArray[3] = false;
+			charArray[4] = false;
+			lives = 5;
+			coins = 40;
+		}
+		if (g_abKeyPressed[K_3]){
+			charArray[2] = true;
+			charArray[0] = false;
+			charArray[1] = false;
+			charArray[3] = false;
+			charArray[4] = false;
+			lives = 5;
+			coins = 40;
+		}
+		if (g_abKeyPressed[K_4]){
+			charArray[3] = true;
+			charArray[0] = false;
+			charArray[1] = false;
+			charArray[2] = false;
+			charArray[4] = false;
+			lives = 4;
+			coins = 70;
+		}
+		if (g_abKeyPressed[K_5]){
+			charArray[4] = true;
+			charArray[0] = false;
+			charArray[1] = false;
+			charArray[2] = false;
+			charArray[3] = false;
+			lives = 3;
+			coins = 100;
+		}
+		if (g_abKeyPressed[K_SPACE] && (charArray[0] == true || charArray[1] == true || charArray[2] == true || charArray[3] == true || charArray[4] == true)){
+			g_eGameState = S_GAME;
+		}
+	}
+	//Win and Lose screen key presses
+	if (g_eGameState == S_WINSCREEN) {
+		if (g_abKeyPressed[K_RETURN]){
+			g_eGameState = S_STARTMENU;
+		}
+	}
+	if (g_eGameState == S_LOSESCREEN) {
+			/*DWORD now = timeGetTime();
+			DWORD nextEndGame = now + 5000;
+			while (g_eGameState==S_LOSESCREEN)
+			{
+				now = timeGetTime();
+				if (now >= nextEndGame)
+				{
+					g_eGameState = S_CHARACTERCREATION;
+					nextEndGame += 5000;
+				}
+			}*/
+		if (g_abKeyPressed[K_RETURN]) {
+			g_eGameState = S_STARTMENU;
+		}
 	}
 }
 
@@ -1262,6 +1548,74 @@ void renderGame()
     renderCharacter();  // renders the character into the buffer
 	renderEntities();   // renders the hugger, gunner, player and enemy bullet into the buffer
 	playershoot();
+}
+void renderWin()
+{
+	//Render Win Screen
+	COORD c;
+	string winScreen;
+	ifstream winFile;
+	int i = 0;
+	PlaySound(NULL, NULL, 0);
+	PlaySound(TEXT("miiWin.wav"), NULL, SND_LOOP | SND_ASYNC | SND_FILENAME);
+	winFile.open("Textfiles/WinScreen.txt");
+	if (winFile.is_open())
+	{
+		while (getline(winFile, winScreen))
+		{
+			for (a = 0; a < winScreen.length(); a++)
+			{
+				if (winScreen[a] == 'w')
+				{
+					winScreen[a] = 223;
+				}
+				map[i][a] = winScreen[a];
+			}
+			c.X = 0;
+			c.Y = i;
+			i++;
+			g_Console.writeToBuffer(c, winScreen, 0x0A);
+		}
+	}
+	winFile.close();
+
+	c.X = 20;
+	c.Y = 24;
+	g_Console.writeToBuffer(c, "Press return to proceed, Press escape to quit the game", 0x08);
+}
+
+void renderLose()
+{
+	COORD c;
+	string loseScreen;
+	ifstream loseFile;
+	int i = 0;
+
+	PlaySound(TEXT("lose_Audio.wav"), NULL, SND_ASYNC | SND_FILENAME);
+	loseFile.open("Textfiles/LoseScreen.txt");
+	if (loseFile.is_open())
+	{
+		while (getline(loseFile, loseScreen))
+		{
+			for (a = 0; a < loseScreen.length(); a++)
+			{
+				if (loseScreen[a] == 'D')
+				{
+					loseScreen[a] = 219;
+				}
+				map[i][a] = loseScreen[a];
+			}
+			c.X = 0;
+			c.Y = i;
+			i++;
+			g_Console.writeToBuffer(c, loseScreen, 0x0C);
+		}
+	}
+	loseFile.close();
+
+	c.X = 7;
+	c.Y = 24;
+	g_Console.writeToBuffer(c, "This is so sad, Alexa play Despacinno", 0x0C);
 }
 void renderMap()
 {
