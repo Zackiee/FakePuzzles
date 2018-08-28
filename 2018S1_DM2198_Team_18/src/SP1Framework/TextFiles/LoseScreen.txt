@@ -1,22 +1,23 @@
-    DDDDDDD  DDDDDDDDDDDDDDD DDDDDDDDDDD DDDDDDD    DDDDDDDDDDD DDDDDDD
-    D      D        D        D           D      D   D           D      D
-    D       D       D        D           D       D  D           D       D
-    D        D      D        D           D        D D           D        D
-    D        D      D        DDDDDDDDDDD D        D DDDDDDDDDDD D        D
-    D       D       D        D           D       D  D           D       D
-    D      D        D        D           D      D   D           D      D   
-    D     D         D        D           D     D    D           D     D   
-    DDDDDD   DDDDDDDDDDDDDDD DDDDDDDDDDD DDDDDD     DDDDDDDDDDD DDDDDD  
-                                                                       
-                                                                      D                       D
-                                                                        D                   D
-                                                                          D               D
-                                                                            D           D
-                                                                              D       D
-                                                                                D   D
-                                                                                  D
-                                                                                D   D 
-                                                                              D       D     
-                                                                            D           D
-                                                                          D               D  
-                                                                        D                   D
+
+
+
+
+
+                                     F F F F F        F        F         F  F F F F F
+                                     F               F F       F F     F F  F
+                                     F              F   F      F  F   F  F  F
+                                     F   F F F     F F F F     F   F F   F  F F F F F
+                                     F       F    F       F    F    F    F  F
+                                     F       F   F         F   F         F  F
+                                     F F F F F  F           F  F         F  F F F F F
+                                                                                     
+                                       F F F     F         F   F F F F F   F F F F F
+                                     F       F    F       F    F           F        F
+                                     F       F     F     F     F           F F F F F
+                                     F       F      F   F      F F F F F   F  F     
+                                     F       F       F F       F           F     F   
+                                       F F F          F        F F F F F   F        F
+                                                
+                                            
+                                           Press Return to go back to Start Menu!
+                                           Press Escape to quit the Game!

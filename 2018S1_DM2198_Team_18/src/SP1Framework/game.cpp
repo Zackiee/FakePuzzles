@@ -1042,7 +1042,6 @@ void saveProgression()
 	for (int a = 0; a < 4; a++)
 	{
 		saveGame << gems[a] ? '1' : '0';
-
 	}
 	saveGame << endl;
 	for (int a = 0; a < 5; a++)
